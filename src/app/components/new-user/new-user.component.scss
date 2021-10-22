@@ -1,0 +1,92 @@
+.container {
+  padding: 70px 30px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.form-container {
+  margin-top: 30px;
+  width: 500px;
+  padding: 30px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  text-align: center;
+}
+img {
+  width: 250px;
+  margin-bottom: 20px;
+}
+p {
+  text-align: left;
+  font-size: 18px;
+  line-height: 2;
+  margin: 10px;
+}
+.already {
+  font-size: 16px;
+  color: rgba(0, 0, 0, 0.6);
+}
+.login {
+  font-weight: bold;
+  color: #b71f6f;
+  cursor: pointer;
+}
+
+/* form */
+
+.mat-form-field {
+  width: 100%;
+}
+.mat-radio-group {
+  text-align: left;
+  display: grid;
+  gap: 15px;
+  margin: 0px 5px 20px;
+}
+.mat-radio-button {
+  margin-left: 15px;
+}
+.valid-Untill {
+  margin: 0px 10px 20px;
+}
+
+.sign-up-btn {
+  font-size: 21px;
+  padding: 10px 30px;
+  background-color: #b71f6f;
+  border-radius: 20px;
+  color: white;
+}
+.sign-up-btn:disabled,
+.sign-up-btn[disabled] {
+  color: white;
+  opacity: 0.5;
+}
+
+@media only screen and (max-width: 650px) {
+  .form-container {
+    margin-top: 20px;
+    width: 300px;
+  }
+  img {
+    width: 150px;
+    margin-bottom: 0;
+  }
+  p {
+    font-size: 16px;
+  }
+  .already {
+    font-size: 14px;
+  }
+  .sign-up-btn {
+    font-size: 16px;
+  }
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}

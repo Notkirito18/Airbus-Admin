@@ -1,0 +1,26 @@
+<div class="container">
+  <img src="../../../assets/aloft-airbus.png" alt="" />
+  <div class="form-container">
+    <form [formGroup]="logInForm" (submit)="submitlogInForm(logInForm.value)">
+      <!-- name input -->
+      <mat-form-field appearance="outline">
+        <mat-label>Name</mat-label>
+        <input matInput type="text" formControlName="name" />
+      </mat-form-field>
+      <!-- Password input -->
+      <mat-form-field appearance="outline">
+        <mat-label>Password</mat-label>
+        <input matInput type="password" formControlName="password" />
+      </mat-form-field>
+      <!-- submit -->
+      <button
+        mat-button
+        class="sign-up-btn"
+        type="submit"
+        [disabled]="!logInForm.valid"
+      >
+        Log In
+      </button>
+    </form>
+  </div>
+</div>

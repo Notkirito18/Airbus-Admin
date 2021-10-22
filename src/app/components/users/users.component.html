@@ -1,0 +1,11 @@
+<div class="container">
+  <button routerLink="/home/new-user">Add new guest</button>
+
+  <ul>
+    <li *ngFor="let guest of guestsToShow">
+      {{ guest.name }} : (Vouchers : {{ guest.vouchers }})
+      <button (click)="removeGuest(guest.id)">Remove</button>
+      <button (click)="onEdit(guest)">edit</button>
+    </li>
+  </ul>
+</div>
