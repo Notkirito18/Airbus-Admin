@@ -1,0 +1,21 @@
+<div class="container">
+  <h1 mat-dialog-title>Warning</h1>
+  <div mat-dialog-content>
+    <p>
+      Are you sure you want to Delete <b>{{ data.name }}</b
+      >?
+    </p>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button (click)="this.dialogRef.close()">No Thanks</button>
+    <button
+      mat-raised-button
+      [mat-dialog-close]="data.id"
+      cdkFocusInitial
+      color="warn"
+      (click)="removeGuest(data.id)"
+    >
+      Ok
+    </button>
+  </div>
+</div>

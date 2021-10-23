@@ -1,3 +1,114 @@
 .container {
-  padding: 90px 30px 30px;
+  padding: 90px 70px 70px;
+  mat-card {
+    width: 96.5%;
+    line-height: 3;
+    color: #6e6e6e;
+
+    .mat-card-title {
+      position: relative;
+      font-size: 21px;
+      font-weight: 400;
+      .mat-card-subtitle {
+        display: inline;
+      }
+      .search-bar {
+        position: absolute;
+        right: 25%;
+        top: -10px;
+        width: 50%;
+        mat-form-field {
+          position: relative;
+          width: 100%;
+          padding: 0;
+          mat-label {
+            display: flex;
+            align-items: center;
+          }
+        }
+      }
+      button {
+        position: absolute;
+        right: 0;
+        top: 13.5px;
+        background-color: #31c2a0;
+        color: white;
+      }
+    }
+  }
+
+  .products-card {
+    margin: 24px 0px 0px 0px;
+    box-shadow: rgba(124, 163, 197, 0.3) 6px 2px 16px 0px,
+      rgba(255, 255, 255, 0.5) -6px -2px 16px 0px;
+    .filter-container {
+      position: relative;
+      font-size: 18px;
+      color: #4a4a4a;
+      margin: 24px 0px;
+    }
+    .filter-icon {
+      position: absolute;
+      right: 0;
+    }
+    table {
+      width: 100%;
+      th,
+      td {
+        padding: 0 24px;
+        color: #4a4a4a;
+        font-size: 15px;
+      }
+
+      .mat-column-select {
+        width: 3%;
+        input {
+          width: 16px;
+          height: 16px;
+        }
+      }
+      .mat-column-id {
+        width: 3%;
+      }
+      .mat-column-image {
+        width: 18%;
+        img {
+          padding: 14px 24px 0px 0px;
+          width: 100px;
+          height: 66px;
+        }
+      }
+      .mat-column-title {
+        width: 18%;
+      }
+      .mat-column-subtitle {
+        width: 18%;
+        line-height: 1.2;
+        text-align: justify;
+      }
+      .mat-column-price {
+        width: 13%;
+      }
+      .mat-column-rating {
+        width: 13%;
+        .rating-container {
+          display: flex;
+          align-items: center;
+          color: #ffc260;
+          font-size: 16px;
+        }
+      }
+      .mat-column-actions {
+        width: 14%;
+        .buttons-container {
+          display: flex;
+          .edit-btn {
+            background-color: #31c2a0;
+            color: white;
+            margin-right: 16px;
+          }
+        }
+      }
+    }
+  }
 }

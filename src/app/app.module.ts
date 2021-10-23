@@ -19,11 +19,17 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatCardModule } from '@angular/material/card';
+import { MatPaginatorModule } from '@angular/material/paginator';
+
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
 import { UsersComponent } from './components/users/users.component';
 import { NewUserComponent } from './components/new-user/new-user.component';
 import { HttpClientModule } from '@angular/common/http';
+import { MatTableModule } from '@angular/material/table';
+import { DeleteConfirmComponent } from './components/delete-confirm/delete-confirm.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 // const firebaseConfig = {
 //   apiKey: 'AIzaSyDKHGQEHRrgyDKjKqRI0ln7kNo-w_Tf8y4',
@@ -43,6 +49,7 @@ import { HttpClientModule } from '@angular/common/http';
     LoginComponent,
     UsersComponent,
     NewUserComponent,
+    DeleteConfirmComponent,
   ],
   imports: [
     BrowserModule,
@@ -64,6 +71,10 @@ import { HttpClientModule } from '@angular/common/http';
     MatDatepickerModule,
     MatRadioModule,
     MatNativeDateModule,
+    MatCardModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatDialogModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

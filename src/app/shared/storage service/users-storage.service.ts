@@ -13,17 +13,6 @@ export class UsersStorageService {
 
   constructor(private http: HttpClient) {}
 
-  // getGuestListFromBackend() {
-  //   let guestsArray: Guest[] = [];
-  //   this.http
-  //     .get('https://airbus-900f9-default-rtdb.firebaseio.com/guests.json')
-  //     .subscribe((guests: Record<string, any>) => {
-  //       guestsArray = Object.values(guests);
-  //       console.log(guestsArray);
-  //     });
-  //   return guestsArray;
-  // }
-
   populateGuests() {
     this.http.get(this.url).subscribe((guests: Record<string, any>) => {
       const guestsArray = Object.values(guests);

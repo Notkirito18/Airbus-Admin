@@ -5,6 +5,7 @@ export class Guest {
     public roomNumber: number,
     public type: string,
     public vouchers: number,
-    public vouchersValidUntill: String
+    public validUntill: Date,
+    public createdDate?: Date
   ) {}
 }
