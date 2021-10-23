@@ -30,6 +30,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { MatTableModule } from '@angular/material/table';
 import { DeleteConfirmComponent } from './components/delete-confirm/delete-confirm.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { UsingComponent } from './pages/using/using.component';
 
 // const firebaseConfig = {
 //   apiKey: 'AIzaSyDKHGQEHRrgyDKjKqRI0ln7kNo-w_Tf8y4',
@@ -50,6 +51,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     UsersComponent,
     NewUserComponent,
     DeleteConfirmComponent,
+    UsingComponent,
   ],
   imports: [
     BrowserModule,

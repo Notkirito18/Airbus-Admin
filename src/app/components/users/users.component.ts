@@ -7,13 +7,14 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { Guest } from 'src/app/shared/models';
+import { Guest, Voucher } from 'src/app/shared/models';
 import { UsersStorageService } from 'src/app/shared/storage service/users-storage.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { DeleteConfirmComponent } from '../delete-confirm/delete-confirm.component';
 import { MatDialog } from '@angular/material/dialog';
+import { VouchersServiceService } from 'src/app/shared/vouchers service/vouchers-service.service';
 
 @Component({
   selector: 'app-users',
@@ -24,6 +25,7 @@ export class UsersComponent implements OnInit, OnDestroy, AfterViewInit {
   guestsToShow!: Guest[];
   guestsData!: MatTableDataSource<Guest>;
   guestsToShow$$!: Subscription;
+  voucherId!: string;
 
   editing!: Guest;
 
@@ -39,7 +41,9 @@ export class UsersComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(
     private guestsService: UsersStorageService,
-    private dialog: MatDialog
+    private vouchersservice: VouchersServiceService,
+    private dialog: MatDialog,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -76,5 +80,11 @@ export class UsersComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnDestroy() {
     this.guestsToShow$$.unsubscribe();
+  }
+
+  test() {
+    // this.vouchersservice.useVoucher('1634995312831_8q6jpvc0w');
+    // console.log('deleted v : 1634995312831_8q6jpvc0w');
+    this.router.navigate(['/using/' + this.voucherId]);
   }
 }

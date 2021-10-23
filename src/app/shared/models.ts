@@ -6,6 +6,15 @@ export class Guest {
     public type: string,
     public vouchers: number,
     public validUntill: Date,
+    public vouchersLis: Voucher[],
+    public createdDate?: Date
+  ) {}
+}
+export class Voucher {
+  constructor(
+    public id: string,
+    public holderId: string,
+    public validUntill: Date,
     public createdDate?: Date
   ) {}
 }

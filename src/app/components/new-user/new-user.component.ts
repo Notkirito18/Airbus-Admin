@@ -1,25 +1,29 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { Guest } from 'src/app/shared/models';
 import { UsersStorageService } from 'src/app/shared/storage service/users-storage.service';
+import { VouchersServiceService } from 'src/app/shared/vouchers service/vouchers-service.service';
 
 @Component({
   selector: 'app-new-user',
   templateUrl: './new-user.component.html',
   styleUrls: ['./new-user.component.scss'],
 })
-export class NewUserComponent implements OnInit {
+export class NewUserComponent implements OnInit, OnDestroy {
   newGuestForm!: FormGroup;
   editingMode = false;
   guestToEdit!: Guest;
+  paramsSub$$!: Subscription;
 
   validUntillInit = new Date(new Date().setDate(new Date().getDate() + 7));
 
   constructor(
     private fb: FormBuilder,
     private guestsService: UsersStorageService,
+    private vouchersService: VouchersServiceService,
     private router: Router,
     private route: ActivatedRoute,
     private http: HttpClient
@@ -34,7 +38,7 @@ export class NewUserComponent implements OnInit {
       validUntill: ['', Validators.required],
     });
 
-    this.route.params.subscribe((params: Params) => {
+    this.paramsSub$$ = this.route.params.subscribe((params: Params) => {
       this.http.get(this.guestsService.url).subscribe((data) => {
         let guestsArray = Object.values(data);
         for (let i = 0; i < guestsArray.length; i++) {
@@ -46,7 +50,7 @@ export class NewUserComponent implements OnInit {
             this.newGuestForm = this.fb.group({
               name: [this.guestToEdit.name, Validators.required],
               roomNumber: [this.guestToEdit.roomNumber, Validators.required],
-              vouchers: [21, Validators.required],
+              vouchers: [this.guestToEdit.vouchers, Validators.required],
               type: [this.guestToEdit.type, Validators.required],
               validUntill: [this.guestToEdit.validUntill, Validators.required],
             });
@@ -76,6 +80,11 @@ export class NewUserComponent implements OnInit {
           newGuest.type,
           newGuest.vouchers,
           newGuest.validUntill,
+          this.vouchersService.vouchersGenerator(
+            newGuest.vouchers,
+            this.guestToEdit.id,
+            newGuest.validUntill
+          ),
           new Date()
         )
       );
@@ -89,10 +98,19 @@ export class NewUserComponent implements OnInit {
           newGuest.type,
           newGuest.vouchers,
           newGuest.validUntill,
+          this.vouchersService.vouchersGenerator(
+            newGuest.vouchers,
+            generatedId,
+            newGuest.validUntill
+          ),
           new Date()
         )
       );
     }
     this.router.navigate(['/home/users']);
+  }
+
+  ngOnDestroy(): void {
+    this.paramsSub$$.unsubscribe();
   }
 }
