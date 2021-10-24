@@ -21,8 +21,10 @@ export class UsingComponent implements OnInit, OnDestroy {
   usedVoucherid!: string;
   usedVoucherid$$!: Subscription;
 
-  guest!: Guest;
+  guest: Guest = new Guest('', '', 0, '', new Date(), []);
   guest$$!: Subscription;
+
+  voucherExpired = false;
 
   ngOnInit(): void {
     this.usedVoucherid$$ = this.route.params.subscribe((params: Params) => {
@@ -32,16 +34,33 @@ export class UsingComponent implements OnInit, OnDestroy {
         .subscribe((data) => {
           const guestsArray = Object.values(data);
           for (let i = 0; i < guestsArray.length; i++) {
-            if (guestsArray[i] === params['id'].slice(0, 13)) {
+            if (guestsArray[i].id === params['id'].slice(0, 13)) {
               this.guest = guestsArray[i];
+              console.log('defined guest', guestsArray[i]);
             }
+          }
+          // ckecking availibility
+          let indexOfGuest = this.vouchersService.indexOfGuestFromId(
+            guestsArray,
+            params['id'].slice(0, 13)
+          );
+          if (
+            this.vouchersService.deleteVoucher(guestsArray, params['id'])[
+              indexOfGuest
+            ].vouchersLis.length !== 0
+          ) {
+            this.vouchersService.useVoucher(this.usedVoucherid);
+          } else {
+            this.voucherExpired = true;
           }
         });
     });
-    this.vouchersService.useVoucher(this.usedVoucherid);
   }
   seeMyVouchers() {
-    this.router.navigate(['/home']);
+    this.router.navigate(['/guest/' + this.guest.id]);
   }
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+    this.usedVoucherid$$.unsubscribe();
+    this.guest$$.unsubscribe();
+  }
 }

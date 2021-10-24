@@ -32,8 +32,10 @@
       <!-- Name Column -->
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-        <td class="title-td" mat-cell *matCellDef="let element">
-          {{ element.name }}
+        <td mat-cell *matCellDef="let element">
+          <span class="title-td" (click)="nameClick(element.id)">{{
+            element.name
+          }}</span>
         </td>
       </ng-container>
 
@@ -45,7 +47,7 @@
         </td>
       </ng-container>
 
-      <!-- type Column -->
+      <!-- Room Num Column -->
       <ng-container matColumnDef="roomNumber">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Room Num</th>
         <td mat-cell *matCellDef="let element">
@@ -56,7 +58,9 @@
       <!-- Vouchers Column -->
       <ng-container matColumnDef="vouchers">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Vouchers</th>
-        <td mat-cell *matCellDef="let element">{{ element.vouchers }}</td>
+        <td mat-cell *matCellDef="let element">
+          {{ element.vouchersLis.length }}
+        </td>
       </ng-container>
 
       <!-- valid untill Column -->
@@ -109,5 +113,5 @@
     </mat-paginator>
   </mat-card>
 </div>
-<input type="text" [(ngModel)]="voucherId" />
-<button (click)="test()">useVoucher</button>
+<!-- <input type="text" [(ngModel)]="voucherId" />
+<button (click)="test()">useVoucher</button> -->

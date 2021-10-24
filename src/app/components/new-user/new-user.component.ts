@@ -50,7 +50,10 @@ export class NewUserComponent implements OnInit, OnDestroy {
             this.newGuestForm = this.fb.group({
               name: [this.guestToEdit.name, Validators.required],
               roomNumber: [this.guestToEdit.roomNumber, Validators.required],
-              vouchers: [this.guestToEdit.vouchers, Validators.required],
+              vouchers: [
+                this.guestToEdit.vouchersLis.length,
+                Validators.required,
+              ],
               type: [this.guestToEdit.type, Validators.required],
               validUntill: [this.guestToEdit.validUntill, Validators.required],
             });
@@ -69,7 +72,7 @@ export class NewUserComponent implements OnInit, OnDestroy {
     });
   }
 
-  onSubmitForm(newGuest: Guest) {
+  onSubmitForm(newGuest: any) {
     if (this.editingMode) {
       this.guestsService.updateGuest(
         this.guestToEdit.id,
@@ -78,7 +81,6 @@ export class NewUserComponent implements OnInit, OnDestroy {
           newGuest.name,
           newGuest.roomNumber,
           newGuest.type,
-          newGuest.vouchers,
           newGuest.validUntill,
           this.vouchersService.vouchersGenerator(
             newGuest.vouchers,
@@ -96,7 +98,6 @@ export class NewUserComponent implements OnInit, OnDestroy {
           newGuest.name,
           newGuest.roomNumber,
           newGuest.type,
-          newGuest.vouchers,
           newGuest.validUntill,
           this.vouchersService.vouchersGenerator(
             newGuest.vouchers,

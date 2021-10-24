@@ -1,0 +1,8 @@
+<div class="container">
+  <h1>{{ guest.name }}'s vouchers</h1>
+  <ol>
+    <li *ngFor="let v of guest.vouchersLis">
+      <span class="vlink" (click)="useVoucher(v.id)">{{ v.id }}</span>
+    </li>
+  </ol>
+</div>

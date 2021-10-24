@@ -1,10 +1,17 @@
 <div class="background"></div>
 <div class="container">
   <div class="v-used">
-    <div class="firstline">
-      <span style="font-weight: bold">{{ guest.name }}</span> Have used a
-      voucher
-    </div>
+    <ng-container *ngIf="!voucherExpired; else expired">
+      <div class="firstline">
+        <span style="font-weight: bold">{{ guest.name }}</span> Have used a
+        voucher
+      </div>
+    </ng-container>
+    <ng-template #expired>
+      <div class="firstline">
+        This voucher is expired and can't be used again!
+      </div>
+    </ng-template>
     <button mat-raised-button class="btn" (click)="seeMyVouchers()">
       See My Vouchers
     </button>

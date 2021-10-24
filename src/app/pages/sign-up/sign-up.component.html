@@ -1,7 +1,10 @@
 <div class="container">
   <img src="../../../assets/aloft-airbus.png" alt="" />
   <div class="form-container">
-    <form [formGroup]="logInForm" (submit)="submitlogInForm(logInForm.value)">
+    <form
+      [formGroup]="signUpForm"
+      (submit)="submitSignUpForm(signUpForm.value)"
+    >
       <!-- name input -->
       <mat-form-field appearance="outline">
         <mat-label>Email</mat-label>
@@ -12,14 +15,19 @@
         <mat-label>Password</mat-label>
         <input matInput type="password" formControlName="password" />
       </mat-form-field>
+      <!-- Repeat Password input -->
+      <mat-form-field appearance="outline">
+        <mat-label>Repeat Password</mat-label>
+        <input matInput type="password" formControlName="repeatPassword" />
+      </mat-form-field>
       <!-- submit -->
       <button
         mat-button
         class="sign-up-btn"
         type="submit"
-        [disabled]="!logInForm.valid"
+        [disabled]="!signUpForm.valid"
       >
-        Log In
+        Sign Up
       </button>
     </form>
   </div>

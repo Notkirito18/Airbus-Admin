@@ -31,6 +31,8 @@ import { MatTableModule } from '@angular/material/table';
 import { DeleteConfirmComponent } from './components/delete-confirm/delete-confirm.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { UsingComponent } from './pages/using/using.component';
+import { SignUpComponent } from './pages/sign-up/sign-up.component';
+import { GuestPageComponent } from './pages/guest-page/guest-page.component';
 
 // const firebaseConfig = {
 //   apiKey: 'AIzaSyDKHGQEHRrgyDKjKqRI0ln7kNo-w_Tf8y4',
@@ -52,6 +54,8 @@ import { UsingComponent } from './pages/using/using.component';
     NewUserComponent,
     DeleteConfirmComponent,
     UsingComponent,
+    SignUpComponent,
+    GuestPageComponent,
   ],
   imports: [
     BrowserModule,

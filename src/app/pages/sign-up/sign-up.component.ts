@@ -3,28 +3,29 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
+  selector: 'app-sign-up',
+  templateUrl: './sign-up.component.html',
+  styleUrls: ['./sign-up.component.scss'],
 })
-export class LoginComponent implements OnInit {
-  logInForm!: FormGroup;
+export class SignUpComponent implements OnInit {
+  signUpForm!: FormGroup;
   isLoggedIn = false;
+
   constructor(private fb: FormBuilder, private router: Router) {}
 
   ngOnInit(): void {
-    // login form
-    this.logInForm = this.fb.group({
+    // signUp form
+    this.signUpForm = this.fb.group({
       email: ['', Validators.required],
       password: ['', Validators.required],
+      repeatPassword: ['', Validators.required],
     });
   }
 
-  submitlogInForm(formValue: any) {}
+  submitSignUpForm(formValue: any) {}
 
-  // async submitlogInForm(formValue: any) {
-
-  //   await this.authService.logIn(formValue.email, formValue.password);
+  // async submitSignUpForm(formValue: any) {
+  //   await this.authService.signUp(formValue.email, formValue.password);
   //   if (this.authService.isLoggedIn) this.isLoggedIn = true;
   // }
 }

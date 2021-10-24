@@ -22,8 +22,8 @@ import { VouchersServiceService } from 'src/app/shared/vouchers service/vouchers
   styleUrls: ['./users.component.scss'],
 })
 export class UsersComponent implements OnInit, OnDestroy, AfterViewInit {
-  guestsToShow!: Guest[];
-  guestsData!: MatTableDataSource<Guest>;
+  guestsToShow: Guest[] = [];
+  guestsData = new MatTableDataSource<Guest>(this.guestsToShow);
   guestsToShow$$!: Subscription;
   voucherId!: string;
 
@@ -51,8 +51,7 @@ export class UsersComponent implements OnInit, OnDestroy, AfterViewInit {
     this.guestsToShow$$ = this.guestsService.Guests.subscribe(
       (guests: Guest[]) => {
         this.guestsToShow = guests;
-        this.guestsData = new MatTableDataSource<Guest>(this.guestsToShow);
-        console.log('nexted', this.guestsToShow);
+        this.guestsData = new MatTableDataSource<Guest>(guests);
       }
     );
     this.guestsService.populateGuests();
@@ -80,6 +79,10 @@ export class UsersComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnDestroy() {
     this.guestsToShow$$.unsubscribe();
+  }
+
+  nameClick(id: string) {
+    this.router.navigate(['guest', id]);
   }
 
   test() {
