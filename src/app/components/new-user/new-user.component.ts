@@ -1,11 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Guest } from 'src/app/shared/models';
 import { UsersStorageService } from 'src/app/shared/storage service/users-storage.service';
 import { VouchersServiceService } from 'src/app/shared/vouchers service/vouchers-service.service';
+import { GuestGeneratedComponent } from '../guest-generated/guest-generated.component';
 
 @Component({
   selector: 'app-new-user',
@@ -26,7 +28,8 @@ export class NewUserComponent implements OnInit, OnDestroy {
     private vouchersService: VouchersServiceService,
     private router: Router,
     private route: ActivatedRoute,
-    private http: HttpClient
+    private http: HttpClient,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -73,42 +76,52 @@ export class NewUserComponent implements OnInit, OnDestroy {
   }
 
   onSubmitForm(newGuest: any) {
+    const generatedId = Date.now().toString();
+    let guestToAdd = new Guest(
+      generatedId,
+      newGuest.name,
+      newGuest.roomNumber,
+      newGuest.type,
+      newGuest.validUntill,
+      this.vouchersService.vouchersGenerator(
+        newGuest.vouchers,
+        generatedId,
+        newGuest.validUntill
+      ),
+      new Date()
+    );
+
     if (this.editingMode) {
-      this.guestsService.updateGuest(
+      let guestToUpdate = new Guest(
         this.guestToEdit.id,
-        new Guest(
+        newGuest.name,
+        newGuest.roomNumber,
+        newGuest.type,
+        newGuest.validUntill,
+        this.vouchersService.vouchersGenerator(
+          newGuest.vouchers,
           this.guestToEdit.id,
-          newGuest.name,
-          newGuest.roomNumber,
-          newGuest.type,
-          newGuest.validUntill,
-          this.vouchersService.vouchersGenerator(
-            newGuest.vouchers,
-            this.guestToEdit.id,
-            newGuest.validUntill
-          ),
-          new Date()
-        )
+          newGuest.validUntill
+        ),
+        new Date()
       );
+      console.log('editing');
+      this.guestsService.updateGuest(this.guestToEdit.id, guestToUpdate);
+      this.router.navigate(['/home/users']);
     } else {
-      const generatedId = Date.now().toString();
-      this.guestsService.addGuest(
-        new Guest(
-          generatedId,
-          newGuest.name,
-          newGuest.roomNumber,
-          newGuest.type,
-          newGuest.validUntill,
-          this.vouchersService.vouchersGenerator(
-            newGuest.vouchers,
-            generatedId,
-            newGuest.validUntill
-          ),
-          new Date()
-        )
-      );
+      console.log('new guest added', guestToAdd);
+      this.guestsService.addGuest(guestToAdd);
+      // openning dialog
+      this.newGuestForm.reset();
+      this.openDialog(guestToAdd);
     }
-    this.router.navigate(['/home/users']);
+  }
+
+  openDialog(guest: Guest): void {
+    this.dialog.open(GuestGeneratedComponent, {
+      width: '350px',
+      data: { guest },
+    });
   }
 
   ngOnDestroy(): void {

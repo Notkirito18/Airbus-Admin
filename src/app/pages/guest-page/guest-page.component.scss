@@ -8,3 +8,9 @@
 .vlink:hover {
   color: rgb(0, 34, 107);
 }
+.qr-codes {
+  display: flex;
+  div {
+    padding: 5px;
+  }
+}

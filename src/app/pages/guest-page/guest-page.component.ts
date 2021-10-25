@@ -33,7 +33,6 @@ export class GuestPageComponent implements OnInit {
   }
 
   useVoucher(id: string) {
-    console.log('clicked', id);
     this.router.navigate(['/using/' + id]);
   }
 }

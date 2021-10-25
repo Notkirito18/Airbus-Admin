@@ -33,6 +33,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { UsingComponent } from './pages/using/using.component';
 import { SignUpComponent } from './pages/sign-up/sign-up.component';
 import { GuestPageComponent } from './pages/guest-page/guest-page.component';
+import { QrCodeCardComponent } from './components/qr-code-card/qr-code-card.component';
+import { GuestGeneratedComponent } from './components/guest-generated/guest-generated.component';
 
 // const firebaseConfig = {
 //   apiKey: 'AIzaSyDKHGQEHRrgyDKjKqRI0ln7kNo-w_Tf8y4',
@@ -56,6 +58,8 @@ import { GuestPageComponent } from './pages/guest-page/guest-page.component';
     UsingComponent,
     SignUpComponent,
     GuestPageComponent,
+    QrCodeCardComponent,
+    GuestGeneratedComponent,
   ],
   imports: [
     BrowserModule,

@@ -5,4 +5,12 @@
       <span class="vlink" (click)="useVoucher(v.id)">{{ v.id }}</span>
     </li>
   </ol>
+
+  <div class="qr-codes">
+    <app-qr-code-card
+      *ngFor="let qrcode of guest.vouchersLis"
+      [voucher]="qrcode"
+    >
+    </app-qr-code-card>
+  </div>
 </div>
