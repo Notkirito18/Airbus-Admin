@@ -1,18 +1,24 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { AuthServiceService } from '../auth/auth-service.service';
 import { Guest, Voucher } from '../models';
+import { take } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
 export class VouchersServiceService implements OnDestroy {
   useVoucherSub$$!: Subscription;
-  useVoucherPutSub$$!: Subscription;
 
-  url = 'https://airbus-900f9-default-rtdb.firebaseio.com/guests.json';
+  token!: string | any;
 
-  constructor(private http: HttpClient) {}
+  url = 'https://airbus-900f9-default-rtdb.firebaseio.com/guests.json?auth=';
+
+  constructor(
+    private http: HttpClient,
+    private authService: AuthServiceService
+  ) {}
 
   IdGenerator() {
     return '_' + Math.random().toString(36).substr(2, 9);
@@ -34,25 +40,31 @@ export class VouchersServiceService implements OnDestroy {
         )
       );
     }
-    console.log(generatedVouchers);
+    console.log('generated Vouchers :', generatedVouchers);
     return generatedVouchers;
   }
 
   useVoucher(voucherId: string) {
-    this.useVoucherSub$$ = this.http.get(this.url).subscribe((data) => {
-      const guestsArray = Object.values(data);
-      let indexOfGuest = this.indexOfGuestFromId(
-        guestsArray,
-        voucherId.slice(0, 13)
-      );
-      if (
-        this.deleteVoucher(guestsArray, voucherId)[indexOfGuest].vouchersLis
-          .length !== 0
-      ) {
-        this.useVoucherPutSub$$ = this.http
-          .put(this.url, this.deleteVoucher(guestsArray, voucherId))
-          .subscribe();
-      }
+    this.authService.user.pipe(take(1)).subscribe((user) => {
+      this.token = user.token;
+      const token = user.token;
+      this.useVoucherSub$$ = this.http
+        .get(this.url + token)
+        .subscribe((data) => {
+          const guestsArray = Object.values(data);
+          let indexOfGuest = this.indexOfGuestFromId(
+            guestsArray,
+            voucherId.slice(0, 13)
+          );
+          if (
+            this.deleteVoucher(guestsArray, voucherId)[indexOfGuest].vouchersLis
+              .length !== 0
+          ) {
+            this.http
+              .put(this.url + token, this.deleteVoucher(guestsArray, voucherId))
+              .subscribe();
+          }
+        });
     });
   }
 
@@ -111,6 +123,5 @@ export class VouchersServiceService implements OnDestroy {
 
   ngOnDestroy(): void {
     this.useVoucherSub$$.unsubscribe();
-    this.useVoucherPutSub$$.unsubscribe();
   }
 }

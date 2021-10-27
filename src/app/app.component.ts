@@ -1,10 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { AuthServiceService } from './shared/auth/auth-service.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
-  title = 'airbus-admin';
+export class AppComponent implements OnInit {
+  constructor(private authService: AuthServiceService) {}
+  ngOnInit() {
+    this.authService.autoLogin();
+  }
 }

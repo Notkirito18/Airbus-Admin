@@ -7,15 +7,17 @@ import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
 import { SignUpComponent } from './pages/sign-up/sign-up.component';
 import { UsingComponent } from './pages/using/using.component';
+import { AuthGuardGuard } from './shared/auth-guard.guard';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: '', redirectTo: 'auth/logIn', pathMatch: 'full' },
   { path: 'auth', redirectTo: 'auth/logIn', pathMatch: 'full' },
   { path: 'auth/logIn', component: LoginComponent },
   { path: 'auth/signUp', component: SignUpComponent },
   {
     path: 'home',
     component: HomeComponent,
+    canActivate: [AuthGuardGuard],
     children: [
       { path: '', redirectTo: 'users', pathMatch: 'full' },
       { path: 'users', component: UsersComponent },

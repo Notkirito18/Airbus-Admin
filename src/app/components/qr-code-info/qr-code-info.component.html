@@ -1,0 +1,12 @@
+<div class="dialog-container">
+  <p mat-dialog-title>{{ holder.name }}'s Voucher</p>
+  <div mat-dialog-content class="qr-code">
+    <div #qrcode></div>
+  </div>
+  <div mat-dialog-content class="info">
+    <div>Holder : {{ holder.name }}</div>
+    <div>Date created : {{ data.voucher.createdDate }}</div>
+    <div>Valid untill : {{ data.voucher.validUntill }}</div>
+    <div>Voucher id : {{ data.voucher.id }}</div>
+  </div>
+</div>

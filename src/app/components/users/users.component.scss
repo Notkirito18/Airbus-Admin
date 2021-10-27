@@ -1,112 +1,103 @@
-.container {
-  padding: 90px 70px 70px;
-  mat-card {
-    line-height: 3;
-    color: #6e6e6e;
+mat-card {
+  line-height: 3;
+  color: #6e6e6e;
+  width: 1400px;
 
-    .mat-card-title {
-      position: relative;
+  .mat-card-title {
+    flex-wrap: wrap;
+    align-items: center;
+    .title {
+      width: 160px;
+      min-width: 180px;
       font-size: 21px;
       font-weight: 400;
-      .mat-card-subtitle {
+      margin-left: 1%;
+      .subtitle {
         display: inline;
       }
-      .search-bar {
-        position: absolute;
-        right: 25%;
-        top: -10px;
-        width: 50%;
-        mat-form-field {
-          position: relative;
-          width: 100%;
-          padding: 0;
-          mat-label {
-            display: flex;
-            align-items: center;
-          }
+    }
+    .search-bar {
+      .mat-form-field {
+        position: relative;
+        width: 100%;
+        padding: 0;
+        font-size: 21px;
+        mat-label {
+          display: flex;
+          align-items: center;
         }
       }
+    }
+    .btn-container {
+      display: flex;
+      width: 260px;
+      min-width: 180px;
+      align-items: center;
+      // justify-content: end;
       button {
-        position: absolute;
-        right: 0;
-        top: 13.5px;
         background-color: #31c2a0;
         color: white;
       }
     }
   }
+}
 
-  .products-card {
-    margin: 24px 0px 0px 0px;
-    box-shadow: rgba(124, 163, 197, 0.3) 6px 2px 16px 0px,
-      rgba(255, 255, 255, 0.5) -6px -2px 16px 0px;
-    .filter-container {
-      position: relative;
-      font-size: 18px;
+.table-card {
+  margin: 0px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  .filter-container {
+    position: relative;
+    font-size: 18px;
+    color: #4a4a4a;
+    margin: 24px 0px;
+  }
+  .filter-icon {
+    position: absolute;
+    right: 0;
+  }
+  table {
+    width: 100%;
+    th,
+    td {
+      padding: 0 24px;
       color: #4a4a4a;
-      margin: 24px 0px;
+      font-size: 15px;
     }
-    .filter-icon {
-      position: absolute;
-      right: 0;
-    }
-    table {
-      width: 100%;
-      th,
-      td {
-        padding: 0 24px;
-        color: #4a4a4a;
-        font-size: 15px;
-        text-align: center;
-      }
 
-      .mat-column-select {
-        width: 3%;
-        input {
-          width: 16px;
-          height: 16px;
-        }
+    .mat-column-select {
+      width: 4%;
+      input {
+        width: 16px;
+        height: 16px;
       }
-      .mat-column-id {
-        width: 3%;
-      }
-      .mat-column-image {
-        width: 18%;
-        img {
-          padding: 14px 24px 0px 0px;
-          width: 100px;
-          height: 66px;
-        }
-      }
-      .mat-column-title {
-        width: 18%;
-      }
-      .mat-column-subtitle {
-        width: 18%;
-        line-height: 1.2;
-        text-align: justify;
-      }
-      .mat-column-price {
-        width: 13%;
-      }
-      .mat-column-rating {
-        width: 13%;
-        .rating-container {
-          display: flex;
-          align-items: center;
-          color: #ffc260;
-          font-size: 16px;
-        }
-      }
-      .mat-column-actions {
-        width: 14%;
-        .buttons-container {
-          display: flex;
-          .edit-btn {
-            background-color: #31c2a0;
-            color: white;
-            margin-right: 16px;
-          }
+    }
+    .mat-column-name {
+      width: 20%;
+    }
+    .mat-column-type {
+      width: 15%;
+    }
+    .mat-column-roomNumber {
+      width: 14%;
+    }
+    .mat-column-vouchers {
+      width: 14%;
+    }
+    .mat-column-validUntill {
+      width: 15%;
+    }
+    .mat-column-createdModified {
+      width: 15%;
+    }
+    .mat-column-actions {
+      width: 3%;
+      text-align: center;
+      .buttons-container {
+        display: flex;
+        .edit-btn {
+          background-color: #31c2a0;
+          color: white;
+          margin-right: 16px;
         }
       }
     }
@@ -118,4 +109,9 @@
 }
 .title-td:hover {
   color: rgb(0, 34, 107);
+}
+@media only screen and (min-width: 1200px) {
+  .mat-card-title {
+    justify-content: space-between;
+  }
 }

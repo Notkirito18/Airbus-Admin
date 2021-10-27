@@ -1,24 +1,40 @@
-<div class="container">
-  <mat-card class="mat-card products-card">
-    <mat-card-title class="mat-card-title">
-      Guests
-      <span class="mat-card-subtitle">({{ guestsToShow.length }})</span>
+<div [ngStyle]="responsiveContainerPaddingPx(screenSize, 10, 10, 50, 70)">
+  <mat-card class="mat-card table-card">
+    <mat-card-title
+      [ngStyle]="displayFlexOrBlock(screenSize, true, true, true, false)"
+    >
+      <div
+        class="title"
+        [ngStyle]="hideElementResponsivly(screenSize, false, true, true, true)"
+      >
+        Guests
+        <span class="subtitle">({{ guestsToShow.length }})</span>
+      </div>
 
       <!-- search bar -->
 
-      <span class="search-bar">
+      <div
+        class="search-bar"
+        [ngStyle]="responsiveWidth(screenSize, 350, 350, 450, 550)"
+      >
         <mat-form-field>
           <mat-label
             ><mat-icon class="search-icon">search</mat-icon>Search</mat-label
           >
-          <input matInput placeholder="Supplier Name" #searchInput />
+          <input
+            matInput
+            placeholder="Guest Name"
+            #searchInput
+            (keyup)="applyFilter($event)"
+          />
         </mat-form-field>
-      </span>
-      <button class="mat-flat-button" routerLink="/home/new-user/new">
-        CREATE NEW GUEST
-      </button>
+      </div>
+      <div class="btn-container">
+        <button class="mat-flat-button" routerLink="/home/new-user/new">
+          CREATE NEW GUEST
+        </button>
+      </div>
     </mat-card-title>
-
     <table mat-table [dataSource]="guestsData" matSort>
       <!-- select Column -->
       <ng-container matColumnDef="select">
@@ -49,7 +65,7 @@
 
       <!-- Room Num Column -->
       <ng-container matColumnDef="roomNumber">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Room Num</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Room</th>
         <td mat-cell *matCellDef="let element">
           {{ element.roomNumber }}
         </td>
@@ -64,12 +80,20 @@
       </ng-container>
 
       <!-- valid untill Column -->
-      <ng-container matColumnDef="valid untill">
+      <ng-container matColumnDef="validUntill">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Valid untill</th>
         <td mat-cell *matCellDef="let element">
-          <div class="rating-container">
-            {{ element.validUntill }}
-          </div>
+          {{ element.validUntill.slice(0, 10) }}
+        </td>
+      </ng-container>
+
+      <!-- created / Modified Column -->
+      <ng-container matColumnDef="createdModified">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          Created / Edited
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.createdDate.slice(0, 10) }}
         </td>
       </ng-container>
 
@@ -77,10 +101,10 @@
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef>Actions</th>
         <td mat-cell *matCellDef="let element">
-          <div class="buttons-container">
+          <!-- <div class="buttons-container">
             <button
               class="mat-flat-button edit-btn"
-              [routerLink]="'/home/new-user/' + element.id"
+
             >
               EDIT
             </button>
@@ -91,22 +115,35 @@
             >
               DELETE
             </button>
-          </div>
+          </div> -->
+          <button mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu" xPosition="before">
+            <button mat-menu-item [routerLink]="'/home/new-user/' + element.id">
+              <mat-icon>mode_edit</mat-icon> Edit
+            </button>
+            <button
+              mat-menu-item
+              (click)="openDeleteGuestDialog(element.id, element.name)"
+            >
+              <mat-icon color="warn">delete</mat-icon> Delete
+            </button>
+          </mat-menu>
         </td>
       </ng-container>
 
       <!-- Row to show when the filter doesn't find anything -->
       <tr class="mat-row" *matNoDataRow>
-        <td class="mat-cell" colspan="4">
-          No guests to show "{{ searchInput.value }}"
-        </td>
+        <td class="mat-cell" colspan="4">No guests to show</td>
       </tr>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
+
     <mat-paginator
-      [pageSizeOptions]="[5, 10, 20]"
+      [pageSizeOptions]="[10, 20, 50]"
       showFirstLastButtons
       aria-label="Select page"
     >

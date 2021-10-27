@@ -1,16 +1,23 @@
-.container {
-  padding: 90px 30px 30px;
-}
-.vlink {
-  color: rgb(30, 85, 156);
-  cursor: pointer;
-}
-.vlink:hover {
-  color: rgb(0, 34, 107);
-}
-.qr-codes {
-  display: flex;
-  div {
-    padding: 5px;
+.guest-container {
+  padding: 90px 50px 50px;
+
+  .info-section {
+    line-height: 1.5;
+    img {
+      width: 200px;
+    }
+    p {
+      font-size: 18px;
+      text-align: justify;
+    }
+  }
+  h1 {
+    margin-top: 20px;
+  }
+
+  .vouchers-wrraper {
+    border: 1px solid rgba(0, 0, 0, 0.123);
+    border-radius: 5px;
+    padding: 20px;
   }
 }

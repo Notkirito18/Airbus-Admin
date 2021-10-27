@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/header/header.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
@@ -21,6 +22,9 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCardModule } from '@angular/material/card';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatMenuModule } from '@angular/material/menu';
 
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
@@ -35,16 +39,12 @@ import { SignUpComponent } from './pages/sign-up/sign-up.component';
 import { GuestPageComponent } from './pages/guest-page/guest-page.component';
 import { QrCodeCardComponent } from './components/qr-code-card/qr-code-card.component';
 import { GuestGeneratedComponent } from './components/guest-generated/guest-generated.component';
+import { environment } from 'src/environments/environment';
 
-// const firebaseConfig = {
-//   apiKey: 'AIzaSyDKHGQEHRrgyDKjKqRI0ln7kNo-w_Tf8y4',
-//   authDomain: 'airbus-900f9.firebaseapp.com',
-//   projectId: 'airbus-900f9',
-//   storageBucket: 'airbus-900f9.appspot.com',
-//   messagingSenderId: '724959592736',
-//   appId: '1:724959592736:web:7d2317ebf0f756a4c3d745',
-//   measurementId: 'G-F0T88TK45L',
-// };
+import * as firebase from 'firebase/app';
+import { QrCodeInfoComponent } from './components/qr-code-info/qr-code-info.component';
+
+firebase.initializeApp(environment.firebaseConfig);
 
 @NgModule({
   declarations: [
@@ -60,6 +60,7 @@ import { GuestGeneratedComponent } from './components/guest-generated/guest-gene
     GuestPageComponent,
     QrCodeCardComponent,
     GuestGeneratedComponent,
+    QrCodeInfoComponent,
   ],
   imports: [
     BrowserModule,
@@ -68,11 +69,12 @@ import { GuestGeneratedComponent } from './components/guest-generated/guest-gene
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    CommonModule,
 
-    // AngularFireModule.initializeApp(firebaseConfig),
-    // AngularFirestoreModule,
-    // AngularFireAuthModule,
-    // AngularFireStorageModule,
+    AngularFireModule,
+    AngularFirestoreModule,
+    AngularFireAuthModule,
+    AngularFireStorageModule,
 
     MatToolbarModule,
     MatIconModule,
@@ -85,6 +87,10 @@ import { GuestGeneratedComponent } from './components/guest-generated/guest-gene
     MatTableModule,
     MatPaginatorModule,
     MatDialogModule,
+    MatSortModule,
+    FlexLayoutModule,
+    MatIconModule,
+    MatMenuModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

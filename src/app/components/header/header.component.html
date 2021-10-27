@@ -1,8 +1,13 @@
 <mat-toolbar>
-  <div class="container">
+  <div class="header-container">
     <span class="logo" routerLink="/home">
       <img src="../../assets/aloft-01.png" alt="aloft-logo" />
     </span>
-    <button mat-button>Logout</button>
+    <div *ngIf="user; else login">
+      <button mat-button (click)="onLogoutClick()">Logout</button>
+    </div>
+    <ng-template #login>
+      <button mat-button (click)="onLoginClick()">Login</button>
+    </ng-template>
   </div>
 </mat-toolbar>

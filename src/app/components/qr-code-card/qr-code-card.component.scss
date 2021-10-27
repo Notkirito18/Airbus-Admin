@@ -1,0 +1,24 @@
+.mat-card {
+  padding: 20px;
+  margin-bottom: 15px;
+  text-align: center;
+  border-radius: 15px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  cursor: pointer;
+}
+.mat-card-title {
+  margin-bottom: 15px;
+}
+.mat-card-footer {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  padding-bottom: 10px;
+  .mat-icon {
+    margin: 5px;
+  }
+}
+.mat-card:hover {
+  border: 1px solid rgba(0, 0, 0, 0.5);
+}

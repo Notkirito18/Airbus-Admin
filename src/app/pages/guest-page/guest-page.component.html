@@ -1,16 +1,30 @@
-<div class="container">
-  <h1>{{ guest.name }}'s vouchers</h1>
-  <ol>
-    <li *ngFor="let v of guest.vouchersLis">
-      <span class="vlink" (click)="useVoucher(v.id)">{{ v.id }}</span>
-    </li>
-  </ol>
+<div class="guest-container">
+  <div class="info-section">
+    <img src="../../../assets/aloft-airbus.png" alt="airbus-logo" />
+    <p>
+      Hello <b>{{ guest.name }}</b
+      >, you have <b>{{ guest.vouchersLis.length }} Vouchers.</b>
+    </p>
+    <p>
+      Choose your favorite amenities from
+      <span style="font-weight: bold"
+        >The Canteen,Splash Pool Bar and Han Shi Fu,</span
+      >
+      with our compliments.
+    </p>
+  </div>
 
-  <div class="qr-codes">
-    <app-qr-code-card
-      *ngFor="let qrcode of guest.vouchersLis"
-      [voucher]="qrcode"
-    >
-    </app-qr-code-card>
+  <h1><b>Your Vouchers</b></h1>
+
+  <div class="vouchers-wrraper">
+    <div class="row">
+      <app-qr-code-card
+        class="col-sm-12 col-md-6 col-lg-3"
+        *ngFor="let qrcode of guest.vouchersLis; let i = index"
+        [voucher]="qrcode"
+        [index]="i"
+      >
+      </app-qr-code-card>
+    </div>
   </div>
 </div>

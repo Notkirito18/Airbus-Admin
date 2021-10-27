@@ -1,17 +1,25 @@
 <div class="background"></div>
-<div class="container">
+<div class="using-container">
   <div class="v-used">
-    <ng-container *ngIf="!voucherExpired; else expired">
+    <ng-container *ngIf="voucherExpired === 'no'">
       <div class="firstline">
         <span style="font-weight: bold">{{ guest.name }}</span> Have used a
         voucher
       </div>
     </ng-container>
-    <ng-template #expired>
+
+    <ng-container *ngIf="voucherExpired === 'expired'">
       <div class="firstline">
         This voucher is expired and can't be used again!
       </div>
-    </ng-template>
+    </ng-container>
+
+    <ng-container *ngIf="voucherExpired === 'notAuth'">
+      <div class="firstline">
+        You do not have the authority to consume the voucher!
+      </div>
+    </ng-container>
+
     <button mat-raised-button class="btn" (click)="seeMyVouchers()">
       See My Vouchers
     </button>

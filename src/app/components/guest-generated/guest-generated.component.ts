@@ -38,4 +38,8 @@ export class GuestGeneratedComponent {
     this.dialogRef.close();
     this.router.navigate(['/guest/' + id]);
   }
+  homePage() {
+    this.dialogRef.close();
+    this.router.navigate(['/home']);
+  }
 }

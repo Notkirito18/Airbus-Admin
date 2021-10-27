@@ -1,17 +1,25 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { AuthServiceService } from 'src/app/shared/auth/auth-service.service';
 
 @Component({
   selector: 'app-sign-up',
   templateUrl: './sign-up.component.html',
   styleUrls: ['./sign-up.component.scss'],
 })
-export class SignUpComponent implements OnInit {
+export class SignUpComponent implements OnInit, OnDestroy {
   signUpForm!: FormGroup;
   isLoggedIn = false;
 
-  constructor(private fb: FormBuilder, private router: Router) {}
+  signUpSub$!: Subscription;
+
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private authService: AuthServiceService
+  ) {}
 
   ngOnInit(): void {
     // signUp form
@@ -22,10 +30,19 @@ export class SignUpComponent implements OnInit {
     });
   }
 
-  submitSignUpForm(formValue: any) {}
-
-  // async submitSignUpForm(formValue: any) {
-  //   await this.authService.signUp(formValue.email, formValue.password);
-  //   if (this.authService.isLoggedIn) this.isLoggedIn = true;
-  // }
+  submitSignUpForm(formValue: any) {
+    this.signUpSub$ = this.authService
+      .signUpEmailAndPass(formValue.email, formValue.password)
+      .subscribe(
+        (response) => {
+          console.log('sign up response :', response);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+  }
+  ngOnDestroy(): void {
+    this.signUpSub$.unsubscribe();
+  }
 }

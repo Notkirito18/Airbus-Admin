@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { AuthServiceService } from 'src/app/shared/auth/auth-service.service';
 
 @Component({
   selector: 'app-login',
@@ -8,9 +10,15 @@ import { Router } from '@angular/router';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
+  loginSub$!: Subscription;
+
   logInForm!: FormGroup;
   isLoggedIn = false;
-  constructor(private fb: FormBuilder, private router: Router) {}
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private authService: AuthServiceService
+  ) {}
 
   ngOnInit(): void {
     // login form
@@ -20,11 +28,21 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  submitlogInForm(formValue: any) {}
+  submitlogInForm(formValue: any) {
+    this.loginSub$ = this.authService
+      .logInEmailAndPass(formValue.email, formValue.password)
+      .subscribe(
+        (response) => {
+          this.router.navigate(['/home']);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+  }
 
-  // async submitlogInForm(formValue: any) {
-
-  //   await this.authService.logIn(formValue.email, formValue.password);
-  //   if (this.authService.isLoggedIn) this.isLoggedIn = true;
-  // }
+  signInWithGoogle() {
+    // this.authService.signinWithGoogle();
+    alert('featur will be added soon');
+  }
 }

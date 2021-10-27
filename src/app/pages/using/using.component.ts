@@ -2,8 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { AuthServiceService } from 'src/app/shared/auth/auth-service.service';
 import { Guest } from 'src/app/shared/models';
 import { VouchersServiceService } from 'src/app/shared/vouchers service/vouchers-service.service';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-using',
@@ -15,6 +17,7 @@ export class UsingComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private vouchersService: VouchersServiceService,
+    private authService: AuthServiceService,
     private http: HttpClient
   ) {}
 
@@ -24,13 +27,20 @@ export class UsingComponent implements OnInit, OnDestroy {
   guest: Guest = new Guest('', '', 0, '', new Date(), []);
   guest$$!: Subscription;
 
-  voucherExpired = false;
+  voucherExpired!: string;
+
+  token!: string;
 
   ngOnInit(): void {
+    this.authService.user.pipe(take(1)).subscribe((user) => {
+      const token = user.token;
+      this.token = user.token;
+    });
+
     this.usedVoucherid$$ = this.route.params.subscribe((params: Params) => {
       this.usedVoucherid = params['id'];
       this.guest$$ = this.http
-        .get(this.vouchersService.url)
+        .get('https://airbus-900f9-default-rtdb.firebaseio.com/guests.json')
         .subscribe((data) => {
           const guestsArray = Object.values(data);
           for (let i = 0; i < guestsArray.length; i++) {
@@ -47,11 +57,17 @@ export class UsingComponent implements OnInit, OnDestroy {
           if (
             this.vouchersService.deleteVoucher(guestsArray, params['id'])[
               indexOfGuest
-            ].vouchersLis.length !== 0
+            ].vouchersLis.length === 0
           ) {
-            this.vouchersService.useVoucher(this.usedVoucherid);
+            this.voucherExpired = 'expired';
+            console.log('expired');
+          } else if (!this.token) {
+            this.voucherExpired = 'notAuth';
+            console.log('notAuth', 'token', this.token);
           } else {
-            this.voucherExpired = true;
+            this.vouchersService.useVoucher(this.usedVoucherid);
+            this.voucherExpired = 'no';
+            console.log('no');
           }
         });
     });
@@ -64,3 +80,5 @@ export class UsingComponent implements OnInit, OnDestroy {
     this.guest$$.unsubscribe();
   }
 }
+
+// 1635173163658_m1rkro7qo

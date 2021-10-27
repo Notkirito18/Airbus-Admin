@@ -1,18 +1,13 @@
-<div class="container">
+<div class="guest-container">
   <p mat-dialog-title>{{ data.guest.name }}'s vouchers has been created</p>
   <div mat-dialog-content>
     <div #qrcode></div>
+    <p>*Give QR Code to guest so that he can see his vouchers.</p>
   </div>
   <div mat-dialog-actions>
-    <button
-      mat-raised-button
-      class="btn"
-      (click)="goToGuestPage(data.guest.id)"
-    >
+    <button mat-raised-button (click)="goToGuestPage(data.guest.id)">
       Guest's page
     </button>
-    <button mat-raised-button class="btn" (click)="this.dialogRef.close()">
-      Create new guest
-    </button>
+    <button mat-raised-button (click)="homePage()">Home page</button>
   </div>
 </div>

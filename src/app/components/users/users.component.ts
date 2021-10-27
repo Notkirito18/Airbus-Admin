@@ -1,10 +1,4 @@
-import {
-  AfterViewInit,
-  Component,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Guest, Voucher } from 'src/app/shared/models';
@@ -14,14 +8,20 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { DeleteConfirmComponent } from '../delete-confirm/delete-confirm.component';
 import { MatDialog } from '@angular/material/dialog';
-import { VouchersServiceService } from 'src/app/shared/vouchers service/vouchers-service.service';
+import { MediaChange, MediaObserver } from '@angular/flex-layout';
+import {
+  displayFlexOrBlock,
+  hideElementResponsivly,
+  responsiveContainerPaddingPx,
+  responsiveWidth,
+} from '../../shared/helper';
 
 @Component({
   selector: 'app-users',
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.scss'],
 })
-export class UsersComponent implements OnInit, OnDestroy, AfterViewInit {
+export class UsersComponent implements OnInit, OnDestroy {
   guestsToShow: Guest[] = [];
   guestsData = new MatTableDataSource<Guest>(this.guestsToShow);
   guestsToShow$$!: Subscription;
@@ -35,23 +35,39 @@ export class UsersComponent implements OnInit, OnDestroy, AfterViewInit {
     'type',
     'roomNumber',
     'vouchers',
-    'valid untill',
+    'validUntill',
+    'createdModified',
     'actions',
   ];
 
   constructor(
     private guestsService: UsersStorageService,
-    private vouchersservice: VouchersServiceService,
     private dialog: MatDialog,
-    private router: Router
+    private router: Router,
+    private mediaObserver: MediaObserver
   ) {}
 
+  @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
+  mediaSubscription!: Subscription;
+  screenSize = 'lg';
+
   ngOnInit(): void {
+    // screen Size
+    this.mediaSubscription = this.mediaObserver.media$.subscribe(
+      (result: MediaChange) => {
+        this.screenSize = result.mqAlias;
+      }
+    );
+
     // showing guest list
     this.guestsToShow$$ = this.guestsService.Guests.subscribe(
       (guests: Guest[]) => {
         this.guestsToShow = guests;
         this.guestsData = new MatTableDataSource<Guest>(guests);
+        this.guestsData.sort = this.sort;
+        this.guestsData.paginator = this.paginator;
       }
     );
     this.guestsService.populateGuests();
@@ -69,25 +85,26 @@ export class UsersComponent implements OnInit, OnDestroy, AfterViewInit {
     console.log('removed ', id);
   }
 
-  @ViewChild(MatSort) sort!: MatSort;
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.guestsData.filter = filterValue.trim().toLowerCase();
 
-  ngAfterViewInit() {
-    this.guestsData.sort = this.sort;
-    this.guestsData.paginator = this.paginator;
+    if (this.guestsData.paginator) {
+      this.guestsData.paginator.firstPage();
+    }
   }
 
   ngOnDestroy() {
     this.guestsToShow$$.unsubscribe();
+    this.mediaSubscription.unsubscribe();
   }
+
+  responsiveContainerPaddingPx = responsiveContainerPaddingPx;
+  hideElementResponsivly = hideElementResponsivly;
+  responsiveWidth = responsiveWidth;
+  displayFlexOrBlock = displayFlexOrBlock;
 
   nameClick(id: string) {
     this.router.navigate(['guest', id]);
-  }
-
-  test() {
-    // this.vouchersservice.useVoucher('1634995312831_8q6jpvc0w');
-    // console.log('deleted v : 1634995312831_8q6jpvc0w');
-    this.router.navigate(['/using/' + this.voucherId]);
   }
 }

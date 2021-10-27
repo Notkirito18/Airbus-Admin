@@ -76,6 +76,7 @@ export class NewUserComponent implements OnInit, OnDestroy {
   }
 
   onSubmitForm(newGuest: any) {
+    // creating new guest
     const generatedId = Date.now().toString();
     let guestToAdd = new Guest(
       generatedId,
@@ -91,6 +92,7 @@ export class NewUserComponent implements OnInit, OnDestroy {
       new Date()
     );
 
+    // creating edited guest
     if (this.editingMode) {
       let guestToUpdate = new Guest(
         this.guestToEdit.id,
@@ -105,19 +107,20 @@ export class NewUserComponent implements OnInit, OnDestroy {
         ),
         new Date()
       );
-      console.log('editing');
       this.guestsService.updateGuest(this.guestToEdit.id, guestToUpdate);
       this.router.navigate(['/home/users']);
-    } else {
+    }
+    // pushing new guest
+    else {
       console.log('new guest added', guestToAdd);
       this.guestsService.addGuest(guestToAdd);
       // openning dialog
       this.newGuestForm.reset();
-      this.openDialog(guestToAdd);
+      this.openGuestDialog(guestToAdd);
     }
   }
 
-  openDialog(guest: Guest): void {
+  openGuestDialog(guest: Guest): void {
     this.dialog.open(GuestGeneratedComponent, {
       width: '350px',
       data: { guest },
