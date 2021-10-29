@@ -7,7 +7,9 @@ import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
 import { SignUpComponent } from './pages/sign-up/sign-up.component';
 import { UsingComponent } from './pages/using/using.component';
-import { AuthGuardGuard } from './shared/auth-guard.guard';
+import { VenderHomeComponent } from './pages/vender-home/vender-home.component';
+import { AuthGuardGuard } from './shared/guards/auth-guard.guard';
+import { SuperUserGuardGuard } from './shared/guards/super-user-guard.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: 'auth/logIn', pathMatch: 'full' },
@@ -17,15 +19,20 @@ const routes: Routes = [
   {
     path: 'home',
     component: HomeComponent,
-    canActivate: [AuthGuardGuard],
+    canActivate: [AuthGuardGuard, SuperUserGuardGuard],
     children: [
-      { path: '', redirectTo: 'users', pathMatch: 'full' },
-      { path: 'users', component: UsersComponent },
+      { path: '', redirectTo: 'guest-list', pathMatch: 'full' },
+      { path: 'guest-list', component: UsersComponent },
       { path: 'new-user/:id', component: NewUserComponent },
     ],
   },
   { path: 'using/:id', component: UsingComponent },
   { path: 'guest/:id', component: GuestPageComponent },
+  {
+    path: 'vhome',
+    component: VenderHomeComponent,
+    canActivate: [AuthGuardGuard],
+  },
 ];
 
 @NgModule({

@@ -14,17 +14,26 @@
     </p>
   </div>
 
-  <h1><b>Your Vouchers</b></h1>
-
-  <div class="vouchers-wrraper">
-    <div class="row">
-      <app-qr-code-card
-        class="col-sm-12 col-md-6 col-lg-3"
-        *ngFor="let qrcode of guest.vouchersLis; let i = index"
-        [voucher]="qrcode"
-        [index]="i"
-      >
-      </app-qr-code-card>
-    </div>
-  </div>
+  <mat-tab-group>
+    <mat-tab label="My Vouchers">
+      <div class="vouchers-wrraper">
+        <div class="row">
+          <app-qr-code-card
+            class="col-sm-12 col-md-6 col-lg-3"
+            *ngFor="let qrcode of guest.vouchersLis; let i = index"
+            [voucher]="qrcode"
+            [index]="i"
+          >
+          </app-qr-code-card>
+        </div>
+      </div>
+    </mat-tab>
+    <mat-tab label="Records">
+      <div class="vouchers-wrraper">
+        <div class="row">
+          <h1>History</h1>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
 </div>

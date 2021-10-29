@@ -32,7 +32,8 @@ export class QrCodeInfoComponent implements OnInit, AfterViewInit {
     @Inject(MAT_DIALOG_DATA) public data: { voucher: Voucher }
   ) {}
 
-  holder!: Guest;
+  holder: Guest = new Guest('', '', 0, '', new Date(), []);
+  // holder!: Guest;
   getolderSub$$!: Subscription;
 
   ngOnInit(): void {

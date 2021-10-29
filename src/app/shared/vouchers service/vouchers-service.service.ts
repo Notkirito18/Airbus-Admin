@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AuthServiceService } from '../auth/auth-service.service';
 import { Guest, Voucher } from '../models';
@@ -8,7 +8,7 @@ import { take } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root',
 })
-export class VouchersServiceService implements OnDestroy {
+export class VouchersServiceService {
   useVoucherSub$$!: Subscription;
 
   token!: string | any;
@@ -48,23 +48,22 @@ export class VouchersServiceService implements OnDestroy {
     this.authService.user.pipe(take(1)).subscribe((user) => {
       this.token = user.token;
       const token = user.token;
-      this.useVoucherSub$$ = this.http
-        .get(this.url + token)
-        .subscribe((data) => {
-          const guestsArray = Object.values(data);
-          let indexOfGuest = this.indexOfGuestFromId(
-            guestsArray,
-            voucherId.slice(0, 13)
-          );
-          if (
-            this.deleteVoucher(guestsArray, voucherId)[indexOfGuest].vouchersLis
-              .length !== 0
-          ) {
-            this.http
-              .put(this.url + token, this.deleteVoucher(guestsArray, voucherId))
-              .subscribe();
-          }
-        });
+      this.http.get(this.url + token).subscribe((data) => {
+        const guestsArray = Object.values(data);
+        let indexOfGuest = this.indexOfGuestFromId(
+          guestsArray,
+          voucherId.slice(0, 13)
+        );
+        if (
+          this.deleteVoucher(guestsArray, voucherId)[indexOfGuest].vouchersLis
+            .length !== 0
+        ) {
+          this.http
+            .put(this.url + token, this.deleteVoucher(guestsArray, voucherId))
+            .subscribe();
+          console.log('deleted', voucherId);
+        }
+      });
     });
   }
 
@@ -73,7 +72,7 @@ export class VouchersServiceService implements OnDestroy {
     let guestId = voucherId.slice(0, 13);
     for (let i = 0; i < arrayOfGuests.length; i++) {
       if (arrayOfGuests[i].id === guestId) {
-        let newVouchList = this.filterVouchers(
+        const newVouchList = this.filterVouchers(
           arrayOfGuests[i].vouchersLis,
           voucherId
         );
@@ -84,7 +83,9 @@ export class VouchersServiceService implements OnDestroy {
             arrayOfGuests[i].roomNumber,
             arrayOfGuests[i].type,
             arrayOfGuests[i].validUntill,
-            newVouchList,
+            newVouchList.length > 0
+              ? newVouchList
+              : [new Voucher('', '', new Date())],
             arrayOfGuests[i].createdDate
           )
         );
@@ -97,7 +98,6 @@ export class VouchersServiceService implements OnDestroy {
 
   filterVouchers(filteringArray: Voucher[], id: string) {
     let filteredArray = [];
-    let voucherNotFound = false;
     for (let i = 0; i < filteringArray.length; i++) {
       if (filteringArray[i].id !== id) {
         filteredArray.push(filteringArray[i]);
@@ -121,7 +121,30 @@ export class VouchersServiceService implements OnDestroy {
     return index;
   }
 
-  ngOnDestroy(): void {
-    this.useVoucherSub$$.unsubscribe();
+  deleteUnvalidVouchers() {
+    this.authService.user.pipe(take(1)).subscribe((user) => {
+      if (user) {
+        this.token = user.token;
+        const token = user.token;
+        this.http.get(this.url + token).subscribe((data) => {
+          const guestsArray = Object.values(data);
+          let updatedArray = guestsArray;
+          for (let i = 0; i < guestsArray.length; i++) {
+            for (let j = 0; j < guestsArray[i].vouchersLis.length; j++) {
+              const voucherValidUntill = new Date(
+                guestsArray[i].vouchersLis[j].validUntill.toString()
+              );
+              if (voucherValidUntill.getTime() < new Date().getTime()) {
+                updatedArray = this.deleteVoucher(
+                  updatedArray,
+                  guestsArray[i].vouchersLis[j].id
+                );
+              }
+            }
+          }
+          this.http.put(this.url + token, updatedArray).subscribe();
+        });
+      }
+    });
   }
 }

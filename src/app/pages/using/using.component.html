@@ -15,8 +15,9 @@
     </ng-container>
 
     <ng-container *ngIf="voucherExpired === 'notAuth'">
-      <div class="firstline">
-        You do not have the authority to consume the voucher!
+      <div class="not-auth">
+        You do not have the authority to consume vouchers, make sure you're
+        logged in to your account before scanning a voucher's code
       </div>
     </ng-container>
 

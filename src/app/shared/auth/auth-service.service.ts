@@ -2,14 +2,9 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs/operators';
 
-import {
-  getAuth,
-  signInWithPopup,
-  GoogleAuthProvider,
-  signOut,
-} from 'firebase/auth';
+import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { User } from '../models';
 import { HttpClient } from '@angular/common/http';
 
@@ -31,6 +26,8 @@ export class AuthServiceService {
   provider = new GoogleAuthProvider();
 
   user = new BehaviorSubject<User | any>(null);
+
+  userRank = new Subject<string>();
 
   key = 'AIzaSyDKHGQEHRrgyDKjKqRI0ln7kNo-w_Tf8y4';
 
@@ -72,7 +69,6 @@ export class AuthServiceService {
       )
       .pipe(
         tap((resData) => {
-          console.log('resData.expiresIn', resData.expiresIn);
           this.handleAuth(
             resData.email,
             resData.localId,
@@ -83,40 +79,43 @@ export class AuthServiceService {
       );
   }
 
-  // signinWithGoogle() {
-  //   const auth = getAuth();
-  //   signInWithPopup(auth, this.provider)
-  //     .then((result) => {
-  //       // This gives you a Google Access Token. You can use it to access the Google API.
-  //       const credential = GoogleAuthProvider.credentialFromResult(result);
-  //       const token = credential?.accessToken;
-  //       // The signed-in user info.
-  //       const user = result.user;
-  //       // ...
-  //       this.handleAuth(result.user.email, user.uid, token, 3600);
-  //       // this.router.navigate(['/home']);
-  //     })
-  //     .catch((error) => {
-  //       // Handle Errors here.
-  //       const errorCode = error.code;
-  //       const errorMessage = error.message;
-  //       // The email of the user's account used.
-  //       const email = error.email;
-  //       // The AuthCredential type that was used.
-  //       const credential = GoogleAuthProvider.credentialFromError(error);
-  //       // ...
-  //     });
-  // }
+  signinWithGoogle() {
+    const auth = getAuth();
+    signInWithPopup(auth, this.provider)
+      .then((result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const idtoken = credential?.idToken;
+        // The signed-in user info.
+        const user = result.user;
+        // ...
+        this.handleAuth(result.user.email, user.uid, idtoken, 3600);
+        // this.router.navigate(['/home']);
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.email;
+        // The AuthCredential type that was used.
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        // ...
+      });
+  }
 
-  private handleAuth(email: string, id: string, token: string, expIn: number) {
+  private handleAuth(
+    email: string | null,
+    id: string,
+    token: string | undefined,
+    expIn: number
+  ) {
     if (email && token) {
       const expDate = new Date(new Date().getTime() + expIn * 1000);
-      console.log('expiration date from handel auth :', expDate);
       const user = new User(email, id, token, expDate);
       this.user.next(user);
       this.autoLogout(expIn * 1000);
       localStorage.setItem('userData', JSON.stringify(user));
-      console.log('saved to local storage:', user);
     }
   }
 
@@ -135,21 +134,14 @@ export class AuthServiceService {
         userData._token,
         new Date(userData._tokenExpirationDate)
       );
-      console.log('if userdata check', userData);
-      console.log('loadedUser', loadedUser);
       if (loadedUser.token) {
         const expirationDuration =
           new Date(userData._tokenExpirationDate).getTime() -
           new Date().getTime();
         this.autoLogout(expirationDuration);
         this.user.next(loadedUser);
-        console.log(
-          'auto login worked',
-          'if userdata check + if loadedUser.token check'
-        );
       }
     } else {
-      console.log('auto login Failed');
       return;
     }
   }

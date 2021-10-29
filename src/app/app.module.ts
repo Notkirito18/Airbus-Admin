@@ -25,6 +25,10 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatRippleModule } from '@angular/material/core';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
@@ -43,6 +47,8 @@ import { environment } from 'src/environments/environment';
 
 import * as firebase from 'firebase/app';
 import { QrCodeInfoComponent } from './components/qr-code-info/qr-code-info.component';
+import { VenderHomeComponent } from './pages/vender-home/vender-home.component';
+import { MyFilterPipe } from './shared/myFilter.pipe';
 
 firebase.initializeApp(environment.firebaseConfig);
 
@@ -61,6 +67,8 @@ firebase.initializeApp(environment.firebaseConfig);
     QrCodeCardComponent,
     GuestGeneratedComponent,
     QrCodeInfoComponent,
+    VenderHomeComponent,
+    MyFilterPipe,
   ],
   imports: [
     BrowserModule,
@@ -91,6 +99,10 @@ firebase.initializeApp(environment.firebaseConfig);
     FlexLayoutModule,
     MatIconModule,
     MatMenuModule,
+    MatSnackBarModule,
+    MatRippleModule,
+    MatTabsModule,
+    MatExpansionModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

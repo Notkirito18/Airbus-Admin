@@ -1,8 +1,7 @@
 mat-toolbar {
-  z-index: 1;
+  z-index: 500;
   position: fixed;
   width: 100%;
-  background-color: #b71f6f;
   padding: 0px 50px;
   color: white;
   height: 70px;
@@ -14,6 +13,11 @@ mat-toolbar {
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  .logo-container {
+    display: flex;
+    gap: 25px;
+    align-items: center;
+  }
 }
 .menu-spacer {
   flex: 1 1 auto;
@@ -30,4 +34,13 @@ mat-toolbar {
   font-size: 1.1rem;
   font-weight: bold;
   letter-spacing: 3px;
+}
+.guest-header {
+  background-color: #b71f6f;
+}
+.vender-header {
+  background-color: #31c2a0;
+}
+.admin-header {
+  background-color: #536dfe;
 }

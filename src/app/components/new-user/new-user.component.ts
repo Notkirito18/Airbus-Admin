@@ -42,36 +42,41 @@ export class NewUserComponent implements OnInit, OnDestroy {
     });
 
     this.paramsSub$$ = this.route.params.subscribe((params: Params) => {
-      this.http.get(this.guestsService.url).subscribe((data) => {
-        let guestsArray = Object.values(data);
-        for (let i = 0; i < guestsArray.length; i++) {
-          if (guestsArray[i].id === params['id']) {
-            this.editingMode = true;
-            this.guestToEdit = guestsArray[i];
+      this.http
+        .get('https://airbus-900f9-default-rtdb.firebaseio.com/guests.json')
+        .subscribe((data) => {
+          let guestsArray = Object.values(data);
+          for (let i = 0; i < guestsArray.length; i++) {
+            if (guestsArray[i].id === params['id']) {
+              this.editingMode = true;
+              this.guestToEdit = guestsArray[i];
 
-            // init edit form
-            this.newGuestForm = this.fb.group({
-              name: [this.guestToEdit.name, Validators.required],
-              roomNumber: [this.guestToEdit.roomNumber, Validators.required],
-              vouchers: [
-                this.guestToEdit.vouchersLis.length,
-                Validators.required,
-              ],
-              type: [this.guestToEdit.type, Validators.required],
-              validUntill: [this.guestToEdit.validUntill, Validators.required],
-            });
+              // init edit form
+              this.newGuestForm = this.fb.group({
+                name: [this.guestToEdit.name, Validators.required],
+                roomNumber: [this.guestToEdit.roomNumber, Validators.required],
+                vouchers: [
+                  this.guestToEdit.vouchersLis.length,
+                  Validators.required,
+                ],
+                type: [this.guestToEdit.type, Validators.required],
+                validUntill: [
+                  new Date(this.guestToEdit.validUntill.toString()),
+                  Validators.required,
+                ],
+              });
 
-            //logging
-            console.log('condition met');
-            console.log(
-              'edit mode :',
-              this.editingMode,
-              '| guest to edit :',
-              this.guestToEdit
-            );
+              //logging
+              console.log('condition met');
+              console.log(
+                'edit mode :',
+                this.editingMode,
+                '| guest to edit :',
+                this.guestToEdit
+              );
+            }
           }
-        }
-      });
+        });
     });
   }
 
@@ -83,11 +88,11 @@ export class NewUserComponent implements OnInit, OnDestroy {
       newGuest.name,
       newGuest.roomNumber,
       newGuest.type,
-      newGuest.validUntill,
+      this.addHoursToDate(newGuest.validUntill, 1),
       this.vouchersService.vouchersGenerator(
         newGuest.vouchers,
         generatedId,
-        newGuest.validUntill
+        this.addHoursToDate(newGuest.validUntill, 1)
       ),
       new Date()
     );
@@ -99,16 +104,16 @@ export class NewUserComponent implements OnInit, OnDestroy {
         newGuest.name,
         newGuest.roomNumber,
         newGuest.type,
-        newGuest.validUntill,
+        this.addHoursToDate(newGuest.validUntill, 1),
         this.vouchersService.vouchersGenerator(
           newGuest.vouchers,
           this.guestToEdit.id,
-          newGuest.validUntill
+          this.addHoursToDate(newGuest.validUntill, 1)
         ),
         new Date()
       );
       this.guestsService.updateGuest(this.guestToEdit.id, guestToUpdate);
-      this.router.navigate(['/home/users']);
+      this.router.navigate(['/home']);
     }
     // pushing new guest
     else {
@@ -129,5 +134,8 @@ export class NewUserComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.paramsSub$$.unsubscribe();
+  }
+  addHoursToDate(date: Date, hours: number) {
+    return new Date(new Date(date).setHours(date.getHours() + hours));
   }
 }

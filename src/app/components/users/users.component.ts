@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { Guest, Voucher } from 'src/app/shared/models';
+import { Guest } from 'src/app/shared/models';
 import { UsersStorageService } from 'src/app/shared/storage service/users-storage.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -26,6 +26,7 @@ export class UsersComponent implements OnInit, OnDestroy {
   guestsData = new MatTableDataSource<Guest>(this.guestsToShow);
   guestsToShow$$!: Subscription;
   voucherId!: string;
+  myFilterString = '';
 
   editing!: Guest;
 
@@ -36,7 +37,6 @@ export class UsersComponent implements OnInit, OnDestroy {
     'roomNumber',
     'vouchers',
     'validUntill',
-    'createdModified',
     'actions',
   ];
 
@@ -61,11 +61,20 @@ export class UsersComponent implements OnInit, OnDestroy {
       }
     );
 
+    //sort fixing
+
     // showing guest list
     this.guestsToShow$$ = this.guestsService.Guests.subscribe(
       (guests: Guest[]) => {
         this.guestsToShow = guests;
         this.guestsData = new MatTableDataSource<Guest>(guests);
+        this.guestsData.sortingDataAccessor = (item: any, property: any) => {
+          if (property === 'vouchers') {
+            return item.vouchersLis.length;
+          } else {
+            return item[property];
+          }
+        };
         this.guestsData.sort = this.sort;
         this.guestsData.paginator = this.paginator;
       }

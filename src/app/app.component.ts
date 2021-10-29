@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { NavigationStart, Router } from '@angular/router';
 import { AuthServiceService } from './shared/auth/auth-service.service';
+import { VouchersServiceService } from './shared/vouchers service/vouchers-service.service';
 
 @Component({
   selector: 'app-root',
@@ -7,8 +9,26 @@ import { AuthServiceService } from './shared/auth/auth-service.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  constructor(private authService: AuthServiceService) {}
+  constructor(
+    private authService: AuthServiceService,
+    private vouchersService: VouchersServiceService,
+    private router: Router
+  ) {}
   ngOnInit() {
     this.authService.autoLogin();
+    this.vouchersService.deleteUnvalidVouchers();
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationStart) {
+        this.authService.user.subscribe((user) => {
+          if (user) {
+            user.id === 'G6QOm6b35tUUUz5sZrH3bo0oi3y2'
+              ? this.authService.userRank.next('admin')
+              : this.authService.userRank.next('vender');
+          } else {
+            this.authService.userRank.next('guest');
+          }
+        });
+      }
+    });
   }
 }

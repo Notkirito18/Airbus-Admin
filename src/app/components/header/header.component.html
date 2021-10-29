@@ -1,13 +1,35 @@
-<mat-toolbar>
+<mat-toolbar *ngIf="!user" class="guest-header">
+  <!-- Guests Header -->
   <div class="header-container">
-    <span class="logo" routerLink="/home">
+    <span matRipple class="logo" routerLink="/home">
       <img src="../../assets/aloft-01.png" alt="aloft-logo" />
     </span>
-    <div *ngIf="user; else login">
-      <button mat-button (click)="onLogoutClick()">Logout</button>
+    <button mat-button (click)="onLogoutClick()">Login</button>
+  </div>
+</mat-toolbar>
+<!-- Vender Header -->
+<mat-toolbar *ngIf="user && !admin" class="vender-header">
+  <div class="header-container">
+    <div class="logo-container">
+      <span matRipple class="logo" routerLink="/home">
+        <img src="../../assets/aloft-01.png" alt="aloft-logo" />
+      </span>
+      <h1><b>Vender</b></h1>
     </div>
-    <ng-template #login>
-      <button mat-button (click)="onLoginClick()">Login</button>
-    </ng-template>
+    <h1>Vender</h1>
+    <button mat-button (click)="onLogoutClick()">Logout</button>
+  </div>
+</mat-toolbar>
+<!-- Admin Header -->
+<mat-toolbar *ngIf="user && admin" class="admin-header">
+  <div class="header-container">
+    <div class="logo-container">
+      <span matRipple class="logo" routerLink="/home">
+        <img src="../../assets/aloft-01.png" alt="aloft-logo" />
+      </span>
+      <h1><b>Admin</b></h1>
+    </div>
+
+    <button mat-button (click)="onLogoutClick()">Logout</button>
   </div>
 </mat-toolbar>

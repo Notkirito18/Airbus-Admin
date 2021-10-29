@@ -26,6 +26,20 @@ export class GuestPageComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    // this.authService.user.pipe(take(1)).subscribe((user) => {
+    //   const token = user.token;
+    //   this.gettingGuestSub$ = this.route.params.subscribe((params: Params) => {
+    //     this.http.get(this.vouchersService.url + token).subscribe((data) => {
+    //       const guestsArray = Object.values(data);
+    //       for (let i = 0; i < guestsArray.length; i++) {
+    //         if (guestsArray[i].id === params['id']) {
+    //           this.guest = guestsArray[i];
+    //         }
+    //       }
+    //     });
+    //   });
+    // });
+
     this.gettingGuestSub$ = this.route.params.subscribe((params: Params) => {
       this.http
         .get('https://airbus-900f9-default-rtdb.firebaseio.com/guests.json')

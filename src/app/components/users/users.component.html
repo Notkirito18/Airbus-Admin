@@ -1,18 +1,140 @@
 <div [ngStyle]="responsiveContainerPaddingPx(screenSize, 10, 10, 50, 70)">
-  <mat-card class="mat-card table-card">
-    <mat-card-title
-      [ngStyle]="displayFlexOrBlock(screenSize, true, true, true, false)"
-    >
-      <div
-        class="title"
-        [ngStyle]="hideElementResponsivly(screenSize, false, true, true, true)"
+  <ng-container
+    *ngIf="screenSize === 'lg' || screenSize === 'md'; else expansionView"
+  >
+    <mat-card class="mat-card table-card">
+      <mat-card-title
+        [ngStyle]="displayFlexOrBlock(screenSize, true, true, true, false)"
       >
-        Guests
-        <span class="subtitle">({{ guestsToShow.length }})</span>
-      </div>
+        <div class="title">
+          Guests
+          <span class="subtitle">({{ guestsToShow.length }})</span>
+        </div>
 
-      <!-- search bar -->
+        <!-- search bar -->
 
+        <div
+          class="search-bar"
+          [ngStyle]="responsiveWidth(screenSize, 350, 350, 450, 550)"
+        >
+          <mat-form-field>
+            <mat-label
+              ><mat-icon class="search-icon">search</mat-icon>Search</mat-label
+            >
+            <input
+              matInput
+              placeholder="Guest Name"
+              #searchInput
+              (keyup)="applyFilter($event)"
+            />
+          </mat-form-field>
+        </div>
+        <div class="btn-container">
+          <button class="mat-flat-button" routerLink="/home/new-user/new">
+            CREATE NEW GUEST
+          </button>
+        </div>
+      </mat-card-title>
+
+      <!-- Table view -->
+      <table mat-table [dataSource]="guestsData" matSort>
+        <!-- select Column -->
+        <ng-container matColumnDef="select">
+          <th mat-header-cell *matHeaderCellDef>
+            <input type="checkbox" />
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <input type="checkbox" />
+          </td>
+        </ng-container>
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+          <td mat-cell *matCellDef="let element">
+            <span class="title-td" (click)="nameClick(element.id)">{{
+              element.name
+            }}</span>
+          </td>
+        </ng-container>
+
+        <!-- type Column -->
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Type</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.type === "starter" ? "Starter" : "House Beverage" }}
+          </td>
+        </ng-container>
+
+        <!-- Room Num Column -->
+        <ng-container matColumnDef="roomNumber">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Room</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.roomNumber }}
+          </td>
+        </ng-container>
+
+        <!-- Vouchers Column -->
+        <ng-container matColumnDef="vouchers">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Vouchers</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.vouchersLis.length }}
+          </td>
+        </ng-container>
+
+        <!-- valid untill Column -->
+        <ng-container matColumnDef="validUntill">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            Valid untill
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.validUntill.slice(0, 10) }}
+          </td>
+        </ng-container>
+
+        <!-- actions Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-icon-button [matMenuTriggerFor]="menu">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu" xPosition="before">
+              <button
+                mat-menu-item
+                [routerLink]="'/home/new-user/' + element.id"
+              >
+                <mat-icon>mode_edit</mat-icon> Edit
+              </button>
+              <button
+                mat-menu-item
+                (click)="openDeleteGuestDialog(element.id, element.name)"
+              >
+                <mat-icon color="warn">delete</mat-icon> Delete
+              </button>
+            </mat-menu>
+          </td>
+        </ng-container>
+
+        <!-- Row to show when the filter doesn't find anything -->
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="4">No guests to show</td>
+        </tr>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+
+      <mat-paginator
+        [pageSizeOptions]="[10, 20, 50]"
+        showFirstLastButtons
+        aria-label="Select page"
+      >
+      </mat-paginator>
+    </mat-card>
+  </ng-container>
+  <!-- Expansion View -->
+  <ng-template #expansionView>
+    <div class="expansion-view-container">
       <div
         class="search-bar"
         [ngStyle]="responsiveWidth(screenSize, 350, 350, 450, 550)"
@@ -24,131 +146,66 @@
           <input
             matInput
             placeholder="Guest Name"
-            #searchInput
-            (keyup)="applyFilter($event)"
+            [(ngModel)]="myFilterString"
           />
         </mat-form-field>
       </div>
-      <div class="btn-container">
-        <button class="mat-flat-button" routerLink="/home/new-user/new">
-          CREATE NEW GUEST
-        </button>
+      <div class="title-and-btn">
+        <div class="title">
+          Guests
+          <span class="subtitle">({{ guestsToShow.length }})</span>
+        </div>
+        <div class="btn-container">
+          <button class="mat-flat-button" routerLink="/home/new-user/new">
+            CREATE NEW GUEST
+          </button>
+        </div>
       </div>
-    </mat-card-title>
-    <table mat-table [dataSource]="guestsData" matSort>
-      <!-- select Column -->
-      <ng-container matColumnDef="select">
-        <th mat-header-cell *matHeaderCellDef>
-          <input type="checkbox" />
-        </th>
-        <td mat-cell *matCellDef="let element">
-          <input type="checkbox" />
-        </td>
-      </ng-container>
-      <!-- Name Column -->
-      <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-        <td mat-cell *matCellDef="let element">
-          <span class="title-td" (click)="nameClick(element.id)">{{
-            element.name
-          }}</span>
-        </td>
-      </ng-container>
-
-      <!-- type Column -->
-      <ng-container matColumnDef="type">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Type</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.type }}
-        </td>
-      </ng-container>
-
-      <!-- Room Num Column -->
-      <ng-container matColumnDef="roomNumber">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Room</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.roomNumber }}
-        </td>
-      </ng-container>
-
-      <!-- Vouchers Column -->
-      <ng-container matColumnDef="vouchers">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Vouchers</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.vouchersLis.length }}
-        </td>
-      </ng-container>
-
-      <!-- valid untill Column -->
-      <ng-container matColumnDef="validUntill">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Valid untill</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.validUntill.slice(0, 10) }}
-        </td>
-      </ng-container>
-
-      <!-- created / Modified Column -->
-      <ng-container matColumnDef="createdModified">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          Created / Edited
-        </th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.createdDate.slice(0, 10) }}
-        </td>
-      </ng-container>
-
-      <!-- actions Column -->
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>Actions</th>
-        <td mat-cell *matCellDef="let element">
-          <!-- <div class="buttons-container">
-            <button
-              class="mat-flat-button edit-btn"
-
+      <!-- Guests -->
+      <mat-expansion-panel
+        *ngFor="let element of guestsToShow | myfilter: myFilterString"
+      >
+        <mat-expansion-panel-header>
+          <mat-panel-title class="mat-panel-title">
+            <mat-icon
+              class="circle"
+              [ngStyle]="{
+                color: element.type === 'starter' ? '#536dfe' : '#31c2a0'
+              }"
+              >circle</mat-icon
             >
-              EDIT
+            {{ element.name }}
+            <span class="vouchers-span">
+              ({{ element.vouchersLis.length }})</span
+            >
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="guest-info">
+          <div>Room : {{ element.roomNumber }}</div>
+          <div>
+            Type :
+            {{ element.type === "starter" ? "Starter" : "House Beverage" }}
+          </div>
+          <div>Vouchers : {{ element.vouchersLis.length }}</div>
+          <div>Created date: {{ element.createdDate.slice(0, 10) }}</div>
+          <div>Valid Untill : {{ element.validUntill.slice(0, 10) }}</div>
+        </div>
+        <div class="expansion-btn-container">
+          <button mat-raised-button class="guest-page-btn">Guest Page</button>
+          <div class="manage-btn">
+            <button mat-button [routerLink]="'/home/new-user/' + element.id">
+              <mat-icon>mode_edit</mat-icon>
             </button>
             <button
-              mat-raised-button
+              mat-button
               color="warn"
               (click)="openDeleteGuestDialog(element.id, element.name)"
             >
-              DELETE
+              <mat-icon>delete</mat-icon>
             </button>
-          </div> -->
-          <button mat-icon-button [matMenuTriggerFor]="menu">
-            <mat-icon>more_vert</mat-icon>
-          </button>
-          <mat-menu #menu="matMenu" xPosition="before">
-            <button mat-menu-item [routerLink]="'/home/new-user/' + element.id">
-              <mat-icon>mode_edit</mat-icon> Edit
-            </button>
-            <button
-              mat-menu-item
-              (click)="openDeleteGuestDialog(element.id, element.name)"
-            >
-              <mat-icon color="warn">delete</mat-icon> Delete
-            </button>
-          </mat-menu>
-        </td>
-      </ng-container>
-
-      <!-- Row to show when the filter doesn't find anything -->
-      <tr class="mat-row" *matNoDataRow>
-        <td class="mat-cell" colspan="4">No guests to show</td>
-      </tr>
-
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-    </table>
-
-    <mat-paginator
-      [pageSizeOptions]="[10, 20, 50]"
-      showFirstLastButtons
-      aria-label="Select page"
-    >
-    </mat-paginator>
-  </mat-card>
+          </div>
+        </div>
+      </mat-expansion-panel>
+    </div>
+  </ng-template>
 </div>
-<!-- <input type="text" [(ngModel)]="voucherId" />
-<button (click)="test()">useVoucher</button> -->

@@ -6,42 +6,41 @@ mat-card {
   .mat-card-title {
     flex-wrap: wrap;
     align-items: center;
-    .title {
-      width: 160px;
-      min-width: 180px;
-      font-size: 21px;
-      font-weight: 400;
-      margin-left: 1%;
-      .subtitle {
-        display: inline;
-      }
-    }
-    .search-bar {
-      .mat-form-field {
-        position: relative;
-        width: 100%;
-        padding: 0;
-        font-size: 21px;
-        mat-label {
-          display: flex;
-          align-items: center;
-        }
-      }
-    }
-    .btn-container {
+  }
+}
+.title {
+  width: 160px;
+  min-width: 180px;
+  font-size: 21px;
+  font-weight: 400;
+  margin-left: 1%;
+  .subtitle {
+    display: inline;
+  }
+}
+.search-bar {
+  .mat-form-field {
+    position: relative;
+    width: 100%;
+    padding: 0;
+    font-size: 21px;
+    mat-label {
       display: flex;
-      width: 260px;
-      min-width: 180px;
       align-items: center;
-      // justify-content: end;
-      button {
-        background-color: #31c2a0;
-        color: white;
-      }
     }
   }
 }
-
+.btn-container {
+  display: flex;
+  width: 260px;
+  min-width: 180px;
+  align-items: center;
+  // justify-content: end;
+  button {
+    background-color: #536dfe;
+    color: white;
+  }
+}
 .table-card {
   margin: 0px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
@@ -72,25 +71,22 @@ mat-card {
       }
     }
     .mat-column-name {
-      width: 20%;
+      width: 27%;
     }
     .mat-column-type {
-      width: 15%;
+      width: 18%;
     }
     .mat-column-roomNumber {
-      width: 14%;
+      width: 15%;
     }
     .mat-column-vouchers {
-      width: 14%;
+      width: 15%;
     }
     .mat-column-validUntill {
       width: 15%;
     }
-    .mat-column-createdModified {
-      width: 15%;
-    }
     .mat-column-actions {
-      width: 3%;
+      width: 5%;
       text-align: center;
       .buttons-container {
         display: flex;
@@ -110,6 +106,47 @@ mat-card {
 .title-td:hover {
   color: rgb(0, 34, 107);
 }
+
+.expansion-view-container {
+  padding: 25px 15px 15px;
+  line-height: 3;
+  color: #6e6e6e;
+  .title-and-btn {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+.mat-expansion-panel {
+  margin-top: 15px;
+  .mat-panel-title {
+    display: flex;
+    align-items: center;
+    .circle {
+      transform: scale(0.5);
+      // margin-right: 8px;
+    }
+    .vouchers-span {
+      color: #6e6e6e;
+      margin-left: 8px;
+    }
+  }
+}
+.expansion-btn-container {
+  display: flex;
+  justify-content: space-between;
+  .guest-page-btn {
+    background-color: #536dfe;
+    color: white;
+  }
+}
+.guest-info {
+  div {
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 3px solid rgba(0, 0, 0, 0.1);
+  }
+}
+
 @media only screen and (min-width: 1200px) {
   .mat-card-title {
     justify-content: space-between;
