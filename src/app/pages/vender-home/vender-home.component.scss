@@ -1,11 +1,16 @@
+.use-vouchers-container {
+  padding: 30px;
+}
+
+::ng-deep .mat-tab-body-content {
+  display: flex;
+  justify-content: center;
+}
+
 .vender-home-container {
   padding: 90px 30px 30px;
 }
 .manual-use {
-  // display: flex;
-  // justify-content: space-between;
-  // align-items: center;
-  // width: 50%;
   text-align: center;
   .mat-form-field {
     width: 90%;

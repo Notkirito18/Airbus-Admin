@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Guest } from 'src/app/shared/models';
@@ -23,6 +23,8 @@ import { GuestGeneratedComponent } from '../guest-generated/guest-generated.comp
   styleUrls: ['./users.component.scss'],
 })
 export class UsersComponent implements OnInit, OnDestroy {
+  @Input() adminUser!: boolean;
+
   guestsToShow: Guest[] = [];
   guestsData = new MatTableDataSource<Guest>(this.guestsToShow);
   guestsToShow$$!: Subscription;

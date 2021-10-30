@@ -49,6 +49,7 @@ import * as firebase from 'firebase/app';
 import { QrCodeInfoComponent } from './components/qr-code-info/qr-code-info.component';
 import { VenderHomeComponent } from './pages/vender-home/vender-home.component';
 import { MyFilterPipe } from './shared/myFilter.pipe';
+import { RecordsComponent } from './components/records/records.component';
 
 firebase.initializeApp(environment.firebaseConfig);
 
@@ -69,6 +70,7 @@ firebase.initializeApp(environment.firebaseConfig);
     QrCodeInfoComponent,
     VenderHomeComponent,
     MyFilterPipe,
+    RecordsComponent,
   ],
   imports: [
     BrowserModule,

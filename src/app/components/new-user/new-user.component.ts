@@ -4,10 +4,12 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { Guest } from 'src/app/shared/models';
+import { AuthServiceService } from 'src/app/shared/auth/auth-service.service';
+import { Guest, Record } from 'src/app/shared/models';
 import { UsersStorageService } from 'src/app/shared/storage service/users-storage.service';
 import { VouchersServiceService } from 'src/app/shared/vouchers service/vouchers-service.service';
 import { GuestGeneratedComponent } from '../guest-generated/guest-generated.component';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-new-user',
@@ -26,6 +28,7 @@ export class NewUserComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private guestsService: UsersStorageService,
     private vouchersService: VouchersServiceService,
+    private authService: AuthServiceService,
     private router: Router,
     private route: ActivatedRoute,
     private http: HttpClient,
@@ -118,6 +121,20 @@ export class NewUserComponent implements OnInit, OnDestroy {
     // pushing new guest
     else {
       console.log('new guest added', guestToAdd);
+      //saving to records
+      this.authService.user.pipe(take(1)).subscribe((user) => {
+        const token = user.token;
+        this.http
+          .post(
+            'https://airbus-900f9-default-rtdb.firebaseio.com/records.json?auth=' +
+              token,
+            new Record(new Date(), 'guest_create', guestToAdd)
+          )
+          .subscribe((result) => {
+            console.log('registered record', result);
+          });
+      });
+
       this.guestsService.addGuest(guestToAdd);
       // openning dialog
       this.newGuestForm.reset();

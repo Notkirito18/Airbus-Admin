@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { AuthServiceService } from '../auth/auth-service.service';
 import { Guest, Voucher } from '../models';
 import { take } from 'rxjs/operators';

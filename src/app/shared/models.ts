@@ -34,3 +34,11 @@ export class User {
     }
   }
 }
+export class Record {
+  constructor(
+    public date: Date,
+    public type: string,
+    public guest?: Guest,
+    public Voucher?: Voucher
+  ) {}
+}

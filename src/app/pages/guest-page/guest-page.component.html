@@ -19,7 +19,7 @@
       <div class="vouchers-wrraper">
         <div class="row">
           <app-qr-code-card
-            class="col-sm-12 col-md-6 col-lg-3"
+            class="col-sm-12 col-md-6 col-lg-3 fix"
             *ngFor="let qrcode of guest.vouchersLis; let i = index"
             [voucher]="qrcode"
             [index]="i"

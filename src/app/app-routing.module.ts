@@ -20,11 +20,11 @@ const routes: Routes = [
     path: 'home',
     component: HomeComponent,
     canActivate: [AuthGuardGuard, SuperUserGuardGuard],
-    children: [
-      { path: '', redirectTo: 'guest-list', pathMatch: 'full' },
-      { path: 'guest-list', component: UsersComponent },
-      { path: 'new-user/:id', component: NewUserComponent },
-    ],
+  },
+  {
+    path: 'new-user/:id',
+    component: NewUserComponent,
+    canActivate: [AuthGuardGuard, SuperUserGuardGuard],
   },
   { path: 'using/:id', component: UsingComponent },
   { path: 'guest/:id', component: GuestPageComponent },

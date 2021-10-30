@@ -32,10 +32,10 @@ mat-card {
 }
 .btn-container {
   display: flex;
-  width: 260px;
-  min-width: 180px;
+  // width: 260px;
+  // min-width: 180px;
   align-items: center;
-  margin-left: -20px;
+  // margin-left: -20px;
   // justify-content: end;
   button {
     background-color: #536dfe;
@@ -112,10 +112,6 @@ mat-card {
   padding: 25px 15px 15px;
   line-height: 3;
   color: #6e6e6e;
-  .title-and-btn {
-    display: flex;
-    justify-content: space-between;
-  }
 }
 .mat-expansion-panel {
   margin-top: 15px;
@@ -124,7 +120,6 @@ mat-card {
     align-items: center;
     .circle {
       transform: scale(0.5);
-      // margin-right: 8px;
     }
     .vouchers-span {
       color: #6e6e6e;

@@ -3,7 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthServiceService } from 'src/app/shared/auth/auth-service.service';
-import { Guest } from 'src/app/shared/models';
+import { Guest, Record, Voucher } from 'src/app/shared/models';
 import { VouchersServiceService } from 'src/app/shared/vouchers service/vouchers-service.service';
 import { take } from 'rxjs/operators';
 
@@ -21,11 +21,15 @@ export class UsingComponent implements OnInit, OnDestroy {
     private http: HttpClient
   ) {}
 
+  voucherUsed!: Voucher;
+
   usedVoucherid!: string;
   usedVoucherid$$!: Subscription;
 
   guest: Guest = new Guest('', '', 0, '', new Date(), []);
   guest$$!: Subscription;
+
+  savingRecordSub$$!: Subscription;
 
   voucherExpired!: string;
 
@@ -49,6 +53,12 @@ export class UsingComponent implements OnInit, OnDestroy {
               console.log('defined guest', guestsArray[i]);
             }
           }
+          for (let i = 0; i < this.guest.vouchersLis.length; i++) {
+            if (this.guest.vouchersLis[i].id === this.usedVoucherid) {
+              this.voucherUsed = this.guest.vouchersLis[i];
+            }
+          }
+
           // ckecking availibility
           let indexOfGuest = this.vouchersService.indexOfGuestFromId(
             guestsArray,
@@ -65,6 +75,21 @@ export class UsingComponent implements OnInit, OnDestroy {
             this.voucherExpired = 'notAuth';
             console.log('notAuth', 'token', this.token);
           } else {
+            // saving record of usage
+            this.http
+              .post(
+                'https://airbus-900f9-default-rtdb.firebaseio.com/records.json?auth=' +
+                  this.token,
+                new Record(
+                  new Date(),
+                  'voucher_use',
+                  this.guest,
+                  this.voucherUsed
+                )
+              )
+              .subscribe((result) => {
+                console.log('registered record', result);
+              });
             this.vouchersService.useVoucher(this.usedVoucherid);
             this.voucherExpired = 'no';
             console.log('no');
@@ -80,5 +105,3 @@ export class UsingComponent implements OnInit, OnDestroy {
     this.guest$$.unsubscribe();
   }
 }
-
-// 1635173163658_m1rkro7qo

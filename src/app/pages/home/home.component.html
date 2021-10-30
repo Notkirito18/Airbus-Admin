@@ -1,1 +1,36 @@
-<router-outlet></router-outlet>
+<div class="home-container">
+  <mat-tab-group>
+    <mat-tab label="Guests">
+      <div>
+        <app-users [adminUser]="true"></app-users>
+      </div>
+    </mat-tab>
+    <mat-tab label="Use Vouchers">
+      <div class="use-vouchers-container">
+        <h1>Welcome Vender</h1>
+        <p>
+          To use a guests voucher paste the voucehr id in the next field, or
+          scan the voucher's QR Code with QR Codes scanner app (recommended).
+        </p>
+        <div class="manual-use">
+          <mat-form-field appearance="outline">
+            <mat-label>Voucher ID</mat-label>
+            <input
+              matInput
+              [(ngModel)]="voucherIdToUse"
+              placeholder="Voucher ID"
+            />
+          </mat-form-field>
+          <div class="btn-container">
+            <button mat-raised-button (click)="useVoucherClick()">
+              Use Voucher
+            </button>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+    <mat-tab label="Records">
+      <app-records></app-records>
+    </mat-tab>
+  </mat-tab-group>
+</div>
