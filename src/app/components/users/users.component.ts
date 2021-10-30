@@ -15,6 +15,7 @@ import {
   responsiveContainerPaddingPx,
   responsiveWidth,
 } from '../../shared/helper';
+import { GuestGeneratedComponent } from '../guest-generated/guest-generated.component';
 
 @Component({
   selector: 'app-users',
@@ -103,6 +104,13 @@ export class UsersComponent implements OnInit, OnDestroy {
     }
   }
 
+  openGuestDialog(guest: Guest): void {
+    this.dialog.open(GuestGeneratedComponent, {
+      width: '350px',
+      data: { guest },
+    });
+  }
+
   ngOnDestroy() {
     this.guestsToShow$$.unsubscribe();
     this.mediaSubscription.unsubscribe();
@@ -113,7 +121,7 @@ export class UsersComponent implements OnInit, OnDestroy {
   responsiveWidth = responsiveWidth;
   displayFlexOrBlock = displayFlexOrBlock;
 
-  nameClick(id: string) {
-    this.router.navigate(['guest', id]);
-  }
+  // nameClick(id: string) {
+  //   this.router.navigate(['guest', id]);
+  // }
 }

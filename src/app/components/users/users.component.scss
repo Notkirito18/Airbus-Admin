@@ -35,6 +35,7 @@ mat-card {
   width: 260px;
   min-width: 180px;
   align-items: center;
+  margin-left: -20px;
   // justify-content: end;
   button {
     background-color: #536dfe;
@@ -141,9 +142,15 @@ mat-card {
 }
 .guest-info {
   div {
+    display: flex;
+    align-items: center;
     margin-bottom: 10px;
     padding-bottom: 10px;
     border-bottom: 3px solid rgba(0, 0, 0, 0.1);
+    mat-icon {
+      margin-right: 8px;
+      transform: scale(0.8);
+    }
   }
 }
 

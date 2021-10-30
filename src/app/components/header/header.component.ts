@@ -32,6 +32,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
     });
   }
 
+  logoReroute() {
+    if (this.user) {
+      if (this.admin) {
+        this.router.navigate(['/home']);
+      } else {
+        this.router.navigate(['/vhome']);
+      }
+    }
+  }
+
   onLoginClick() {
     this.router.navigate(['/auth']);
   }

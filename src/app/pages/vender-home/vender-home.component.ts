@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-vender-home',
@@ -6,7 +7,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./vender-home.component.scss'],
 })
 export class VenderHomeComponent implements OnInit {
-  constructor() {}
+  constructor(private router: Router) {}
+  voucherIdToUse!: string;
 
   ngOnInit(): void {}
+
+  useVoucherClick() {
+    this.router.navigate(['/using/' + this.voucherIdToUse]);
+  }
 }
