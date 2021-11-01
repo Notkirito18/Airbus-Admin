@@ -6,12 +6,12 @@
       >,<b>
         {{
           guestHasNoValidVouchers
-            ? "unfortunatly you have no valid Vouchers."
-            : "you have" + guest.vouchersLis.length + "Vouchers."
+            ? " unfortunatly you have no valid Vouchers."
+            : " you have " + guest.vouchersLis.length + " Vouchers."
         }}
       </b>
     </p>
-    <p>
+    <p *ngIf="!guestHasNoValidVouchers">
       Choose your favorite amenities from
       <span style="font-weight: bold"
         >The Canteen,Splash Pool Bar and Han Shi Fu,</span
@@ -22,22 +22,23 @@
 
   <mat-tab-group>
     <mat-tab label="My Vouchers">
-      <ng-container
-        *ngIf="!guestHasNoValidVouchers; else noVouchers"
-        class="vouchers-wrraper"
-      >
-        <div class="row">
-          <app-qr-code-card
-            class="col-sm-12 col-md-6 col-lg-3 fix"
-            *ngFor="let qrcode of guest.vouchersLis; let i = index"
-            [voucher]="qrcode"
-            [index]="i"
-          >
-          </app-qr-code-card>
+      <ng-container *ngIf="!guestHasNoValidVouchers; else noVouchers">
+        <div class="vouchers-wrraper">
+          <div class="row">
+            <app-qr-code-card
+              class="col-sm-12 col-md-6 col-lg-3 fix"
+              *ngFor="let qrcode of guest.vouchersLis; let i = index"
+              [voucher]="qrcode"
+              [index]="i"
+            >
+            </app-qr-code-card>
+          </div>
         </div>
       </ng-container>
       <ng-template #noVouchers>
-        <h3>You don't have any valid vouchers</h3>
+        <div class="vouchers-wrraper">
+          <h3>You don't have any valid vouchers</h3>
+        </div>
       </ng-template>
     </mat-tab>
     <mat-tab label="History">

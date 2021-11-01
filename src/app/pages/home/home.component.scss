@@ -2,11 +2,6 @@
   padding: 30px;
 }
 
-// ::ng-deep .mat-tab-body-content {
-//   display: flex;
-//   justify-content: center;
-// }
-
 .home-container {
   padding: 90px 30px 30px;
 }
@@ -44,6 +39,10 @@
     padding: 0px 16px;
     margin: 5px 0px;
   }
+  mat-icon {
+    margin-right: 5px;
+    margin-left: -5px;
+  }
 }
 
 ::ng-deep .mat-form-field-wrapper {
@@ -53,7 +52,9 @@ img {
   width: 250px;
   margin: 20px;
 }
-
+.use-btn-container {
+  justify-content: center;
+}
 @media only screen and (max-width: 650px) {
   img {
     width: 150px;
@@ -66,4 +67,8 @@ img {
       margin-top: 8px;
     }
   }
+}
+.table-center {
+  display: flex;
+  justify-content: center;
 }

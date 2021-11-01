@@ -32,14 +32,17 @@ mat-card {
 }
 .btn-container {
   display: flex;
-  // width: 260px;
-  // min-width: 180px;
   align-items: center;
-  // margin-left: -20px;
-  // justify-content: end;
+
   button {
+    display: flex;
+    align-items: center;
     background-color: #536dfe;
     color: white;
+  }
+  mat-icon {
+    margin-right: 5px;
+    margin-left: -5px;
   }
 }
 .table-card {

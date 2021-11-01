@@ -1,7 +1,7 @@
 <div class="home-container">
   <mat-tab-group>
     <mat-tab label="Guests">
-      <div>
+      <div class="table-center">
         <app-users [adminUser]="true"></app-users>
       </div>
     </mat-tab>
@@ -21,7 +21,7 @@
               placeholder="Voucher ID"
             />
           </mat-form-field>
-          <div class="btn-container">
+          <div class="use-btn-container btn-container">
             <button mat-raised-button (click)="useVoucherClick()">
               Use Voucher
             </button>
@@ -56,7 +56,7 @@
                 mat-flat-button
                 class="pdf-btn"
               >
-                GET RECORDS AS PDF
+                <mat-icon>description</mat-icon> GET RECORDS AS PDF
               </button>
             </div>
             <div class="col-md-4 btn-container">
@@ -67,7 +67,7 @@
                 color="warn"
                 class="clear-btn"
               >
-                CLEAR RECORDS
+                <mat-icon>delete</mat-icon> CLEAR ALL RECORDS
               </button>
             </div>
           </div>
