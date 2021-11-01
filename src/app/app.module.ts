@@ -29,6 +29,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatRippleModule } from '@angular/material/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatSelectModule } from '@angular/material/select';
 
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
@@ -49,7 +50,10 @@ import * as firebase from 'firebase/app';
 import { QrCodeInfoComponent } from './components/qr-code-info/qr-code-info.component';
 import { VenderHomeComponent } from './pages/vender-home/vender-home.component';
 import { MyFilterPipe } from './shared/myFilter.pipe';
+import { sortRecordsPipe } from './shared/sortRecords.pipe';
+import { filterRecordsPipe } from './shared/filterRecords.pipe';
 import { RecordsComponent } from './components/records/records.component';
+import { DeleteConfirmRecordsComponent } from './components/delete-confirm-records/delete-confirm-records.component';
 
 firebase.initializeApp(environment.firebaseConfig);
 
@@ -70,7 +74,10 @@ firebase.initializeApp(environment.firebaseConfig);
     QrCodeInfoComponent,
     VenderHomeComponent,
     MyFilterPipe,
+    sortRecordsPipe,
+    filterRecordsPipe,
     RecordsComponent,
+    DeleteConfirmRecordsComponent,
   ],
   imports: [
     BrowserModule,
@@ -105,6 +112,7 @@ firebase.initializeApp(environment.firebaseConfig);
     MatRippleModule,
     MatTabsModule,
     MatExpansionModule,
+    MatSelectModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

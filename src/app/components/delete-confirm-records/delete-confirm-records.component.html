@@ -1,0 +1,17 @@
+<div class="dialog-container">
+  <h1 mat-dialog-title>Warning</h1>
+  <div mat-dialog-content>
+    <p>Are you sure you want to Clear all records ?</p>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button (click)="this.dialogRef.close()">Cancel</button>
+    <button
+      mat-raised-button
+      cdkFocusInitial
+      color="warn"
+      (click)="celarRecords()"
+    >
+      Ok
+    </button>
+  </div>
+</div>

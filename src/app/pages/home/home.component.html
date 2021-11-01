@@ -30,7 +30,50 @@
       </div>
     </mat-tab>
     <mat-tab label="Records">
-      <app-records></app-records>
+      <div class="records-container">
+        <div class="manage">
+          <div class="row">
+            <div class="col-md-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Time span</mat-label>
+                <mat-select [(value)]="periode">
+                  <mat-option (click)="selectChange()" value="all" active
+                    >All</mat-option
+                  >
+                  <mat-option (click)="selectChange()" value="lastWeek"
+                    >Last week</mat-option
+                  >
+                  <mat-option (click)="selectChange()" value="lastMonth"
+                    >Last month</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4 btn-container">
+              <button
+                (click)="generatePdf()"
+                [disabled]="disabelBtns"
+                mat-flat-button
+                class="pdf-btn"
+              >
+                GET RECORDS AS PDF
+              </button>
+            </div>
+            <div class="col-md-4 btn-container">
+              <button
+                (click)="openDeleteGuestDialog()"
+                [disabled]="disabelBtns"
+                mat-flat-button
+                color="warn"
+                class="clear-btn"
+              >
+                CLEAR RECORDS
+              </button>
+            </div>
+          </div>
+        </div>
+        <app-records [userRank]="'admin'"></app-records>
+      </div>
     </mat-tab>
   </mat-tab-group>
 </div>

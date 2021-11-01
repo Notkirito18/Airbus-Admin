@@ -5,8 +5,12 @@
   </div>
   <div mat-dialog-content class="info">
     <div>Holder : {{ holder.name }}</div>
-    <div>Date created : {{ data.voucher.createdDate }}</div>
-    <div>Valid untill : {{ data.voucher.validUntill }}</div>
+    <div>
+      Date created : {{ data.voucher.createdDate?.toString()?.slice(0, 10) }}
+    </div>
+    <div>
+      Valid untill : {{ data.voucher.validUntill.toString().slice(0, 10) }}
+    </div>
     <div>Voucher id : {{ data.voucher.id }}</div>
   </div>
 </div>

@@ -15,7 +15,6 @@ import { take } from 'rxjs/operators';
 export class UsingComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
     private vouchersService: VouchersServiceService,
     private authService: AuthServiceService,
     private http: HttpClient
@@ -35,10 +34,15 @@ export class UsingComponent implements OnInit, OnDestroy {
 
   token!: string;
 
+  admin = false;
+
   ngOnInit(): void {
     this.authService.user.pipe(take(1)).subscribe((user) => {
       const token = user.token;
       this.token = user.token;
+      if (user.id === 'G6QOm6b35tUUUz5sZrH3bo0oi3y2') {
+        this.admin = true;
+      }
     });
 
     this.usedVoucherid$$ = this.route.params.subscribe((params: Params) => {
@@ -50,7 +54,6 @@ export class UsingComponent implements OnInit, OnDestroy {
           for (let i = 0; i < guestsArray.length; i++) {
             if (guestsArray[i].id === params['id'].slice(0, 13)) {
               this.guest = guestsArray[i];
-              console.log('defined guest', guestsArray[i]);
             }
           }
           for (let i = 0; i < this.guest.vouchersLis.length; i++) {
@@ -60,45 +63,43 @@ export class UsingComponent implements OnInit, OnDestroy {
           }
 
           // ckecking availibility
-          let indexOfGuest = this.vouchersService.indexOfGuestFromId(
-            guestsArray,
-            params['id'].slice(0, 13)
-          );
-          if (
-            this.vouchersService.deleteVoucher(guestsArray, params['id'])[
-              indexOfGuest
-            ].vouchersLis.length === 0
-          ) {
-            this.voucherExpired = 'expired';
-            console.log('expired');
-          } else if (!this.token) {
-            this.voucherExpired = 'notAuth';
-            console.log('notAuth', 'token', this.token);
-          } else {
-            // saving record of usage
-            this.http
-              .post(
-                'https://airbus-900f9-default-rtdb.firebaseio.com/records.json?auth=' +
-                  this.token,
-                new Record(
-                  new Date(),
-                  'voucher_use',
-                  this.guest,
-                  this.voucherUsed
-                )
-              )
-              .subscribe((result) => {
-                console.log('registered record', result);
-              });
-            this.vouchersService.useVoucher(this.usedVoucherid);
-            this.voucherExpired = 'no';
-            console.log('no');
-          }
+
+          let voucherExist = false;
+          this.http
+            .get('https://airbus-900f9-default-rtdb.firebaseio.com/guests.json')
+            .subscribe((data) => {
+              const guestsArray = Object.values(data);
+              for (let i = 0; i < guestsArray.length; i++) {
+                for (let j = 0; j < guestsArray[i].vouchersLis.length; j++) {
+                  if (guestsArray[i].vouchersLis[j].id === params['id']) {
+                    voucherExist = true;
+                  }
+                }
+              }
+              if (!voucherExist) {
+                this.voucherExpired = 'expired';
+              } else if (!this.token) {
+                this.voucherExpired = 'notAuth';
+              } else {
+                // saving record of usage
+                this.http
+                  .post(
+                    'https://airbus-900f9-default-rtdb.firebaseio.com/records.json?auth=' +
+                      this.token,
+                    new Record(
+                      new Date(),
+                      'voucher_use',
+                      this.guest,
+                      this.voucherUsed
+                    )
+                  )
+                  .subscribe();
+                this.vouchersService.useVoucher(this.usedVoucherid);
+                this.voucherExpired = 'no';
+              }
+            });
         });
     });
-  }
-  seeMyVouchers() {
-    this.router.navigate(['/guest/' + this.guest.id]);
   }
   ngOnDestroy(): void {
     this.usedVoucherid$$.unsubscribe();

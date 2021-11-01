@@ -2,10 +2,10 @@
   padding: 30px;
 }
 
-::ng-deep .mat-tab-body-content {
-  display: flex;
-  justify-content: center;
-}
+// ::ng-deep .mat-tab-body-content {
+//   display: flex;
+//   justify-content: center;
+// }
 
 .home-container {
   padding: 90px 30px 30px;
@@ -17,10 +17,32 @@
   }
   button {
     font-size: 21px;
-    background-color: #31c2a0;
+    background-color: #536dfe;
     color: white;
     padding: 10px 25px;
     margin-top: 15px;
+  }
+}
+.records-container {
+  padding: 20px 0px;
+}
+.manage {
+  padding: 0px 30px;
+}
+.btn-container {
+  display: flex;
+  align-items: center;
+  .pdf-btn {
+    font-size: 14px;
+    padding: 0px 16px;
+    background-color: #536dfe;
+    color: white;
+    margin: 5px 0px;
+  }
+  .clear-btn {
+    font-size: 14px;
+    padding: 0px 16px;
+    margin: 5px 0px;
   }
 }
 

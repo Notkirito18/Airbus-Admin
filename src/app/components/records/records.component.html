@@ -1,3 +1,43 @@
 <div class="records-container">
-  <h1>records</h1>
+  <ng-container *ngIf="recordsLength > 0; else noHistory">
+    <div *ngFor="let element of records | sortRecords: 'newest'">
+      <div class="record" mat-ripple>
+        <div class="left">
+          <mat-icon
+            [ngStyle]="{
+              color: element.type === 'voucher_use' ? '#f44336' : '#31c2a0'
+            }"
+          >
+            {{
+              element.type === "voucher_use" ? "remove_circle" : "add_circle"
+            }}</mat-icon
+          >
+          <div class="title">
+            <div>
+              {{
+                element.type === "voucher_use"
+                  ? "Voucher Used"
+                  : "Guest Created"
+              }}
+            </div>
+            <div *ngIf="!guest" class="subtitle">
+              {{
+                element.type === "voucher_use"
+                  ? 'By "' + element.guest?.name + '"'
+                  : '"' + element.guest?.name + '"'
+              }}
+            </div>
+          </div>
+        </div>
+        <div class="right">
+          <div>{{ element.date.toString().slice(0, 10) }}</div>
+          <div>{{ element.date.toString().slice(11, 19) }}</div>
+        </div>
+      </div>
+      <hr />
+    </div>
+  </ng-container>
+  <ng-template #noHistory>
+    <h3>There are no records of your vouchers use</h3>
+  </ng-template>
 </div>

@@ -27,25 +27,10 @@
   border-radius: 10px;
   box-shadow: rgba(0, 0, 0, 0.5) 0px 3px 8px;
 }
-.vouchers-num-used {
-  display: inline-flex;
-  align-items: center;
-  text-align: center;
-  justify-content: center;
-  margin: 0px 8px;
-  border-radius: 50%;
-  height: 40px;
-  width: 40px;
-  background-color: #b71f6f;
-  color: white;
-  padding: 10px;
-}
 .btn {
-  font-size: 21px;
-  background-color: #b71f6f;
   padding: 10px 30px;
   color: white;
-  border-radius: 20px;
+  border-radius: 5px;
   margin-top: 20px;
 }
 .not-auth {
@@ -59,13 +44,5 @@
     width: auto;
     height: auto;
     display: block;
-  }
-  .vouchers-num-used {
-    height: 35px;
-    width: 35px;
-    padding: 5px;
-  }
-  .btn {
-    font-size: 16px;
   }
 }

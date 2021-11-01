@@ -1,12 +1,12 @@
 <div class="guest-container">
-  <p mat-dialog-title>{{ data.guest.name }}'s vouchers has been created</p>
+  <p mat-dialog-title>{{ data.guest.name }}'s Page code :</p>
   <div mat-dialog-content>
     <div #qrcode></div>
     <p>*Give QR Code to guest so that he can see his vouchers.</p>
   </div>
   <div mat-dialog-actions>
     <button mat-raised-button (click)="goToGuestPage(data.guest.id)">
-      Guest's page
+      Go to page
     </button>
     <button mat-raised-button (click)="homePage()">Home page</button>
   </div>

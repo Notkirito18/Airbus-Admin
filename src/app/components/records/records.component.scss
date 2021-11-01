@@ -1,3 +1,28 @@
 .records-container {
   padding: 30px;
 }
+.record {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 10px;
+  .left {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    mat-icon {
+      margin-right: 15px;
+      transform: scale(1.5);
+    }
+    .subtitle {
+      color: #6e6e6e;
+    }
+  }
+  .right {
+    text-align: right;
+  }
+}
+hr {
+  margin: 10px 0px;
+  color: rgba(0, 0, 0, 0.205);
+}

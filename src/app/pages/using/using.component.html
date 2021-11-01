@@ -21,8 +21,25 @@
       </div>
     </ng-container>
 
-    <button mat-raised-button class="btn" (click)="seeMyVouchers()">
-      See My Vouchers
-    </button>
+    <div *ngIf="voucherExpired !== 'notAuth' && voucherExpired !== 'expired'">
+      <button
+        mat-raised-button
+        class="btn"
+        [ngStyle]="{ background: admin ? '#536dfe' : '#31c2a0' }"
+        [routerLink]="'/guest/' + guest.id"
+      >
+        Go to {{ guest.name }}'s page
+      </button>
+    </div>
+    <div *ngIf="voucherExpired !== 'notAuth'">
+      <button
+        mat-raised-button
+        class="btn"
+        [ngStyle]="{ background: admin ? '#536dfe' : '#31c2a0' }"
+        [routerLink]="admin ? '/home' : '/vhome'"
+      >
+        Home
+      </button>
+    </div>
   </div>
 </div>

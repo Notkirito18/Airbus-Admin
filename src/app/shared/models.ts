@@ -38,7 +38,7 @@ export class Record {
   constructor(
     public date: Date,
     public type: string,
-    public guest?: Guest,
+    public guest: Guest,
     public Voucher?: Voucher
   ) {}
 }
