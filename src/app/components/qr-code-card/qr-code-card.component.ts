@@ -43,7 +43,7 @@ export class QrCodeCardComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     // Options
     var options = {
-      text: 'http://localhost:4200/using/' + this.voucher.id,
+      text: 'https://airbus-900f9.firebaseapp.com/using/' + this.voucher.id,
       width: 150,
       height: 150,
       colorDark: '#440024',

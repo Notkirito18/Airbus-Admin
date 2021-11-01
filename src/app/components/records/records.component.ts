@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
 import { Guest, Record } from 'src/app/shared/models';
+import { RecordsService } from 'src/app/shared/records service/records.service';
 
 @Component({
   selector: 'app-records',
@@ -8,41 +9,18 @@ import { Guest, Record } from 'src/app/shared/models';
   styleUrls: ['./records.component.scss'],
 })
 export class RecordsComponent implements OnInit {
-  @Input() userRank!: string;
+  records!: Record[];
 
   @Input() guest!: Guest;
 
   recordsLength = 0;
 
-  constructor(private http: HttpClient) {}
-
-  records!: Record[];
+  constructor(private recordsService: RecordsService) {}
 
   ngOnInit(): void {
-    this.http
-      .get('https://airbus-900f9-default-rtdb.firebaseio.com/records.json')
-      .subscribe((result) => {
-        if (result) {
-          const recordsArr = Object.values(result);
-          if (this.userRank === 'vender') {
-            this.records = recordsArr.filter((item) => {
-              return item.type === 'voucher_use';
-            });
-            this.recordsLength = this.records.length;
-          } else if (this.userRank === 'guest') {
-            console.log('im filtering for guest');
-            this.records = recordsArr.filter((item) => {
-              return (
-                item.type === 'voucher_use' &&
-                item.Voucher?.holderId === this.guest.id
-              );
-            });
-            this.recordsLength = this.records.length;
-          } else {
-            this.records = recordsArr;
-            this.recordsLength = this.records.length;
-          }
-        }
-      });
+    this.recordsService.recordsArray.subscribe((recordsData) => {
+      this.records = recordsData;
+      this.recordsLength = recordsData.length;
+    });
   }
 }

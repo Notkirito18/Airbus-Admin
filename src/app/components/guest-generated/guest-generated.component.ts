@@ -22,7 +22,7 @@ export class GuestGeneratedComponent {
   ngAfterViewInit() {
     // Options
     var options = {
-      text: 'http://localhost:4200/guest/' + this.data.guest.id,
+      text: 'https://airbus-900f9.firebaseapp.com/guest/' + this.data.guest.id,
       width: 150,
       height: 150,
       colorDark: '#440024',

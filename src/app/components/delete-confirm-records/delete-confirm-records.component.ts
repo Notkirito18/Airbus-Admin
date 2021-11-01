@@ -37,5 +37,6 @@ export class DeleteConfirmRecordsComponent {
           console.log('clear All ');
         });
     });
+    this.dialogRef.close();
   }
 }

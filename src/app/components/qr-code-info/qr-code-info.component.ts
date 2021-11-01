@@ -54,7 +54,8 @@ export class QrCodeInfoComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     // Options
     var options = {
-      text: 'http://localhost:4200/using/' + this.data.voucher.id,
+      text:
+        'https://airbus-900f9.firebaseapp.com/using/' + this.data.voucher.id,
       width: 250,
       height: 250,
       colorDark: '#440024',

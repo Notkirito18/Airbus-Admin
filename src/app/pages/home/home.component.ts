@@ -7,7 +7,9 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { Alignment, Decoration, Margins, Table } from 'pdfmake/interfaces';
 import { DeleteConfirmRecordsComponent } from 'src/app/components/delete-confirm-records/delete-confirm-records.component';
+import { dateShower } from 'src/app/shared/helper';
 import { Record } from 'src/app/shared/models';
+import { RecordsService } from 'src/app/shared/records service/records.service';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -19,7 +21,8 @@ export class HomeComponent implements OnInit {
   constructor(
     private router: Router,
     private http: HttpClient,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private recordsService: RecordsService
   ) {}
 
   voucherIdToUse!: string;
@@ -35,19 +38,28 @@ export class HomeComponent implements OnInit {
         if (result) {
           const recordsArr = Object.values(result);
           this.records = recordsArr;
+          this.recordsService.recordsArray.next(this.records);
           this.disabelBtns = false;
         }
       });
   }
   selectChange() {
     if (this.periode === 'all') {
-      this.displayRecords = this.records;
+      this.recordsService.recordsArray.next(this.records);
     }
     if (this.periode === 'lastWeek') {
-      this.displayRecords = this.records;
+      this.displayRecords = this.records.filter((item) => {
+        return new Date(item.date).getTime() > new Date().getTime() - 604800000;
+      });
+      this.recordsService.recordsArray.next(this.displayRecords);
     }
     if (this.periode === 'lastMonth') {
-      this.displayRecords = this.records;
+      this.displayRecords = this.records.filter((item) => {
+        return (
+          new Date(item.date).getTime() > new Date().getTime() - 2629800000
+        );
+      });
+      this.recordsService.recordsArray.next(this.displayRecords);
     }
   }
 
@@ -55,11 +67,7 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['/using/' + this.voucherIdToUse]);
   }
 
-  timeSpan = [
-    { value: 'all', viewValue: 'All' },
-    { value: 'lastWeek', viewValue: 'Last week' },
-    { value: 'lastMonth', viewValue: 'Last Month' },
-  ];
+  dateShower = dateShower;
 
   generatePdf() {
     let recordsToShow = this.records.map((item) => {
@@ -80,6 +88,22 @@ export class HomeComponent implements OnInit {
         totalG += 1;
       }
     }
+
+    let now = new Date();
+
+    let oldestRecordDate = new Date();
+
+    for (let i = 0; i < this.records.length - 1; i++) {
+      if (
+        new Date(this.records[i].date).getTime() <
+        new Date(this.records[i + 1].date).getTime()
+      ) {
+        oldestRecordDate = this.records[i].date;
+      }
+    }
+    let sevenDaysAgoDate = new Date(now.setDate(now.getDate() - 7));
+
+    let monthAgoDate = new Date(now.setDate(now.getDate() - 30));
 
     let docDefinition = {
       content: [
@@ -108,7 +132,12 @@ export class HomeComponent implements OnInit {
                 bold: true,
               },
               {
-                text: '01/10/2021',
+                text:
+                  this.periode === 'all'
+                    ? this.dateShower(oldestRecordDate)
+                    : this.periode === 'lastWeek'
+                    ? this.dateShower(sevenDaysAgoDate)
+                    : this.dateShower(monthAgoDate),
               },
             ],
             [
@@ -117,12 +146,7 @@ export class HomeComponent implements OnInit {
                 bold: true,
               },
               {
-                text:
-                  new Date().getDate().toString() +
-                  '-' +
-                  new Date().getMonth().toString() +
-                  '-' +
-                  new Date().getFullYear().toString(),
+                text: this.dateShower(new Date()),
               },
             ],
           ],
