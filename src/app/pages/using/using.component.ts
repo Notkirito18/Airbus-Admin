@@ -22,6 +22,8 @@ export class UsingComponent implements OnInit, OnDestroy {
 
   voucherUsed!: Voucher;
 
+  loading = true;
+
   usedVoucherid!: string;
   usedVoucherid$$!: Subscription;
 
@@ -97,6 +99,7 @@ export class UsingComponent implements OnInit, OnDestroy {
                 this.vouchersService.useVoucher(this.usedVoucherid);
                 this.voucherExpired = 'no';
               }
+              this.loading = false;
             });
         });
     });

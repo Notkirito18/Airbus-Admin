@@ -1,45 +1,52 @@
 <div class="background"></div>
 <div class="using-container">
   <div class="v-used">
-    <ng-container *ngIf="voucherExpired === 'no'">
-      <div class="firstline">
-        <span style="font-weight: bold">{{ guest.name }}</span> Have used a
-        voucher
-      </div>
-    </ng-container>
+    <div *ngIf="!loading; else loadingContent">
+      <ng-container *ngIf="voucherExpired === 'no'">
+        <div class="firstline">
+          <span style="font-weight: bold">{{ guest.name }}</span> Have used a
+          voucher
+        </div>
+      </ng-container>
 
-    <ng-container *ngIf="voucherExpired === 'expired'">
-      <div class="firstline">
-        This voucher is expired and can't be used again!
-      </div>
-    </ng-container>
+      <ng-container *ngIf="voucherExpired === 'expired'">
+        <div class="firstline">
+          This voucher is expired and can't be used again!
+        </div>
+      </ng-container>
 
-    <ng-container *ngIf="voucherExpired === 'notAuth'">
-      <div class="not-auth">
-        You do not have the authority to consume vouchers, make sure you're
-        logged in to your account before scanning a voucher's code
-      </div>
-    </ng-container>
+      <ng-container *ngIf="voucherExpired === 'notAuth'">
+        <div class="not-auth">
+          You do not have the authority to consume vouchers, make sure you're
+          logged in to your account before scanning a voucher's code
+        </div>
+      </ng-container>
 
-    <div *ngIf="voucherExpired !== 'notAuth' && voucherExpired !== 'expired'">
-      <button
-        mat-raised-button
-        class="btn"
-        [ngStyle]="{ background: admin ? '#536dfe' : '#31c2a0' }"
-        [routerLink]="'/guest/' + guest.id"
-      >
-        Go to {{ guest.name }}'s page
-      </button>
+      <div *ngIf="voucherExpired !== 'notAuth' && voucherExpired !== 'expired'">
+        <button
+          mat-raised-button
+          class="btn"
+          [ngStyle]="{ background: admin ? '#536dfe' : '#31c2a0' }"
+          [routerLink]="'/guest/' + guest.id"
+        >
+          Go to {{ guest.name }}'s page
+        </button>
+      </div>
+      <div *ngIf="voucherExpired !== 'notAuth'">
+        <button
+          mat-raised-button
+          class="btn"
+          [ngStyle]="{ background: admin ? '#536dfe' : '#31c2a0' }"
+          [routerLink]="admin ? '/home' : '/vhome'"
+        >
+          Home
+        </button>
+      </div>
     </div>
-    <div *ngIf="voucherExpired !== 'notAuth'">
-      <button
-        mat-raised-button
-        class="btn"
-        [ngStyle]="{ background: admin ? '#536dfe' : '#31c2a0' }"
-        [routerLink]="admin ? '/home' : '/vhome'"
-      >
-        Home
-      </button>
-    </div>
+    <ng-template #loadingContent>
+      <div class="loading-container">
+        <mat-spinner color="accent"></mat-spinner>
+      </div>
+    </ng-template>
   </div>
 </div>

@@ -33,7 +33,6 @@ export class QrCodeInfoComponent implements OnInit, AfterViewInit {
   ) {}
 
   holder: Guest = new Guest('', '', 0, '', new Date(), []);
-  // holder!: Guest;
   getolderSub$$!: Subscription;
 
   ngOnInit(): void {

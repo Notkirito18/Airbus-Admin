@@ -12,6 +12,7 @@ import { RecordsService } from 'src/app/shared/records service/records.service';
 export class GuestPageComponent implements OnInit {
   guest: Guest = new Guest('', '', 0, '', new Date(), []);
   guestHasNoValidVouchers = false;
+  loading = true;
 
   constructor(
     private route: ActivatedRoute,
@@ -25,6 +26,7 @@ export class GuestPageComponent implements OnInit {
         .get('https://airbus-900f9-default-rtdb.firebaseio.com/guests.json')
         .subscribe((data) => {
           const guestsArray = Object.values(data);
+
           for (let i = 0; i < guestsArray.length; i++) {
             if (guestsArray[i].id === params['id']) {
               this.guest = guestsArray[i];
@@ -33,6 +35,7 @@ export class GuestPageComponent implements OnInit {
               }
             }
           }
+          this.loading = false;
         });
     });
     this.http
@@ -49,5 +52,8 @@ export class GuestPageComponent implements OnInit {
           this.recordsService.recordsArray.next(GuestRecords);
         }
       });
+  }
+  testFun() {
+    this.loading = false;
   }
 }

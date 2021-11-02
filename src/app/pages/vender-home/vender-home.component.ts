@@ -16,6 +16,7 @@ export class VenderHomeComponent implements OnInit {
     private recordsService: RecordsService
   ) {}
   voucherIdToUse!: string;
+  loading = true;
 
   periode = 'all';
   records!: Record[];
@@ -30,7 +31,11 @@ export class VenderHomeComponent implements OnInit {
           this.records = recordsArr;
           this.recordsService.recordsArray.next(this.records);
         }
+        this.loading = false;
       });
+    setTimeout(() => {
+      this.recordsService.recordsArray.next(this.records);
+    }, 1000);
   }
 
   selectChange() {

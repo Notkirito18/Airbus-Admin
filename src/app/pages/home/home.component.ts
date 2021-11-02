@@ -25,6 +25,7 @@ export class HomeComponent implements OnInit {
     private recordsService: RecordsService
   ) {}
 
+  loading = true;
   voucherIdToUse!: string;
   periode = 'all';
   records!: Record[];
@@ -41,7 +42,11 @@ export class HomeComponent implements OnInit {
           this.recordsService.recordsArray.next(this.records);
           this.disabelBtns = false;
         }
+        this.loading = false;
       });
+    setTimeout(() => {
+      this.recordsService.recordsArray.next(this.records);
+    }, 1000);
   }
   selectChange() {
     if (this.periode === 'all') {

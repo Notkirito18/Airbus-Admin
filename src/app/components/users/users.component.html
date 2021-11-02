@@ -221,11 +221,17 @@
           {{ element.validUntill.slice(0, 10) }}
         </div>
       </div>
-      <div class="expansion-btn-container">
+      <div
+        class="expansion-btn-container"
+        [ngStyle]="
+          !adminUser ? { display: 'flex', justifyContent: 'center' } : {}
+        "
+      >
         <button
           mat-raised-button
           (click)="openGuestDialog(element)"
           class="guest-page-btn"
+          [ngStyle]="!adminUser ? { background: '#31c2a0' } : {}"
         >
           Guest Page
         </button>

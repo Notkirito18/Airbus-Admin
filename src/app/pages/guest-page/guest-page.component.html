@@ -1,4 +1,4 @@
-<div class="guest-container">
+<div *ngIf="!loading; else loadingContent" class="guest-container">
   <div class="info-section">
     <img src="../../../assets/aloft-airbus.png" alt="airbus-logo" />
     <p>
@@ -14,7 +14,7 @@
     <p *ngIf="!guestHasNoValidVouchers">
       Choose your favorite amenities from
       <span style="font-weight: bold"
-        >The Canteen,Splash Pool Bar and Han Shi Fu,</span
+        >The Canteen,Splash Pool Bar and Re fuel,</span
       >
       with our compliments.
     </p>
@@ -46,3 +46,9 @@
     </mat-tab>
   </mat-tab-group>
 </div>
+
+<ng-template #loadingContent>
+  <div class="loading-container">
+    <mat-spinner color="accent"></mat-spinner>
+  </div>
+</ng-template>

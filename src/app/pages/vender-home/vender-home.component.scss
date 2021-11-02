@@ -1,11 +1,14 @@
+.loading-container {
+  padding: 100px 50px 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 90vh;
+}
+
 .use-vouchers-container {
   padding: 30px;
 }
-
-// ::ng-deep .mat-tab-body-content {
-//   display: flex;
-//   justify-content: center;
-// }
 
 .vender-home-container {
   padding: 90px 30px 30px;
