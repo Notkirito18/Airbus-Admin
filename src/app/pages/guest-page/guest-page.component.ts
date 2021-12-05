@@ -30,7 +30,10 @@ export class GuestPageComponent implements OnInit {
           for (let i = 0; i < guestsArray.length; i++) {
             if (guestsArray[i].id === params['id']) {
               this.guest = guestsArray[i];
-              if (this.guest.vouchersLis[0].id.length < 1) {
+              if (
+                this.guest.vouchersLis[0].id.length < 1 ||
+                this.guest.vouchersLis[0].unvalid
+              ) {
                 this.guestHasNoValidVouchers = true;
               }
             }

@@ -15,7 +15,8 @@ export class Voucher {
     public id: string,
     public holderId: string,
     public validUntill: Date,
-    public createdDate?: Date
+    public createdDate?: Date,
+    public unvalid?: boolean
   ) {}
 }
 export class User {

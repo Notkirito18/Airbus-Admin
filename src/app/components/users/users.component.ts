@@ -34,7 +34,6 @@ export class UsersComponent implements OnInit, OnDestroy {
   editing!: Guest;
 
   displayedColumns: string[] = [
-    'select',
     'name',
     'type',
     'roomNumber',
@@ -63,7 +62,6 @@ export class UsersComponent implements OnInit, OnDestroy {
         this.screenSize = result.mqAlias;
       }
     );
-
     //sort fixing
 
     // showing guest list
@@ -122,8 +120,4 @@ export class UsersComponent implements OnInit, OnDestroy {
   hideElementResponsivly = hideElementResponsivly;
   responsiveWidth = responsiveWidth;
   displayFlexOrBlock = displayFlexOrBlock;
-
-  // nameClick(id: string) {
-  //   this.router.navigate(['guest', id]);
-  // }
 }

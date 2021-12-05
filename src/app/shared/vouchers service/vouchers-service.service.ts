@@ -61,7 +61,6 @@ export class VouchersServiceService {
           this.http
             .put(this.url + token, this.deleteVoucher(guestsArray, voucherId))
             .subscribe();
-          console.log('deleted', voucherId);
         }
       });
     });
@@ -76,19 +75,13 @@ export class VouchersServiceService {
           arrayOfGuests[i].vouchersLis,
           voucherId
         );
-        updatedArray.push(
-          new Guest(
-            arrayOfGuests[i].id,
-            arrayOfGuests[i].name,
-            arrayOfGuests[i].roomNumber,
-            arrayOfGuests[i].type,
-            arrayOfGuests[i].validUntill,
+        updatedArray.push({
+          ...arrayOfGuests[i],
+          vouchersLis:
             newVouchList.length > 0
               ? newVouchList
               : [new Voucher('', '', new Date())],
-            arrayOfGuests[i].createdDate
-          )
-        );
+        });
       } else {
         updatedArray.push(arrayOfGuests[i]);
       }
@@ -135,7 +128,7 @@ export class VouchersServiceService {
                 guestsArray[i].vouchersLis[j].validUntill.toString()
               );
               if (voucherValidUntill.getTime() < new Date().getTime()) {
-                updatedArray = this.deleteVoucher(
+                updatedArray = this.makeVoucherInvalid(
                   updatedArray,
                   guestsArray[i].vouchersLis[j].id
                 );
@@ -146,5 +139,32 @@ export class VouchersServiceService {
         });
       }
     });
+  }
+  makeVoucherInvalid(arrayOfGuests: Guest[], voucherId: string) {
+    let updatedArray: Guest[] = [];
+    let guestId = voucherId.slice(0, 13);
+    for (let i = 0; i < arrayOfGuests.length; i++) {
+      if (arrayOfGuests[i].id === guestId) {
+        const newVouchList = this.unvalidateVouchers(
+          arrayOfGuests[i].vouchersLis,
+          voucherId
+        );
+        updatedArray.push({ ...arrayOfGuests[i], vouchersLis: newVouchList });
+      } else {
+        updatedArray.push(arrayOfGuests[i]);
+      }
+    }
+    return updatedArray;
+  }
+  unvalidateVouchers(filteringArray: Voucher[], id: string): Voucher[] {
+    let filteredArray = [];
+    for (let i = 0; i < filteringArray.length; i++) {
+      if (filteringArray[i].id !== id) {
+        filteredArray.push(filteringArray[i]);
+      } else {
+        filteredArray.push({ ...filteringArray[i], unvalid: true });
+      }
+    }
+    return filteredArray;
   }
 }
