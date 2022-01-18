@@ -113,16 +113,16 @@ export class HomeComponent implements OnInit {
     let docDefinition = {
       content: [
         {
-          text: 'AIRBUS',
+          text: 'Vouchy QR',
           fontSize: 18,
           alignment: 'center' as Alignment,
           color: '#6e6e6e',
         },
         {
           text: 'VOUCHERS RECORDS',
-          fontSize: 22,
+          fontSize: 20,
           bold: true,
-          color: '#536dfe',
+          color: '#b91f70',
           alignment: 'center' as Alignment,
         },
         {

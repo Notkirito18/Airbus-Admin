@@ -59,7 +59,7 @@ export class QrCodeInfoComponent implements OnInit, AfterViewInit {
       height: 250,
       colorDark: '#440024',
       colorLight: '#ffffff',
-      logo: '../../../assets/aloftC-01.png',
+      logo: '../../../assets/aloftC.png',
     };
 
     // Create new QRCode Object

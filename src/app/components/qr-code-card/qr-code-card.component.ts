@@ -48,7 +48,7 @@ export class QrCodeCardComponent implements OnInit, AfterViewInit, OnDestroy {
       height: 150,
       colorDark: '#440024',
       colorLight: '#ffffff',
-      logo: '../../../assets/aloftC-01.png',
+      logo: '../../../assets/aloftC.png',
       quietZone: 3,
       quietZoneColor: 'rgb(52, 58, 64,0.5)',
     };

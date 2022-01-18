@@ -4,12 +4,14 @@ export class Guest {
     public name: string,
     public roomNumber: number,
     public type: string,
-    // public vouchers: number,
     public validUntill: Date,
     public vouchersLis: Voucher[],
     public createdDate?: Date
   ) {}
 }
+// add pin code to the guest model (instruct of guarding in routing modules)
+
+// rebrand the whole app to it's new name : VouchyQR
 export class Voucher {
   constructor(
     public id: string,

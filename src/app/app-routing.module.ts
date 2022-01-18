@@ -40,3 +40,6 @@ const routes: Routes = [
   exports: [RouterModule],
 })
 export class AppRoutingModule {}
+
+// add a guard to guest/:id page that takes the id of the user and pin code
+// and compare the pin code to the pin of the guest with that id in the db

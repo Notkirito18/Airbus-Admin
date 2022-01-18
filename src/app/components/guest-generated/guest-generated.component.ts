@@ -27,7 +27,7 @@ export class GuestGeneratedComponent {
       height: 150,
       colorDark: '#440024',
       colorLight: '#ffffff',
-      logo: '../../../assets/aloftC-01.png',
+      logo: '../../../assets/aloftC.png',
     };
 
     // Create new QRCode Object
