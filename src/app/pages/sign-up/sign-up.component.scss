@@ -3,36 +3,34 @@
   text-align: center;
 }
 
+.title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24pt;
+  mat-icon {
+    margin: 15px;
+    transform: scale(2);
+  }
+}
+
+p {
+  text-align: center;
+  line-height: 2;
+  margin: 10px;
+}
 .form-container {
   padding: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-img {
-  width: 250px;
-  margin: 20px;
-}
-p {
-  text-align: left;
-  font-size: 18px;
-  line-height: 2;
-  margin: 10px;
-}
-.already {
-  font-size: 16px;
-  color: rgba(0, 0, 0, 0.6);
-}
-.login {
-  font-weight: bold;
-  color: #b71f6f;
-  cursor: pointer;
-}
 
 /* form */
 
 .mat-form-field {
   width: 100%;
+  margin-bottom: 20px;
 }
 .mat-radio-group {
   text-align: left;
@@ -46,16 +44,18 @@ p {
 .valid-Untill {
   margin: 0px 10px 20px;
 }
-
-.sign-up-btn {
+mat-error {
+  margin-top: 15px;
+}
+.register-btn {
   font-size: 21px;
   padding: 10px 30px;
-  background-color: #b71f6f;
+  // background-color: #b71f6f;
   border-radius: 20px;
   color: white;
 }
-.sign-up-btn:disabled,
-.sign-up-btn[disabled] {
+.register-btn:disabled,
+.register-btn[disabled] {
   color: white;
   opacity: 0.5;
 }

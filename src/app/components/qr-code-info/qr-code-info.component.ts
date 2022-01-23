@@ -14,7 +14,6 @@ import { responsiveWidth } from 'src/app/shared/helper';
 import { HttpClient } from '@angular/common/http';
 import { AuthServiceService } from 'src/app/shared/auth/auth-service.service';
 import { Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
 import { VouchersServiceService } from 'src/app/shared/vouchers service/vouchers-service.service';
 
 @Component({
@@ -26,8 +25,6 @@ export class QrCodeInfoComponent implements OnInit, AfterViewInit {
   constructor(
     private router: Router,
     private http: HttpClient,
-    private authService: AuthServiceService,
-    private vouchersService: VouchersServiceService,
     public dialogRef: MatDialogRef<QrCodeInfoComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { voucher: Voucher }
   ) {}

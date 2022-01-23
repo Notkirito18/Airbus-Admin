@@ -131,8 +131,3 @@ export function dateShower(date: Date): string {
     date.getDate().toString();
   return dateString;
 }
-// export function monthAgoDate(): Date {
-//   let sevenDaysAgo = new Date();
-
-//   return new Date(sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 30));
-// }

@@ -1,5 +1,11 @@
 <div class="signup-container">
-  <img src="../../../assets/vouchyQR-c.png" alt="logo" />
+  <div class="title">
+    <mat-icon>how_to_reg</mat-icon> <span>Register a New vender</span>
+  </div>
+  <p>
+    When you create a vender account you will give him the ability to view all
+    guests information and consume there vouchers
+  </p>
   <div class="form-container">
     <form
       [formGroup]="signUpForm"
@@ -7,27 +13,54 @@
     >
       <!-- name input -->
       <mat-form-field appearance="outline">
-        <mat-label>Email</mat-label>
-        <input matInput type="email" formControlName="email" />
+        <input
+          matInput
+          type="email"
+          placeholder="Email"
+          formControlName="email"
+          required
+        />
       </mat-form-field>
       <!-- Password input -->
       <mat-form-field appearance="outline">
-        <mat-label>Password</mat-label>
-        <input matInput type="password" formControlName="password" />
+        <input
+          matInput
+          type="password"
+          placeholder="Password"
+          formControlName="password"
+          [errorStateMatcher]="matcher"
+          required
+          min="6"
+        />
+        <mat-error *ngIf="signUpForm.hasError('invalid')">
+          Password Need to be at least 6 characters with a mix of uppercase and
+          lowercase
+        </mat-error>
       </mat-form-field>
       <!-- Repeat Password input -->
       <mat-form-field appearance="outline">
-        <mat-label>Repeat Password</mat-label>
-        <input matInput type="password" formControlName="repeatPassword" />
+        <input
+          matInput
+          type="password"
+          placeholder="Confirm password"
+          formControlName="confirmPassword"
+          [errorStateMatcher]="matcher"
+          required
+          min="6"
+        />
+        <mat-error *ngIf="signUpForm.hasError('notSame')">
+          Passwords do not match
+        </mat-error>
       </mat-form-field>
       <!-- submit -->
       <button
         mat-button
-        class="sign-up-btn"
+        class="mat-flat-button"
+        color="primary"
         type="submit"
         [disabled]="!signUpForm.valid"
       >
-        Sign Up
+        Register
       </button>
     </form>
   </div>
