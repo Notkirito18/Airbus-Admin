@@ -4,6 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthServiceService } from 'src/app/shared/auth/auth-service.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -39,8 +40,11 @@ export class LoginComponent implements OnInit {
       .logInEmailAndPass(formValue.email, formValue.password)
       .subscribe(
         (response) => {
-          if (response.localId === 'G6QOm6b35tUUUz5sZrH3bo0oi3y2') {
-            this.router.navigate(['/home']);
+          if (
+            response.localId === environment.adminId ||
+            response.localId === environment.myAdminId
+          ) {
+            this.router.navigate(['/dashboard']);
           } else {
             this.router.navigate(['/vhome']);
           }

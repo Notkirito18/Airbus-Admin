@@ -21,6 +21,6 @@ export class DeleteConfirmComponent {
   }
   removeGuest(id: string) {
     this.guestsService.removeGuest(id);
-    this.router.navigate(['/home']);
+    this.router.navigate(['/dashboard']);
   }
 }

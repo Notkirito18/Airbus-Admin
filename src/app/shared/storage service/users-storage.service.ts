@@ -98,9 +98,17 @@ export class UsersStorageService implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.populateGuestsSub$$.unsubscribe();
-    this.addGuestSub$$.unsubscribe();
-    this.removeGuestSub$$.unsubscribe();
-    this.updateGuest$$.unsubscribe();
+    if (this.populateGuestsSub$$) {
+      this.populateGuestsSub$$.unsubscribe();
+    }
+    if (this.addGuestSub$$) {
+      this.addGuestSub$$.unsubscribe();
+    }
+    if (this.removeGuestSub$$) {
+      this.removeGuestSub$$.unsubscribe();
+    }
+    if (this.updateGuest$$) {
+      this.updateGuest$$.unsubscribe();
+    }
   }
 }

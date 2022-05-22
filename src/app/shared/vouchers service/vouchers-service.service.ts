@@ -135,7 +135,13 @@ export class VouchersServiceService {
               }
             }
           }
-          this.http.put(this.url + token, updatedArray).subscribe();
+          console.log('updatedArray', updatedArray);
+          this.http.put(this.url + token, updatedArray).subscribe(
+            (res) => {},
+            (error) => {
+              console.log('put error', error);
+            }
+          );
         });
       }
     });

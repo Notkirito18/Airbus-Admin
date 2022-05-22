@@ -35,10 +35,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
   logoReroute() {
     if (this.user) {
       if (this.admin) {
-        this.router.navigate(['/home']);
+        this.router.navigate(['/dashboard']);
       } else {
         this.router.navigate(['/vhome']);
       }
+    } else {
+      this.router.navigate(['/home']);
     }
   }
 
@@ -47,10 +49,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
   onLogoutClick() {
     this.authService.logOut();
-    this.router.navigate(['/auth']);
+    this.router.navigate(['/home']);
   }
 
   ngOnDestroy(): void {
-    this.userSub$$.unsubscribe();
+    if (this.userSub$$) this.userSub$$.unsubscribe();
   }
 }

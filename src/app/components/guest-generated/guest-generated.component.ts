@@ -40,6 +40,6 @@ export class GuestGeneratedComponent {
   }
   homePage() {
     this.dialogRef.close();
-    this.router.navigate(['/home']);
+    this.router.navigate(['/dashboard']);
   }
 }

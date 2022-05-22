@@ -69,7 +69,7 @@ export class QrCodeInfoComponent implements OnInit, AfterViewInit {
   }
   homePage() {
     this.dialogRef.close();
-    this.router.navigate(['/home']);
+    this.router.navigate(['/dashboard']);
   }
   responsiveWidth = responsiveWidth;
 }

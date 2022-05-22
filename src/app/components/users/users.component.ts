@@ -10,6 +10,7 @@ import { DeleteConfirmComponent } from '../delete-confirm/delete-confirm.compone
 import { MatDialog } from '@angular/material/dialog';
 import { MediaChange, MediaObserver } from '@angular/flex-layout';
 import {
+  checkDate,
   displayFlexOrBlock,
   hideElementResponsivly,
   responsiveContainerPaddingPx,
@@ -116,6 +117,7 @@ export class UsersComponent implements OnInit, OnDestroy {
     this.mediaSubscription.unsubscribe();
   }
 
+  checkDate = checkDate;
   responsiveContainerPaddingPx = responsiveContainerPaddingPx;
   hideElementResponsivly = hideElementResponsivly;
   responsiveWidth = responsiveWidth;

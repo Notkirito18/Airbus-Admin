@@ -44,3 +44,17 @@ mat-toolbar {
 .admin-header {
   background-color: #536dfe;
 }
+.register-btn{
+  border: 1px solid white;
+  transition: all 500ms ease;
+}
+.register-btn:hover{
+  background-color: white;
+  color: #b71f6f;
+}
+
+@media only screen and (max-width:768px){
+  mat-toolbar{
+    padding: 0px 20px;
+  }
+}

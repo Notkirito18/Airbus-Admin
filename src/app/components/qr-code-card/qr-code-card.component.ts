@@ -64,6 +64,6 @@ export class QrCodeCardComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
   ngOnDestroy(): void {
-    this.mediaSubscription.unsubscribe();
+    if (this.mediaSubscription) this.mediaSubscription.unsubscribe();
   }
 }

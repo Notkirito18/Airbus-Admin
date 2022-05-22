@@ -55,6 +55,8 @@ import { sortRecordsPipe } from './shared/sortRecords.pipe';
 import { filterRecordsPipe } from './shared/filterRecords.pipe';
 import { RecordsComponent } from './components/records/records.component';
 import { DeleteConfirmRecordsComponent } from './components/delete-confirm-records/delete-confirm-records.component';
+import { HomePageComponent } from './pages/home-page/home-page.component';
+import { RegisterComponent } from './pages/register/register.component';
 
 firebase.initializeApp(environment.firebaseConfig);
 
@@ -79,6 +81,8 @@ firebase.initializeApp(environment.firebaseConfig);
     filterRecordsPipe,
     RecordsComponent,
     DeleteConfirmRecordsComponent,
+    HomePageComponent,
+    RegisterComponent,
   ],
   imports: [
     BrowserModule,

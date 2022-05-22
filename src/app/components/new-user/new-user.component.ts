@@ -116,7 +116,7 @@ export class NewUserComponent implements OnInit, OnDestroy {
         new Date()
       );
       this.guestsService.updateGuest(this.guestToEdit.id, guestToUpdate);
-      this.router.navigate(['/home']);
+      this.router.navigate(['/dashboard']);
     }
     // pushing new guest
     else {
@@ -150,7 +150,7 @@ export class NewUserComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.paramsSub$$.unsubscribe();
+    if (this.paramsSub$$) this.paramsSub$$.unsubscribe();
   }
   addHoursToDate(date: Date, hours: number) {
     return new Date(new Date(date).setHours(date.getHours() + hours));

@@ -1,0 +1,100 @@
+<section class="section-1">
+  <div
+    class="bg"
+    *ngIf="screenSize == 'lg' || screenSize == 'md' || screenSize == 'xl'"
+  ></div>
+  <div
+    [ngClass]="
+      screenSize == 'lg' || screenSize == 'md' || screenSize == 'xl'
+        ? 'title-container'
+        : 'title-container-small'
+    "
+  >
+    <div class="title">VouchyQR</div>
+    <div class="subtitle">Manage hotel vouchers with ease using QR codes.</div>
+    <button mat-button class="register-btn" [routerLink]="'/register'">
+      Register
+    </button>
+    <div class="login">
+      you have an account? <a [routerLink]="'/auth'">Login</a>
+    </div>
+  </div>
+  <img
+    src="../../../assets/background-small-screen.png"
+    alt="qr-code-illustration"
+    *ngIf="screenSize == 'sm' || screenSize == 'xs'"
+    class="small-screen-img"
+  />
+</section>
+<section class="section-2">
+  <div class="container">
+    <div class="pb-5">
+      <div class="title">How it works</div>
+      <p class="text">
+        VouchyQR make vouchers easier to useand manage with QR codes, by making
+        the processes of giving vouchers to gests and consuming vouchers
+        possible with one QR code scan.
+      </p>
+    </div>
+    <!--* part 1 Getting vouchers  -->
+    <div class="row part pb-5">
+      <div class="col-md-6">
+        <div class="part-title">Getting vouchers</div>
+        <p class="text">
+          At the reception, guests can get theire vouchers by scanning a QR code
+          given by the receptionist.
+        </p>
+      </div>
+      <div class="col-md-6 img-container">
+        <img src="../../../assets/reception.png" alt="reception.png" />
+      </div>
+    </div>
+    <!--* part 2 Consumming vouchers  -->
+    <div class="row part pb-5">
+      <div *ngIf="screenSize != 'xs'" class="col-md-6 img-container">
+        <img src="../../../assets/consuming.png" alt="reception.png" />
+      </div>
+      <div class="col-md-6">
+        <div class="part-title">Consumming vouchers</div>
+        <p class="text">
+          After getting their vouchers, guests can consume them by presenting
+          the voucher’s QR code to be scanned by the vender.
+        </p>
+      </div>
+      <div *ngIf="screenSize == 'xs'" class="col-md-6 img-container">
+        <img src="../../../assets/consuming.png" alt="reception.png" />
+      </div>
+    </div>
+    <!--* part 3 records  -->
+    <div class="row part pb-5">
+      <div class="col-md-6">
+        <div class="part-title">Records</div>
+        <p class="text">
+          All the records of vouchres use will be available for and easy to
+          download.
+        </p>
+      </div>
+      <div class="col-md-6 img-container">
+        <img src="../../../assets/records.png" alt="reception.png" />
+      </div>
+    </div>
+  </div>
+</section>
+<section class="section-3">
+  <div id="contact" class="container">
+    <div class="title">CONTACT US</div>
+    <form>
+      <input type="email" placeholder="email" />
+      <textarea
+        name="message"
+        placeholder="Message"
+        cols="30"
+        rows="10"
+      ></textarea>
+      <button mat-button type="submit" class="submit-btn">SUBMIT</button>
+    </form>
+  </div>
+  <div class="footer">
+    <div>Designed And Developed By Notkirito18 - 2022</div>
+  </div>
+</section>

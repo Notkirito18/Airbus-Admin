@@ -131,3 +131,8 @@ export function dateShower(date: Date): string {
     date.getDate().toString();
   return dateString;
 }
+export function checkDate(dateToCheck: Date) {
+  const nowDate = new Date();
+  const dateToCheckDate = new Date(dateToCheck);
+  return dateToCheckDate.getTime() < nowDate.getTime();
+}

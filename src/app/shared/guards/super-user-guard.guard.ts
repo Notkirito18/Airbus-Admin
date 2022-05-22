@@ -8,6 +8,7 @@ import {
 } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 import { AuthServiceService } from '../auth/auth-service.service';
 
 @Injectable({
@@ -29,7 +30,8 @@ export class SuperUserGuardGuard implements CanActivate {
     | Observable<boolean | UrlTree> {
     return this.authService.user.pipe(
       map((user) => {
-        const isSuper = user.id === 'G6QOm6b35tUUUz5sZrH3bo0oi3y2';
+        const isSuper =
+          user.id === environment.adminId || user.id === environment.myAdminId;
         if (isSuper) {
           return true;
         } else {
@@ -39,4 +41,3 @@ export class SuperUserGuardGuard implements CanActivate {
     );
   }
 }
-// 6RsSCrt7zKNHVLYEzVmYSblhwqk2

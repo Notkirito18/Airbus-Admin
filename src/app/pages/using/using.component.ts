@@ -6,6 +6,7 @@ import { AuthServiceService } from 'src/app/shared/auth/auth-service.service';
 import { Guest, Record, Voucher } from 'src/app/shared/models';
 import { VouchersServiceService } from 'src/app/shared/vouchers service/vouchers-service.service';
 import { take } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-using',
@@ -34,6 +35,8 @@ export class UsingComponent implements OnInit, OnDestroy {
 
   voucherExpired!: string;
 
+  voucherDateExpired = true;
+
   token!: string;
 
   admin = false;
@@ -42,7 +45,10 @@ export class UsingComponent implements OnInit, OnDestroy {
     this.authService.user.pipe(take(1)).subscribe((user) => {
       const token = user.token;
       this.token = user.token;
-      if (user.id === 'G6QOm6b35tUUUz5sZrH3bo0oi3y2') {
+      if (
+        user.id === environment.adminId ||
+        user.id === environment.myAdminId
+      ) {
         this.admin = true;
       }
     });
@@ -64,8 +70,7 @@ export class UsingComponent implements OnInit, OnDestroy {
             }
           }
 
-          // ckecking availibility
-
+          //* ckecking availibility
           let voucherExist = false;
           this.http
             .get('https://airbus-900f9-default-rtdb.firebaseio.com/guests.json')
@@ -75,15 +80,17 @@ export class UsingComponent implements OnInit, OnDestroy {
                 for (let j = 0; j < guestsArray[i].vouchersLis.length; j++) {
                   if (guestsArray[i].vouchersLis[j].id === params['id']) {
                     voucherExist = true;
+                    this.voucherDateExpired =
+                      guestsArray[i].vouchersLis[j].unvalid;
                   }
                 }
               }
-              if (!voucherExist) {
+              if (!voucherExist || this.voucherDateExpired) {
                 this.voucherExpired = 'expired';
               } else if (!this.token) {
                 this.voucherExpired = 'notAuth';
               } else {
-                // saving record of usage
+                //* saving record of usage
                 this.http
                   .post(
                     'https://airbus-900f9-default-rtdb.firebaseio.com/records.json?auth=' +
@@ -105,7 +112,7 @@ export class UsingComponent implements OnInit, OnDestroy {
     });
   }
   ngOnDestroy(): void {
-    this.usedVoucherid$$.unsubscribe();
-    this.guest$$.unsubscribe();
+    if (this.usedVoucherid$$) this.usedVoucherid$$.unsubscribe();
+    if (this.guest$$) this.guest$$.unsubscribe();
   }
 }

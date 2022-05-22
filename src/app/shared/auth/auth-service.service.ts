@@ -90,7 +90,6 @@ export class AuthServiceService {
         const user = result.user;
         // ...
         this.handleAuth(result.user.email, user.uid, idtoken, 3600);
-        // this.router.navigate(['/home']);
       })
       .catch((error) => {
         // Handle Errors here.

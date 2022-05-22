@@ -4,7 +4,12 @@
     <span matRipple class="logo" (click)="logoReroute()">
       <img src="../../../assets/vouchyQR.png" alt="aloft-logo" />
     </span>
-    <button mat-button (click)="onLogoutClick()">Login</button>
+    <div>
+      <button mat-button (click)="onLoginClick()">Login</button>
+      <button class="register-btn" mat-button [routerLink]="'/register'">
+        Register
+      </button>
+    </div>
   </div>
 </mat-toolbar>
 <!-- Vender Header -->

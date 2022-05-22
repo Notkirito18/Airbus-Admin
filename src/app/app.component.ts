@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationStart, Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 import { AuthServiceService } from './shared/auth/auth-service.service';
 import { VouchersServiceService } from './shared/vouchers service/vouchers-service.service';
 
@@ -21,7 +22,7 @@ export class AppComponent implements OnInit {
       if (event instanceof NavigationStart) {
         this.authService.user.subscribe((user) => {
           if (user) {
-            user.id === 'G6QOm6b35tUUUz5sZrH3bo0oi3y2'
+            user.id === environment.adminId || user.id === environment.myAdminId
               ? this.authService.userRank.next('admin')
               : this.authService.userRank.next('vender');
           } else {
