@@ -83,15 +83,23 @@
 <section class="section-3">
   <div id="contact" class="container">
     <div class="title">CONTACT US</div>
-    <form>
-      <input type="email" placeholder="email" />
+    <form [formGroup]="contactForm">
+      <input type="email" formControlName="email" placeholder="email" />
+      <input type="text" formControlName="subject" placeholder="subject" />
       <textarea
-        name="message"
+        formControlName="message"
         placeholder="Message"
         cols="30"
         rows="10"
       ></textarea>
-      <button mat-button type="submit" class="submit-btn">SUBMIT</button>
+      <button
+        mat-button
+        class="submit-btn"
+        (click)="onFormSubmit()"
+        [disabled]="!contactForm.valid"
+      >
+        SUBMIT
+      </button>
     </form>
   </div>
   <div class="footer">
