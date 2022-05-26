@@ -1,144 +1,164 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { AuthServiceService } from 'src/app/shared/auth/auth-service.service';
-import { Guest, Record } from 'src/app/shared/models';
-import { UsersStorageService } from 'src/app/shared/storage service/users-storage.service';
-import { VouchersServiceService } from 'src/app/shared/vouchers service/vouchers-service.service';
+import {
+  Guest,
+  GuestAddObject,
+  Record,
+  RecordAddObject,
+} from 'src/app/shared/models';
 import { GuestGeneratedComponent } from '../guest-generated/guest-generated.component';
-import { take } from 'rxjs/operators';
+import { GuestsService } from 'src/app/shared/guests-service/guests.service';
+import { AuthServiceService } from 'src/app/shared/auth/auth-service.service';
+import { RecordsService } from 'src/app/shared/records service/records.service';
+import { filterValidVouchers } from 'src/app/shared/helper';
 
 @Component({
   selector: 'app-new-user',
   templateUrl: './new-user.component.html',
   styleUrls: ['./new-user.component.scss'],
 })
-export class NewUserComponent implements OnInit, OnDestroy {
+export class NewUserComponent implements OnInit {
   newGuestForm!: FormGroup;
   editingMode = false;
   guestToEdit!: Guest;
-  paramsSub$$!: Subscription;
+  guestAdded!: Guest;
+  loading: boolean = true;
 
   validUntillInit = new Date(new Date().setDate(new Date().getDate() + 7));
 
   constructor(
     private fb: FormBuilder,
-    private guestsService: UsersStorageService,
-    private vouchersService: VouchersServiceService,
+    private guestsService: GuestsService,
     private authService: AuthServiceService,
+    private recordsService: RecordsService,
     private router: Router,
     private route: ActivatedRoute,
-    private http: HttpClient,
     private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
-    this.newGuestForm = this.fb.group({
-      name: ['', Validators.required],
-      roomNumber: ['', Validators.required],
-      vouchers: [21, Validators.required],
-      type: ['', Validators.required],
-      validUntill: ['', Validators.required],
-    });
-
-    this.paramsSub$$ = this.route.params.subscribe((params: Params) => {
-      this.http
-        .get('https://airbus-900f9-default-rtdb.firebaseio.com/guests.json')
-        .subscribe((data) => {
-          let guestsArray = Object.values(data);
-          for (let i = 0; i < guestsArray.length; i++) {
-            if (guestsArray[i].id === params['id']) {
-              this.editingMode = true;
-              this.guestToEdit = guestsArray[i];
-
-              // init edit form
-              this.newGuestForm = this.fb.group({
-                name: [this.guestToEdit.name, Validators.required],
-                roomNumber: [this.guestToEdit.roomNumber, Validators.required],
-                vouchers: [
-                  this.guestToEdit.vouchersLis.length,
-                  Validators.required,
-                ],
-                type: [this.guestToEdit.type, Validators.required],
-                validUntill: [
-                  new Date(this.guestToEdit.validUntill.toString()),
-                  Validators.required,
-                ],
-              });
-
-              //logging
-              console.log('condition met');
-              console.log(
-                'edit mode :',
-                this.editingMode,
-                '| guest to edit :',
-                this.guestToEdit
-              );
-            }
-          }
+    this.route.params.subscribe((params: Params) => {
+      //setting mode
+      if (params['id'] != 'new') {
+        this.editingMode = true;
+      } else {
+        this.editingMode = false;
+      }
+      // initialing the new guest form
+      if (!this.editingMode) {
+        //TODO match validation with backend
+        this.newGuestForm = this.fb.group({
+          name: ['', [Validators.required, Validators.minLength(3)]],
+          roomNumber: ['', Validators.required],
+          vouchers: ['', Validators.required],
+          type: ['', Validators.required],
+          validUntill: ['', Validators.required],
         });
+        this.loading = false;
+      } else {
+        // getting token
+        const { _token, userDataId } = this.authService.getStorageData();
+        if (_token && userDataId) {
+          // initialing the editing guest form
+          this.guestsService
+            .getGuestById(params['id'], _token, userDataId)
+            .subscribe(
+              (guest: Guest) => {
+                this.newGuestForm = this.fb.group({
+                  name: [guest.name, Validators.required],
+                  roomNumber: [guest.roomNumber, Validators.required],
+                  vouchers: [
+                    filterValidVouchers(guest.vouchersLis).length,
+                    Validators.required,
+                  ],
+                  type: [guest.type, Validators.required],
+                  validUntill: [
+                    new Date(guest.validUntill.toString()),
+                    Validators.required,
+                  ],
+                });
+                // initialing guestToEdit variable
+                this.guestToEdit = guest;
+                this.loading = false;
+              },
+              (error) => {
+                console.log(error);
+              }
+            );
+        }
+      }
     });
   }
 
   onSubmitForm(newGuest: any) {
-    // creating new guest
-    const generatedId = Date.now().toString();
-    let guestToAdd = new Guest(
-      generatedId,
-      newGuest.name,
-      newGuest.roomNumber,
-      newGuest.type,
-      this.addHoursToDate(newGuest.validUntill, 1),
-      this.vouchersService.vouchersGenerator(
-        newGuest.vouchers,
-        generatedId,
-        this.addHoursToDate(newGuest.validUntill, 1)
-      ),
-      new Date()
-    );
-
-    // creating edited guest
-    if (this.editingMode) {
-      let guestToUpdate = new Guest(
-        this.guestToEdit.id,
-        newGuest.name,
-        newGuest.roomNumber,
-        newGuest.type,
-        this.addHoursToDate(newGuest.validUntill, 1),
-        this.vouchersService.vouchersGenerator(
-          newGuest.vouchers,
-          this.guestToEdit.id,
-          this.addHoursToDate(newGuest.validUntill, 1)
-        ),
-        new Date()
-      );
-      this.guestsService.updateGuest(this.guestToEdit.id, guestToUpdate);
-      this.router.navigate(['/dashboard']);
+    // fixing vouchers and validUntill
+    const validUntill = this.addHoursToDate(newGuest.validUntill, 1);
+    let vouchers = [];
+    for (let i = 0; i < newGuest.vouchers; i++) {
+      vouchers.push({ validUntill });
     }
-    // pushing new guest
-    else {
-      console.log('new guest added', guestToAdd);
-      //saving to records
-      this.authService.user.pipe(take(1)).subscribe((user) => {
-        const token = user.token;
-        this.http
-          .post(
-            'https://airbus-900f9-default-rtdb.firebaseio.com/records.json?auth=' +
-              token,
-            new Record(new Date(), 'guest_create', guestToAdd)
-          )
-          .subscribe((result) => {
-            console.log('registered record', result);
-          });
-      });
-
-      this.guestsService.addGuest(guestToAdd);
-      // openning dialog
-      this.newGuestForm.reset();
-      this.openGuestDialog(guestToAdd);
+    // creating new guest
+    let guestToAdd: GuestAddObject = {
+      name: newGuest.name,
+      roomNumber: newGuest.roomNumber,
+      type: newGuest.type,
+      validUntill: validUntill,
+      vouchersLis: vouchers,
+    };
+    // getting token
+    const { _token, userDataId } = this.authService.getStorageData();
+    if (_token && userDataId) {
+      if (!this.editingMode) {
+        // adding new guest to db
+        this.guestsService.addGuest(guestToAdd, _token, userDataId).subscribe(
+          (guest: Guest) => {
+            this.guestAdded = guest;
+            const recordToAdd: RecordAddObject = {
+              date: new Date(),
+              type: 'guest_created',
+              guestId: guest._id,
+              guestName: guest.name,
+              userDataId: userDataId,
+            };
+            this.recordsService
+              .addRecord(recordToAdd, _token, userDataId)
+              .subscribe(
+                (record) => {
+                  console.log('record added', record);
+                },
+                (error) => {
+                  console.log(error);
+                }
+              );
+            // openning dialog
+            this.newGuestForm.reset();
+            this.openGuestDialog(this.guestAdded);
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
+      } else {
+        // editing guest in db
+        this.route.params.subscribe((params: Params) => {
+          this.guestsService
+            .updateGuest(params['id'], guestToAdd, _token, userDataId)
+            .subscribe(
+              (guest: Guest) => {
+                this.guestAdded = guest;
+                // openning dialog
+                this.newGuestForm.reset();
+                this.openGuestDialog(this.guestAdded);
+              },
+              (error) => {
+                console.log(error);
+              }
+            );
+        });
+      }
     }
   }
 
@@ -148,11 +168,8 @@ export class NewUserComponent implements OnInit, OnDestroy {
       data: { guest },
     });
   }
-
-  ngOnDestroy(): void {
-    if (this.paramsSub$$) this.paramsSub$$.unsubscribe();
-  }
   addHoursToDate(date: Date, hours: number) {
     return new Date(new Date(date).setHours(date.getHours() + hours));
   }
+  filterValidVouchers = filterValidVouchers;
 }

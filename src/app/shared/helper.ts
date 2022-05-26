@@ -1,4 +1,5 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { Voucher } from './models';
 
 export function responsiveWidth(
   screenSize: string,
@@ -135,4 +136,11 @@ export function checkDate(dateToCheck: Date) {
   const nowDate = new Date();
   const dateToCheckDate = new Date(dateToCheck);
   return dateToCheckDate.getTime() < nowDate.getTime();
+}
+export function filterValidVouchers(vouchers: Voucher[]): Voucher[] {
+  return vouchers.filter((item) => {
+    const newDate = new Date();
+    const expireDate = new Date(item.validUntill);
+    return !item.unvalid || newDate.getTime() > expireDate.getTime();
+  });
 }

@@ -21,3 +21,37 @@
     <b> djalelguergouri@gmail.com </b>
   </p>
 </div>
+<div class="login-container">
+  <p>Login in to be able to access the vender website.</p>
+
+  <div class="form-container">
+    <form
+      [formGroup]="registerForm"
+      (submit)="onFormSubmit(registerForm.value)"
+    >
+      <mat-form-field appearance="outline">
+        <mat-label>Username</mat-label>
+        <input matInput type="text" formControlName="username" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Password</mat-label>
+        <input matInput type="password" formControlName="password" />
+      </mat-form-field>
+
+      <button
+        mat-button
+        class="sign-up-btn"
+        type="submit"
+        [disabled]="!registerForm.valid"
+      >
+        Log In
+      </button>
+    </form>
+  </div>
+</div>

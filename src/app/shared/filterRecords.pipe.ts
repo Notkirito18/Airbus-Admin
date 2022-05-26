@@ -14,9 +14,10 @@ export class filterRecordsPipe implements PipeTransform {
       let filtered = items.filter((item) => {
         item.type === 'voucher_use';
       });
-      filtered = items.filter((item) => {
-        item.Voucher?.holderId === guest?.id;
-      });
+      //TODO fix this
+      // filtered = items.filter((item) => {
+      //   item.Voucher?.holderId === guest?._id;
+      // });
       return filtered;
     }
     if (filter === 'vender') {

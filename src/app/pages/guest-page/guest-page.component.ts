@@ -1,7 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { Guest } from 'src/app/shared/models';
+import { AuthServiceService } from 'src/app/shared/auth/auth-service.service';
+import { GuestsService } from 'src/app/shared/guests-service/guests.service';
+import { filterValidVouchers } from 'src/app/shared/helper';
+import { Guest, Record } from 'src/app/shared/models';
 import { RecordsService } from 'src/app/shared/records service/records.service';
 
 @Component({
@@ -11,52 +14,45 @@ import { RecordsService } from 'src/app/shared/records service/records.service';
 })
 export class GuestPageComponent implements OnInit {
   guest: Guest = new Guest('', '', 0, '', new Date(), []);
+  // guest!: Guest;
   guestHasNoValidVouchers = false;
   loading = true;
+  displayRecords!: Record[];
 
   constructor(
     private route: ActivatedRoute,
-    private http: HttpClient,
-    private recordsService: RecordsService
+    private guestsServie: GuestsService,
+    private recordsService: RecordsService,
+    private authService: AuthServiceService
   ) {}
 
   ngOnInit(): void {
+    // getting guest id
     this.route.params.subscribe((params: Params) => {
-      this.http
-        .get('https://airbus-900f9-default-rtdb.firebaseio.com/guests.json')
-        .subscribe((data) => {
-          const guestsArray = Object.values(data);
-
-          for (let i = 0; i < guestsArray.length; i++) {
-            if (guestsArray[i].id === params['id']) {
-              this.guest = guestsArray[i];
-              if (
-                this.guest.vouchersLis[0].id.length < 1 ||
-                this.guest.vouchersLis[0].unvalid
-              ) {
-                this.guestHasNoValidVouchers = true;
-              }
+      const guestId = params['id'];
+      // getting token
+      const { _token, userDataId } = this.authService.getStorageData();
+      if (_token && userDataId) {
+        // getting guest info
+        this.guestsServie
+          .getGuestById(guestId, _token, userDataId)
+          .subscribe((guest: Guest) => {
+            this.guest = guest;
+            console.log(guest);
+            // checking if the guest has valid vouchers
+            if (filterValidVouchers(guest.vouchersLis).length == 0) {
+              this.guestHasNoValidVouchers = true;
             }
-          }
-          this.loading = false;
-        });
+          });
+        // getting guest's records
+        this.recordsService
+          .getGuestRecords(guestId, _token, userDataId)
+          .subscribe((records: Record[]) => {
+            this.displayRecords = records;
+            this.loading = false;
+          });
+      }
     });
-    this.http
-      .get('https://airbus-900f9-default-rtdb.firebaseio.com/records.json')
-      .subscribe((recordsData) => {
-        if (recordsData) {
-          const recordsArr = Object.values(recordsData);
-          let GuestRecords = [];
-          for (let i = 0; i < recordsArr.length; i++) {
-            if (recordsArr[i].guest.id === this.guest.id) {
-              GuestRecords.push(recordsArr[i]);
-            }
-          }
-          this.recordsService.recordsArray.next(GuestRecords);
-        }
-      });
   }
-  testFun() {
-    this.loading = false;
-  }
+  filterValidVouchers = filterValidVouchers;
 }

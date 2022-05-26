@@ -1,5 +1,6 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
+import { AuthServiceService } from 'src/app/shared/auth/auth-service.service';
+import { GuestsService } from 'src/app/shared/guests-service/guests.service';
 import { Guest, Record } from 'src/app/shared/models';
 import { RecordsService } from 'src/app/shared/records service/records.service';
 
@@ -9,18 +10,14 @@ import { RecordsService } from 'src/app/shared/records service/records.service';
   styleUrls: ['./records.component.scss'],
 })
 export class RecordsComponent implements OnInit {
-  records!: Record[];
-
   @Input() guest!: Guest;
+  @Input() records!: any[];
 
   recordsLength = 0;
 
-  constructor(private recordsService: RecordsService) {}
+  constructor() {}
 
   ngOnInit(): void {
-    this.recordsService.recordsArray.subscribe((recordsData) => {
-      this.records = recordsData;
-      this.recordsLength = recordsData.length;
-    });
+    this.recordsLength = this.records.length;
   }
 }

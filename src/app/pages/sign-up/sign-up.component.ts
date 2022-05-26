@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -37,7 +37,7 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   templateUrl: './sign-up.component.html',
   styleUrls: ['./sign-up.component.scss'],
 })
-export class SignUpComponent implements OnInit, OnDestroy {
+export class SignUpComponent implements OnInit {
   signUpForm!: FormGroup;
   isLoggedIn = false;
 
@@ -54,6 +54,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
 
     this.signUpForm = this.fb.group(
       {
+        username: ['', Validators.required],
         email: ['', [Validators.required, Validators.email]],
         password: ['', [Validators.required, Validators.min(6)]],
         confirmPassword: [''],
@@ -91,23 +92,14 @@ export class SignUpComponent implements OnInit, OnDestroy {
     return pass.length >= 6 && valid ? null : { invalid: true };
   };
 
-  submitSignUpForm(formValue: any) {
-    if (formValue.email && formValue.password) {
-      this.signUpSub$ = this.authService
-        .signUpEmailAndPass(formValue.email, formValue.password)
-        .subscribe(
-          (response) => {
-            console.log('sign up response :', response);
-          },
-          (error) => {
-            console.log(error);
-          }
-        );
-    } else {
-      alert('You have to provide an email and a password');
-    }
-  }
-  ngOnDestroy(): void {
-    if (this.signUpSub$) this.signUpSub$.unsubscribe();
+  submitSignUpForm({ username, email, password }: any) {
+    this.authService.registerNewVender(username, email, password).subscribe(
+      (result) => {
+        console.log(result);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
   }
 }

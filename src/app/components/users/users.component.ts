@@ -1,8 +1,7 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { Guest } from 'src/app/shared/models';
-import { UsersStorageService } from 'src/app/shared/storage service/users-storage.service';
+import { Guest, Voucher } from 'src/app/shared/models';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -12,11 +11,15 @@ import { MediaChange, MediaObserver } from '@angular/flex-layout';
 import {
   checkDate,
   displayFlexOrBlock,
+  filterValidVouchers,
   hideElementResponsivly,
   responsiveContainerPaddingPx,
   responsiveWidth,
 } from '../../shared/helper';
 import { GuestGeneratedComponent } from '../guest-generated/guest-generated.component';
+import { GuestsService } from 'src/app/shared/guests-service/guests.service';
+import { AuthServiceService } from 'src/app/shared/auth/auth-service.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-users',
@@ -28,7 +31,6 @@ export class UsersComponent implements OnInit, OnDestroy {
 
   guestsToShow: Guest[] = [];
   guestsData = new MatTableDataSource<Guest>(this.guestsToShow);
-  guestsToShow$$!: Subscription;
   voucherId!: string;
   myFilterString = '';
 
@@ -44,8 +46,10 @@ export class UsersComponent implements OnInit, OnDestroy {
   ];
 
   constructor(
-    private guestsService: UsersStorageService,
+    private guestsService: GuestsService,
+    private authService: AuthServiceService,
     private dialog: MatDialog,
+    private snackBar: MatSnackBar,
     private router: Router,
     private mediaObserver: MediaObserver
   ) {}
@@ -63,37 +67,60 @@ export class UsersComponent implements OnInit, OnDestroy {
         this.screenSize = result.mqAlias;
       }
     );
-    //sort fixing
-
-    // showing guest list
-    this.guestsToShow$$ = this.guestsService.Guests.subscribe(
-      (guests: Guest[]) => {
-        this.guestsToShow = guests;
-        this.guestsData = new MatTableDataSource<Guest>(guests);
-        this.guestsData.sortingDataAccessor = (item: any, property: any) => {
-          if (property === 'vouchers') {
-            return item.vouchersLis.length;
-          } else {
-            return item[property];
+    //getting token
+    const { _token, userDataId } = this.authService.getStorageData();
+    if (_token && userDataId) {
+      // showing guest list
+      this.guestsService.getAllGuests(_token, userDataId).subscribe(
+        (guests: Guest[]) => {
+          this.guestsToShow = guests;
+          this.guestsData = new MatTableDataSource<Guest>(guests);
+          this.guestsData.sortingDataAccessor = (item: any, property: any) => {
+            if (property === 'vouchers') {
+              return item.vouchersLis.length;
+            } else {
+              return item[property];
+            }
+          };
+          if (guests.length > 0) {
+            this.guestsData.sort = this.sort;
+            this.guestsData.paginator = this.paginator;
           }
-        };
-        this.guestsData.sort = this.sort;
-        this.guestsData.paginator = this.paginator;
-      }
-    );
-    this.guestsService.populateGuests();
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    } else {
+      this.router.navigate(['/auth']);
+    }
   }
 
   openDeleteGuestDialog(id: string, name: string): void {
-    this.dialog.open(DeleteConfirmComponent, {
+    const dialogRef = this.dialog.open(DeleteConfirmComponent, {
       width: '250px',
       data: { name, id },
     });
-  }
-
-  removeGuest(id: string) {
-    // this.guestsService.removeGuest(id);
-    console.log('removed ', id);
+    dialogRef.afterClosed().subscribe((deleted) => {
+      if (deleted) {
+        this.snackBar.open(
+          'Guest deleted, page will reload to update data',
+          '',
+          {
+            duration: 3000,
+            panelClass: 'deleted-snackbar',
+          }
+        );
+        setTimeout(() => {
+          window.location.reload();
+        }, 3200);
+      } else {
+        this.snackBar.open('Something went wrong when deleting guest', '', {
+          duration: 3000,
+          panelClass: 'not-deleted-snackbar',
+        });
+      }
+    });
   }
 
   applyFilter(event: Event) {
@@ -113,10 +140,10 @@ export class UsersComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.guestsToShow$$.unsubscribe();
     this.mediaSubscription.unsubscribe();
   }
 
+  filterValidVouchers = filterValidVouchers;
   checkDate = checkDate;
   responsiveContainerPaddingPx = responsiveContainerPaddingPx;
   hideElementResponsivly = hideElementResponsivly;

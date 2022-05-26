@@ -27,7 +27,7 @@
           mat-raised-button
           class="btn"
           [ngStyle]="{ background: admin ? '#536dfe' : '#31c2a0' }"
-          [routerLink]="'/guest/' + guest.id"
+          [routerLink]="'/guest/' + guest._id"
         >
           Go to {{ guest.name }}'s page
         </button>

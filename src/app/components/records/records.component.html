@@ -23,15 +23,19 @@
             <div *ngIf="!guest" class="subtitle">
               {{
                 element.type === "voucher_use"
-                  ? 'By "' + element.guest?.name + '"'
-                  : '"' + element.guest?.name + '"'
+                  ? 'By "' + element.guestName + '"'
+                  : '"' + element.guestName + '"'
               }}
             </div>
           </div>
         </div>
         <div class="right">
-          <div>{{ element.date.toString().slice(0, 10) }}</div>
-          <div>{{ element.date.toString().slice(11, 19) }}</div>
+          <div>
+            {{ element.date ? element.date.toString().slice(0, 10) : "" }}
+          </div>
+          <div>
+            {{ element.date ? element.date.toString().slice(11, 19) : "" }}
+          </div>
         </div>
       </div>
       <hr />

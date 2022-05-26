@@ -12,9 +12,10 @@ import { Guest, Voucher } from 'src/app/shared/models';
 import QRCode from 'easyqrcodejs';
 import { responsiveWidth } from 'src/app/shared/helper';
 import { HttpClient } from '@angular/common/http';
-import { AuthServiceService } from 'src/app/shared/auth/auth-service.service';
 import { Subscription } from 'rxjs';
-import { VouchersServiceService } from 'src/app/shared/vouchers service/vouchers-service.service';
+import { environment } from 'src/environments/environment';
+import { GuestsService } from 'src/app/shared/guests-service/guests.service';
+import { AuthServiceService } from 'src/app/shared/auth/auth-service.service';
 
 @Component({
   selector: 'app-qr-code-info',
@@ -24,7 +25,8 @@ import { VouchersServiceService } from 'src/app/shared/vouchers service/vouchers
 export class QrCodeInfoComponent implements OnInit, AfterViewInit {
   constructor(
     private router: Router,
-    private http: HttpClient,
+    private guestsService: GuestsService,
+    private authService: AuthServiceService,
     public dialogRef: MatDialogRef<QrCodeInfoComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { voucher: Voucher }
   ) {}
@@ -33,16 +35,18 @@ export class QrCodeInfoComponent implements OnInit, AfterViewInit {
   getolderSub$$!: Subscription;
 
   ngOnInit(): void {
-    this.http
-      .get('https://airbus-900f9-default-rtdb.firebaseio.com/guests.json')
-      .subscribe((guests: Record<string, any>) => {
-        const guestsArray = Object.values(guests);
-        for (let i = 0; i < guestsArray.length; i++) {
-          if (guestsArray[i].id === this.data.voucher.holderId) {
-            this.holder = guestsArray[i];
-          }
+    //get token
+    const { _token, userDataId } = this.authService.getStorageData();
+    this.guestsService
+      .getGuestById(this.data.voucher.holderId, _token, userDataId)
+      .subscribe(
+        (guest: Guest) => {
+          this.holder = guest;
+        },
+        (error) => {
+          console.log(error);
         }
-      });
+      );
   }
 
   @ViewChild('qrcode', { static: false }) qrcode!: ElementRef;
@@ -50,8 +54,7 @@ export class QrCodeInfoComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     // Options
     var options = {
-      text:
-        'https://airbus-900f9.firebaseapp.com/using/' + this.data.voucher.id,
+      text: environment.serverUrl + 'using/' + this.data.voucher._id,
       width: 250,
       height: 250,
       colorDark: '#440024',
