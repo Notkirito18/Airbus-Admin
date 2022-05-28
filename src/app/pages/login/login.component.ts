@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormGroupDirective,
+  Validators,
+} from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AuthServiceService } from 'src/app/shared/auth/auth-service.service';
@@ -32,7 +37,7 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  submitlogInForm({ email, password }: any) {
+  submitlogInForm({ email, password }: any, formDirective: FormGroupDirective) {
     this.authService.logInEmailAndPass(email, password).subscribe(
       (result) => {
         if (result.body.admin) {
@@ -42,6 +47,8 @@ export class LoginComponent implements OnInit {
         }
       },
       (error) => {
+        this.logInForm.reset();
+        formDirective.resetForm();
         this.authService.notification.next({
           msg: error.error.msg,
           type: 'error',
