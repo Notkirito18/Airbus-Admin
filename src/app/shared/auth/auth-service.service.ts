@@ -23,7 +23,7 @@ export class AuthServiceService {
   registerNewAdmin(username: string, email: string, password: string) {
     return this.http
       .post(
-        environment.serverUrl + 'auth/register',
+        'auth/register',
         {
           username,
           email,
@@ -59,7 +59,7 @@ export class AuthServiceService {
     } = JSON.parse(localStorage.getItem('userData') || '{}');
 
     return this.http.post(
-      environment.serverUrl + 'auth/register',
+      'auth/register',
       {
         username,
         email,
@@ -73,7 +73,7 @@ export class AuthServiceService {
   logInEmailAndPass(email: string, password: string) {
     return this.http
       .post(
-        environment.serverUrl + 'auth/login',
+        'auth/login',
         { email, password },
         { headers: { key: environment.serverKey }, observe: 'response' }
       )
@@ -175,7 +175,7 @@ export class AuthServiceService {
   }
 
   submitContactForm(contactInfo: any) {
-    return this.http.post(environment.serverUrl + 'contact', contactInfo, {
+    return this.http.post('contact', contactInfo, {
       headers: { key: environment.serverKey },
       observe: 'response',
     });

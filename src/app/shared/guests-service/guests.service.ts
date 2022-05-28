@@ -13,7 +13,7 @@ export class GuestsService {
 
   getAllGuests(token: string, userDataId: string): Observable<Guest[]> {
     return this.http
-      .get<{ guests: Guest[] }>(environment.serverUrl + 'api/guests', {
+      .get<{ guests: Guest[] }>('api/guests', {
         headers: {
           key: environment.serverKey,
           authToken: token,
@@ -29,7 +29,7 @@ export class GuestsService {
 
   getGuestById(_id: string): Observable<Guest> {
     return this.http
-      .get<{ guest: Guest }>(environment.serverUrl + 'api/guest/' + _id, {
+      .get<{ guest: Guest }>('api/guest/' + _id, {
         headers: {
           key: environment.serverKey,
         },
@@ -43,14 +43,11 @@ export class GuestsService {
 
   getGuestRecords(_id: string): Observable<Record[]> {
     return this.http
-      .get<{ guest: Guest; records: Record[] }>(
-        environment.serverUrl + 'api/guest/' + _id,
-        {
-          headers: {
-            key: environment.serverKey,
-          },
-        }
-      )
+      .get<{ guest: Guest; records: Record[] }>('api/guest/' + _id, {
+        headers: {
+          key: environment.serverKey,
+        },
+      })
       .pipe(
         map((responseGuest) => {
           return responseGuest.records;
@@ -64,17 +61,13 @@ export class GuestsService {
     userDataId: string
   ): Observable<Guest> {
     return this.http
-      .post<{ guest: Guest }>(
-        environment.serverUrl + 'api/guests',
-        guestToAdd,
-        {
-          headers: {
-            key: environment.serverKey,
-            authToken: token,
-            userDataId: userDataId,
-          },
-        }
-      )
+      .post<{ guest: Guest }>('api/guests', guestToAdd, {
+        headers: {
+          key: environment.serverKey,
+          authToken: token,
+          userDataId: userDataId,
+        },
+      })
       .pipe(
         map((responseGuest) => {
           return responseGuest.guest;
@@ -89,17 +82,13 @@ export class GuestsService {
     userDataId: string
   ): Observable<Guest> {
     return this.http
-      .patch<{ guest: Guest }>(
-        environment.serverUrl + 'api/guests/' + _id,
-        updatedGuest,
-        {
-          headers: {
-            key: environment.serverKey,
-            authToken: token,
-            userDataId: userDataId,
-          },
-        }
-      )
+      .patch<{ guest: Guest }>('api/guests/' + _id, updatedGuest, {
+        headers: {
+          key: environment.serverKey,
+          authToken: token,
+          userDataId: userDataId,
+        },
+      })
       .pipe(
         map((responseGuest) => {
           return responseGuest.guest;
@@ -108,7 +97,7 @@ export class GuestsService {
   }
 
   removeGuest(_id: string, token: string, userDataId: string) {
-    return this.http.delete(environment.serverUrl + 'api/guests/' + _id, {
+    return this.http.delete('api/guests/' + _id, {
       headers: {
         key: environment.serverKey,
         authToken: token,

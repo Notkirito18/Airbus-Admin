@@ -13,7 +13,7 @@ export class RecordsService {
 
   getAllRecords(token: string, userDataId: string): Observable<Record[]> {
     return this.http
-      .get<{ records: Record[] }>(environment.serverUrl + 'api/records', {
+      .get<{ records: Record[] }>('api/records', {
         headers: {
           key: environment.serverKey,
           authToken: token,
@@ -33,17 +33,13 @@ export class RecordsService {
     userDataId: string
   ): Observable<Record> {
     return this.http
-      .post<{ record: Record }>(
-        environment.serverUrl + 'api/records',
-        recordToAdd,
-        {
-          headers: {
-            key: environment.serverKey,
-            authToken: token,
-            userDataId: userDataId,
-          },
-        }
-      )
+      .post<{ record: Record }>('api/records', recordToAdd, {
+        headers: {
+          key: environment.serverKey,
+          authToken: token,
+          userDataId: userDataId,
+        },
+      })
       .pipe(
         map((responseGuests) => {
           return responseGuests.record;
@@ -58,17 +54,13 @@ export class RecordsService {
     userDataId: string
   ): Observable<Record> {
     return this.http
-      .patch<{ record: Record }>(
-        environment.serverUrl + 'api/records/' + id,
-        updatedRecord,
-        {
-          headers: {
-            key: environment.serverKey,
-            authToken: token,
-            userDataId: userDataId,
-          },
-        }
-      )
+      .patch<{ record: Record }>('api/records/' + id, updatedRecord, {
+        headers: {
+          key: environment.serverKey,
+          authToken: token,
+          userDataId: userDataId,
+        },
+      })
       .pipe(
         map((responseGuests) => {
           return responseGuests.record;
@@ -77,7 +69,7 @@ export class RecordsService {
   }
 
   removeRecord(id: string, token: string, userDataId: string) {
-    return this.http.delete(environment.serverUrl + 'api/records/' + id, {
+    return this.http.delete('api/records/' + id, {
       headers: {
         key: environment.serverKey,
         authToken: token,
@@ -92,7 +84,7 @@ export class RecordsService {
     userDataId: string
   ): Observable<any> {
     return this.http.post(
-      environment.serverUrl + 'api/records/deleteMany',
+      'api/records/deleteMany',
       { ids },
       {
         headers: {
