@@ -37,19 +37,17 @@ export class QrCodeInfoComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     //get token
     const { _token, userDataId } = this.authService.getStorageData();
-    this.guestsService
-      .getGuestById(this.data.voucher.holderId, _token, userDataId)
-      .subscribe(
-        (guest: Guest) => {
-          this.holder = guest;
-        },
-        (error) => {
-          this.authService.notification.next({
-            msg: error.error.msg,
-            type: 'error',
-          });
-        }
-      );
+    this.guestsService.getGuestById(this.data.voucher.holderId).subscribe(
+      (guest: Guest) => {
+        this.holder = guest;
+      },
+      (error) => {
+        this.authService.notification.next({
+          msg: error.error.msg,
+          type: 'error',
+        });
+      }
+    );
   }
 
   @ViewChild('qrcode', { static: false }) qrcode!: ElementRef;

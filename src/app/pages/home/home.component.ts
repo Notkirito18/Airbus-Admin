@@ -208,8 +208,7 @@ export class HomeComponent implements OnInit {
         },
       },
     };
-    //TODO uncomment pdf maker
-    // pdfMake.createPdf(docDefinition).open();
+    pdfMake.createPdf(docDefinition).open();
   }
 
   openDeleteGuestDialog(): void {

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { Guest, GuestAddObject } from '../models';
+import { Guest, GuestAddObject, Record } from '../models';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
@@ -27,22 +27,33 @@ export class GuestsService {
       );
   }
 
-  getGuestById(
-    _id: string,
-    token: string,
-    userDataId: string
-  ): Observable<Guest> {
+  getGuestById(_id: string): Observable<Guest> {
     return this.http
-      .get<{ guest: Guest }>(environment.serverUrl + 'api/guests/' + _id, {
+      .get<{ guest: Guest }>(environment.serverUrl + 'api/guest/' + _id, {
         headers: {
           key: environment.serverKey,
-          authToken: token,
-          userDataId: userDataId,
         },
       })
       .pipe(
         map((responseGuest) => {
           return responseGuest.guest;
+        })
+      );
+  }
+
+  getGuestRecords(_id: string): Observable<Record[]> {
+    return this.http
+      .get<{ guest: Guest; records: Record[] }>(
+        environment.serverUrl + 'api/guest/' + _id,
+        {
+          headers: {
+            key: environment.serverKey,
+          },
+        }
+      )
+      .pipe(
+        map((responseGuest) => {
+          return responseGuest.records;
         })
       );
   }

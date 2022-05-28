@@ -27,28 +27,6 @@ export class RecordsService {
       );
   }
 
-  getGuestRecords(
-    guestId: string,
-    token: string,
-    userDataId: string
-  ): Observable<Record[]> {
-    return this.http
-      .get<{ records: Record[] }>(environment.serverUrl + 'api/records', {
-        headers: {
-          key: environment.serverKey,
-          authToken: token,
-          userDataId: userDataId,
-        },
-      })
-      .pipe(
-        map((responseGuests) => {
-          return responseGuests.records.filter((item) => {
-            return item.guestId == guestId;
-          });
-        })
-      );
-  }
-
   addRecord(
     recordToAdd: RecordAddObject,
     token: string,

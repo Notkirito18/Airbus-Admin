@@ -22,7 +22,6 @@ export class GuestPageComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private guestsServie: GuestsService,
-    private recordsService: RecordsService,
     private authService: AuthServiceService
   ) {}
 
@@ -30,42 +29,40 @@ export class GuestPageComponent implements OnInit {
     // getting guest id
     this.route.params.subscribe((params: Params) => {
       const guestId = params['id'];
-      // getting token
-      const { _token, userDataId } = this.authService.getStorageData();
-      if (_token && userDataId) {
-        // getting guest info
-        this.guestsServie.getGuestById(guestId, _token, userDataId).subscribe(
-          (guest: Guest) => {
-            this.guest = guest;
-            console.log(guest);
-            // checking if the guest has valid vouchers
-            if (filterValidVouchers(guest.vouchersLis).length == 0) {
-              this.guestHasNoValidVouchers = true;
-            }
-          },
-          (error) => {
-            this.authService.notification.next({
-              msg: error.error.msg,
-              type: 'error',
-            });
+      // getting guest info
+      this.guestsServie.getGuestById(guestId).subscribe(
+        (guest: Guest) => {
+          this.guest = guest;
+          console.log(guest);
+          // checking if the guest has valid vouchers
+          if (filterValidVouchers(guest.vouchersLis).length == 0) {
+            this.guestHasNoValidVouchers = true;
           }
-        );
-        // getting guest's records
-        this.recordsService
-          .getGuestRecords(guestId, _token, userDataId)
-          .subscribe(
-            (records: Record[]) => {
-              this.displayRecords = records;
-              this.loading = false;
-            },
-            (error) => {
-              this.authService.notification.next({
-                msg: error.error.msg,
-                type: 'error',
-              });
-            }
-          );
-      }
+        },
+        (error) => {
+          console.log(error);
+
+          this.authService.notification.next({
+            msg: error.error.msg,
+            type: 'error',
+          });
+        }
+      );
+      // getting guest's records
+      this.guestsServie.getGuestRecords(guestId).subscribe(
+        (records: Record[]) => {
+          this.displayRecords = records;
+          this.loading = false;
+        },
+        (error) => {
+          console.log(error);
+
+          this.authService.notification.next({
+            msg: error.error.msg,
+            type: 'error',
+          });
+        }
+      );
     });
   }
   filterValidVouchers = filterValidVouchers;

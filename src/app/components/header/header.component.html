@@ -21,7 +21,12 @@
       </span>
       <h1><b>Vender</b></h1>
     </div>
-    <button mat-button (click)="onLogoutClick()">Logout</button>
+    <div class="username-container">
+      <div class="username">{{ user.username }}</div>
+      <button class="logout-vender" mat-button (click)="onLogoutClick()">
+        Logout
+      </button>
+    </div>
   </div>
 </mat-toolbar>
 <!-- Admin Header -->
@@ -33,7 +38,11 @@
       </span>
       <h1><b>Admin</b></h1>
     </div>
-
-    <button mat-button (click)="onLogoutClick()">Logout</button>
+    <div class="username-container">
+      <div class="username">{{ user.username }}</div>
+      <button class="logout-admin" mat-button (click)="onLogoutClick()">
+        Logout
+      </button>
+    </div>
   </div>
 </mat-toolbar>

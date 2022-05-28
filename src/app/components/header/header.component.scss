@@ -52,6 +52,27 @@ mat-toolbar {
   background-color: white;
   color: #b71f6f;
 }
+.username-container{
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  .username{
+    font-size: 12pt;
+  }
+  button{
+    border: 1px solid white;
+    transition: all 500ms ease;
+  }
+  .logout-admin:hover {
+    background-color: white;
+    color: #536dfe;
+  }
+  .logout-vender:hover {
+    background-color: white;
+    color: #31c2a0;
+  }
+
+}
 
 @media only screen and (max-width:768px){
   mat-toolbar{

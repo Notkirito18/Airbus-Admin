@@ -45,9 +45,7 @@ import { SignUpComponent } from './pages/sign-up/sign-up.component';
 import { GuestPageComponent } from './pages/guest-page/guest-page.component';
 import { QrCodeCardComponent } from './components/qr-code-card/qr-code-card.component';
 import { GuestGeneratedComponent } from './components/guest-generated/guest-generated.component';
-import { environment } from 'src/environments/environment';
 
-import * as firebase from 'firebase/app';
 import { QrCodeInfoComponent } from './components/qr-code-info/qr-code-info.component';
 import { VenderHomeComponent } from './pages/vender-home/vender-home.component';
 import { MyFilterPipe } from './shared/myFilter.pipe';
@@ -56,8 +54,6 @@ import { RecordsComponent } from './components/records/records.component';
 import { DeleteConfirmRecordsComponent } from './components/delete-confirm-records/delete-confirm-records.component';
 import { HomePageComponent } from './pages/home-page/home-page.component';
 import { RegisterComponent } from './pages/register/register.component';
-
-firebase.initializeApp(environment.firebaseConfig);
 
 @NgModule({
   declarations: [

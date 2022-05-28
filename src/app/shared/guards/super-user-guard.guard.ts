@@ -34,7 +34,7 @@ export class SuperUserGuardGuard implements CanActivate {
         if (isAdmin) {
           return true;
         } else {
-          return this.router.createUrlTree(['/auth/logIn']);
+          return this.router.createUrlTree(['/vhome']);
         }
       })
     );

@@ -53,7 +53,6 @@ export class NewUserComponent implements OnInit {
       }
       // initialing the new guest form
       if (!this.editingMode) {
-        //TODO match validation with backend
         this.newGuestForm = this.fb.group({
           name: [
             '',
@@ -74,44 +73,42 @@ export class NewUserComponent implements OnInit {
         const { _token, userDataId } = this.authService.getStorageData();
         if (_token && userDataId) {
           // initialing the editing guest form
-          this.guestsService
-            .getGuestById(params['id'], _token, userDataId)
-            .subscribe(
-              (guest: Guest) => {
-                this.newGuestForm = this.fb.group({
-                  name: [
-                    guest.name,
-                    [
-                      Validators.required,
-                      Validators.minLength(3),
-                      Validators.maxLength(30),
-                    ],
+          this.guestsService.getGuestById(params['id']).subscribe(
+            (guest: Guest) => {
+              this.newGuestForm = this.fb.group({
+                name: [
+                  guest.name,
+                  [
+                    Validators.required,
+                    Validators.minLength(3),
+                    Validators.maxLength(30),
                   ],
-                  roomNumber: [
-                    guest.roomNumber,
-                    [Validators.required, Validators.min(0)],
-                  ],
-                  vouchers: [
-                    filterValidVouchers(guest.vouchersLis).length,
-                    [Validators.required, Validators.min(0)],
-                  ],
-                  type: [guest.type, Validators.required],
-                  validUntill: [
-                    new Date(guest.validUntill.toString()),
-                    [Validators.required, dateInFuture],
-                  ],
-                });
-                // initialing guestToEdit variable
-                this.guestToEdit = guest;
-                this.loading = false;
-              },
-              (error) => {
-                this.authService.notification.next({
-                  msg: error.error.msg,
-                  type: 'error',
-                });
-              }
-            );
+                ],
+                roomNumber: [
+                  guest.roomNumber,
+                  [Validators.required, Validators.min(0)],
+                ],
+                vouchers: [
+                  filterValidVouchers(guest.vouchersLis).length,
+                  [Validators.required, Validators.min(0)],
+                ],
+                type: [guest.type, Validators.required],
+                validUntill: [
+                  new Date(guest.validUntill.toString()),
+                  [Validators.required, dateInFuture],
+                ],
+              });
+              // initialing guestToEdit variable
+              this.guestToEdit = guest;
+              this.loading = false;
+            },
+            (error) => {
+              this.authService.notification.next({
+                msg: error.error.msg,
+                type: 'error',
+              });
+            }
+          );
         }
       }
     });

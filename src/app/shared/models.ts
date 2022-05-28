@@ -32,7 +32,8 @@ export class User {
     private _token: string,
     private _tokenExpirationDate: Date,
     private admin: boolean,
-    private userDataId: string
+    private userDataId: string,
+    public username: string
   ) {}
 
   get token() {

@@ -40,7 +40,8 @@ export class AuthServiceService {
             result.headers.get('authToken'),
             parseInt(result.headers.get('expires-in')),
             true,
-            result.body.userId
+            result.body.userId,
+            result.username
           );
         })
       );
@@ -78,13 +79,16 @@ export class AuthServiceService {
       )
       .pipe(
         tap((result: any) => {
+          console.log('backend result', result);
+
           this.handleAuth(
             result.body.email,
             result.body._id,
             result.headers.get('authToken'),
             result.headers.get('expires-in'),
             result.body.admin,
-            result.body.userDataId
+            result.body.userDataId,
+            result.body.username
           );
         })
       );
@@ -96,13 +100,23 @@ export class AuthServiceService {
     token: string | undefined,
     expIn: number,
     admin: boolean,
-    userDataId: string
+    userDataId: string,
+    username: string
   ) {
     if (email && token) {
       const expDate = new Date(new Date().getTime() + expIn * 1000);
-      const user = new User(email, _id, token, expDate, admin, userDataId);
+      const user = new User(
+        email,
+        _id,
+        token,
+        expDate,
+        admin,
+        userDataId,
+        username
+      );
       this.user.next(user);
       this.autoLogout(expIn * 1000);
+      console.log('user', user);
       localStorage.setItem('userData', JSON.stringify(user));
     }
   }
@@ -115,6 +129,7 @@ export class AuthServiceService {
       _tokenExpirationDate: string;
       admin: boolean;
       userDataId: string;
+      username: string;
     } = JSON.parse(localStorage.getItem('userData') || '{}');
 
     if (userData) {
@@ -124,7 +139,8 @@ export class AuthServiceService {
         userData._token,
         new Date(userData._tokenExpirationDate),
         userData.admin,
-        userData.userDataId
+        userData.userDataId,
+        userData.username
       );
       if (loadedUser.token) {
         const expirationDuration =
