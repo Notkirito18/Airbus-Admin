@@ -11,7 +11,8 @@
     </h2>
     <form
       [formGroup]="newGuestForm"
-      (submit)="onSubmitForm(newGuestForm.value)"
+      #formDirective="ngForm"
+      (submit)="onSubmitForm(newGuestForm.value, formDirective)"
     >
       <!-- name input -->
       <mat-form-field appearance="outline">

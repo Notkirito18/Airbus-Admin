@@ -52,7 +52,6 @@ import { QrCodeInfoComponent } from './components/qr-code-info/qr-code-info.comp
 import { VenderHomeComponent } from './pages/vender-home/vender-home.component';
 import { MyFilterPipe } from './shared/myFilter.pipe';
 import { sortRecordsPipe } from './shared/sortRecords.pipe';
-import { filterRecordsPipe } from './shared/filterRecords.pipe';
 import { RecordsComponent } from './components/records/records.component';
 import { DeleteConfirmRecordsComponent } from './components/delete-confirm-records/delete-confirm-records.component';
 import { HomePageComponent } from './pages/home-page/home-page.component';
@@ -78,7 +77,6 @@ firebase.initializeApp(environment.firebaseConfig);
     VenderHomeComponent,
     MyFilterPipe,
     sortRecordsPipe,
-    filterRecordsPipe,
     RecordsComponent,
     DeleteConfirmRecordsComponent,
     HomePageComponent,

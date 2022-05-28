@@ -34,23 +34,37 @@ export class GuestPageComponent implements OnInit {
       const { _token, userDataId } = this.authService.getStorageData();
       if (_token && userDataId) {
         // getting guest info
-        this.guestsServie
-          .getGuestById(guestId, _token, userDataId)
-          .subscribe((guest: Guest) => {
+        this.guestsServie.getGuestById(guestId, _token, userDataId).subscribe(
+          (guest: Guest) => {
             this.guest = guest;
             console.log(guest);
             // checking if the guest has valid vouchers
             if (filterValidVouchers(guest.vouchersLis).length == 0) {
               this.guestHasNoValidVouchers = true;
             }
-          });
+          },
+          (error) => {
+            this.authService.notification.next({
+              msg: error.error.msg,
+              type: 'error',
+            });
+          }
+        );
         // getting guest's records
         this.recordsService
           .getGuestRecords(guestId, _token, userDataId)
-          .subscribe((records: Record[]) => {
-            this.displayRecords = records;
-            this.loading = false;
-          });
+          .subscribe(
+            (records: Record[]) => {
+              this.displayRecords = records;
+              this.loading = false;
+            },
+            (error) => {
+              this.authService.notification.next({
+                msg: error.error.msg,
+                type: 'error',
+              });
+            }
+          );
       }
     });
   }

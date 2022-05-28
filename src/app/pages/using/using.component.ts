@@ -1,8 +1,7 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { AuthServiceService } from 'src/app/shared/auth/auth-service.service';
-import { Guest, Record, RecordAddObject, Voucher } from 'src/app/shared/models';
+import { Guest, RecordAddObject, Voucher } from 'src/app/shared/models';
 import { GuestsService } from 'src/app/shared/guests-service/guests.service';
 import { RecordsService } from 'src/app/shared/records service/records.service';
 
@@ -33,15 +32,15 @@ export class UsingComponent implements OnInit {
       // getting voucher id
       this.usedVoucherid = params['id'];
       //*deleting/unvalidating used voucher
-      const { _token, userDataId } = this.authService.getStorageData();
+      const { _token, userDataId, admin } = this.authService.getStorageData();
+      this.admin = admin;
       if (!_token) {
         this.voucherExpired = 'notAuth';
         this.loading = false;
       } else {
         // checking validity
-        this.guestsService
-          .getAllGuests(_token, userDataId)
-          .subscribe((guests: Guest[]) => {
+        this.guestsService.getAllGuests(_token, userDataId).subscribe(
+          (guests: Guest[]) => {
             guests.forEach((element) => {
               element.vouchersLis.forEach((voucher) => {
                 if (voucher._id == this.usedVoucherid) {
@@ -69,7 +68,7 @@ export class UsingComponent implements OnInit {
                 const updatedVouchersList = this.guest.vouchersLis.map(
                   (item) => {
                     if (item._id == this.usedVoucherid) {
-                      item.unvalid = true;
+                      return { ...item, unvalid: true };
                     }
                     return item;
                   }
@@ -77,31 +76,56 @@ export class UsingComponent implements OnInit {
                 this.guestsService
                   .updateGuest(
                     this.voucherUsed.holderId,
-                    { ...this.guest, voucherLis: updatedVouchersList },
+                    { ...this.guest, vouchersLis: updatedVouchersList },
                     _token,
                     userDataId
                   )
-                  .subscribe((guest: Guest) => {
-                    console.log(guest);
-                    const recordToAdd: RecordAddObject = {
-                      date: new Date(),
-                      type: 'voucher_use',
-                      guestId: guest._id,
-                      guestName: guest.name,
-                      userDataId: userDataId,
-                      voucherId: this.voucherUsed._id,
-                    };
-                    //* saving record of usage
-                    this.recordsService
-                      .addRecord(recordToAdd, _token, userDataId)
-                      .subscribe((record) => {
-                        console.log(record);
+                  .subscribe(
+                    (guest: Guest) => {
+                      const recordToAdd: RecordAddObject = {
+                        date: new Date(),
+                        type: 'voucher_use',
+                        guestId: guest._id,
+                        guestName: guest.name,
+                        userDataId: userDataId,
+                        voucherId: this.voucherUsed._id,
+                      };
+                      //* saving record of usage
+                      this.recordsService
+                        .addRecord(recordToAdd, _token, userDataId)
+                        .subscribe(
+                          (record) => {
+                            this.authService.notification.next({
+                              msg: 'Record saved',
+                              type: 'notError',
+                            });
+                          },
+                          (error) => {
+                            this.authService.notification.next({
+                              msg: error.error.msg,
+                              type: 'error',
+                            });
+                          }
+                        );
+                      this.loading = false;
+                    },
+                    (error) => {
+                      this.authService.notification.next({
+                        msg: error.error.msg,
+                        type: 'error',
                       });
-                    this.loading = false;
-                  });
+                    }
+                  );
               }
             }
-          });
+          },
+          (error) => {
+            this.authService.notification.next({
+              msg: error.error.msg,
+              type: 'error',
+            });
+          }
+        );
       }
     });
   }

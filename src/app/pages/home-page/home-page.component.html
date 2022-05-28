@@ -83,7 +83,11 @@
 <section class="section-3">
   <div id="contact" class="container">
     <div class="title">CONTACT US</div>
-    <form [formGroup]="contactForm">
+    <form
+      [formGroup]="contactForm"
+      #formDirective="ngForm"
+      (submit)="onFormSubmit(contactForm.value, formDirective)"
+    >
       <input type="email" formControlName="email" placeholder="email" />
       <input type="text" formControlName="subject" placeholder="subject" />
       <textarea
@@ -95,7 +99,7 @@
       <button
         mat-button
         class="submit-btn"
-        (click)="onFormSubmit()"
+        type="submit"
         [disabled]="!contactForm.valid"
       >
         SUBMIT
@@ -103,6 +107,6 @@
     </form>
   </div>
   <div class="footer">
-    <div>Designed And Developed By Notkirito18 - 2022</div>
+    <div>Designed And Developed By Notkirito18 @2022</div>
   </div>
 </section>

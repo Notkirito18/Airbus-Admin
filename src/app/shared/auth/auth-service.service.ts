@@ -6,13 +6,6 @@ import { User } from '../models';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 
-// interface authResponseData {
-//   authToken: string;
-//   email: string;
-//   expiresIn: string;
-//   userId: string;
-// }
-
 @Injectable({
   providedIn: 'root',
 })
@@ -20,6 +13,8 @@ export class AuthServiceService {
   constructor(private router: Router, private http: HttpClient) {}
 
   user = new BehaviorSubject<User | any>(null);
+
+  notification = new Subject<{ msg: string; type: 'error' | 'notError' }>();
 
   userRank = new Subject<string>();
 
@@ -72,18 +67,6 @@ export class AuthServiceService {
       },
       { headers: { key: environment.serverKey }, observe: 'response' }
     );
-    // .pipe(
-    //   tap((result: any) => {
-    //     this.handleAuth(
-    //       result.body.email,
-    //       result.body.userId,
-    //       result.headers.get('authToken'),
-    //       parseInt(result.headers.get('expires-in')),
-    //       false,
-    //       adminData.userDataId
-    //     );
-    //   })
-    // );
   }
 
   logInEmailAndPass(email: string, password: string) {
@@ -173,5 +156,12 @@ export class AuthServiceService {
 
   getStorageData() {
     return JSON.parse(localStorage.getItem('userData') || '{}');
+  }
+
+  submitContactForm(contactInfo: any) {
+    return this.http.post(environment.serverUrl + 'contact', contactInfo, {
+      headers: { key: environment.serverKey },
+      observe: 'response',
+    });
   }
 }

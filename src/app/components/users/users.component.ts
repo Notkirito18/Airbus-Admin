@@ -88,7 +88,10 @@ export class UsersComponent implements OnInit, OnDestroy {
           }
         },
         (error) => {
-          console.log(error);
+          this.authService.notification.next({
+            msg: error.error.msg,
+            type: 'error',
+          });
         }
       );
     } else {
@@ -103,21 +106,20 @@ export class UsersComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe((deleted) => {
       if (deleted) {
-        this.snackBar.open(
-          'Guest deleted, page will reload to update data',
-          '',
-          {
-            duration: 3000,
-            panelClass: 'deleted-snackbar',
-          }
+        this.guestsData.data = this.guestsData.data.filter(
+          (item) => item._id != id
         );
-        setTimeout(() => {
-          window.location.reload();
-        }, 3200);
+        this.snackBar.open('Guest Deleted', '', {
+          duration: 3000,
+          panelClass: 'deleted-snackbar',
+        });
+        // setTimeout(() => {
+        //   window.location.reload();
+        // }, 1000);
       } else {
         this.snackBar.open('Something went wrong when deleting guest', '', {
           duration: 3000,
-          panelClass: 'not-deleted-snackbar',
+          panelClass: 'deleted-snackbar',
         });
       }
     });

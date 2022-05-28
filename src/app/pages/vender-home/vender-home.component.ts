@@ -27,16 +27,22 @@ export class VenderHomeComponent implements OnInit {
     // getting token
     const { _token, userDataId } = this.authService.getStorageData();
     if (_token && userDataId) {
-      this.recordsService
-        .getAllRecords(_token, userDataId)
-        .subscribe((records) => {
+      this.recordsService.getAllRecords(_token, userDataId).subscribe(
+        (records) => {
           if (records) {
             this.records = records;
             this.displayRecords = this.records;
             console.log('got records :', this.records);
             this.loading = false;
           }
-        });
+        },
+        (error) => {
+          this.authService.notification.next({
+            msg: error.error.msg,
+            type: 'error',
+          });
+        }
+      );
     } else {
       this.router.navigate(['/auth']);
     }

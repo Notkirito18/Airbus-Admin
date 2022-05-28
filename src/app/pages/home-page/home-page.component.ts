@@ -1,7 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { MediaChange, MediaObserver } from '@angular/flex-layout';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormGroupDirective,
+  Validators,
+} from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { AuthServiceService } from 'src/app/shared/auth/auth-service.service';
 
 @Component({
   selector: 'app-home-page',
@@ -9,7 +15,11 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./home-page.component.scss'],
 })
 export class HomePageComponent implements OnInit {
-  constructor(private mediaObserver: MediaObserver, private fb: FormBuilder) {}
+  constructor(
+    private mediaObserver: MediaObserver,
+    private fb: FormBuilder,
+    private authService: AuthServiceService
+  ) {}
   mediaSubscription!: Subscription;
   screenSize = 'lg';
   contactForm!: FormGroup;
@@ -28,7 +38,23 @@ export class HomePageComponent implements OnInit {
       message: [null, Validators.required],
     });
   }
-  onFormSubmit() {
-    console.log(this.contactForm.value);
+  onFormSubmit(formValue: any, formDirective: FormGroupDirective) {
+    this.authService.submitContactForm(formValue).subscribe(
+      (result) => {
+        console.log(result);
+        this.authService.notification.next({
+          msg: 'Email sent',
+          type: 'notError',
+        });
+        this.contactForm.reset();
+        formDirective.resetForm();
+      },
+      (error) => {
+        this.authService.notification.next({
+          msg: error.error.msg,
+          type: 'error',
+        });
+      }
+    );
   }
 }

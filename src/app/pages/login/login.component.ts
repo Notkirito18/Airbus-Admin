@@ -42,7 +42,10 @@ export class LoginComponent implements OnInit {
         }
       },
       (error) => {
-        console.log(error);
+        this.authService.notification.next({
+          msg: error.error.msg,
+          type: 'error',
+        });
       }
     );
   }

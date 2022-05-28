@@ -1,0 +1,11 @@
+::ng-deep snack-bar-container.error {
+  min-width: 0 !important;
+  background-color: #f44336;
+  color: white;
+}
+
+::ng-deep snack-bar-container.notError {
+  min-width: 0 !important;
+  background-color: #31c2a0;
+  color: white;
+}

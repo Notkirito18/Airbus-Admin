@@ -36,9 +36,8 @@ export class HomeComponent implements OnInit {
     // getting token
     const { _token, userDataId } = this.authService.getStorageData();
     if (_token && userDataId) {
-      this.recordsService
-        .getAllRecords(_token, userDataId)
-        .subscribe((records) => {
+      this.recordsService.getAllRecords(_token, userDataId).subscribe(
+        (records) => {
           if (records) {
             this.records = records;
             this.displayRecords = this.records;
@@ -46,7 +45,15 @@ export class HomeComponent implements OnInit {
             this.disabelBtns = false;
             this.loading = false;
           }
-        });
+        },
+        (error) => {
+          this.loading = false;
+          this.authService.notification.next({
+            msg: error.error.msg,
+            type: 'error',
+          });
+        }
+      );
     } else {
       this.router.navigate(['/auth']);
     }
@@ -220,7 +227,10 @@ export class HomeComponent implements OnInit {
               console.log(res);
             },
             (error) => {
-              console.log(error);
+              this.authService.notification.next({
+                msg: error.error.msg,
+                type: 'error',
+              });
             }
           );
       }

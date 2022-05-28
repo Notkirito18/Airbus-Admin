@@ -44,7 +44,10 @@ export class QrCodeInfoComponent implements OnInit, AfterViewInit {
           this.holder = guest;
         },
         (error) => {
-          console.log(error);
+          this.authService.notification.next({
+            msg: error.error.msg,
+            type: 'error',
+          });
         }
       );
   }

@@ -1,4 +1,12 @@
-import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import {
+  AbstractControl,
+  FormControl,
+  FormGroupDirective,
+  NgForm,
+  ValidationErrors,
+  ValidatorFn,
+} from '@angular/forms';
+import { ErrorStateMatcher } from '@angular/material/core';
 import { Voucher } from './models';
 
 export function responsiveWidth(
@@ -144,3 +152,48 @@ export function filterValidVouchers(vouchers: Voucher[]): Voucher[] {
     return !item.unvalid || newDate.getTime() > expireDate.getTime();
   });
 }
+//*validators
+export function dateInFuture(control: AbstractControl) {
+  const date = new Date(control.value);
+  const newDate = new Date();
+  if (newDate.getTime() > date.getTime()) {
+    return { dateNotInFuture: true };
+  }
+  return null;
+}
+
+export function passwordValidator(
+  control: AbstractControl
+): ValidationErrors | null {
+  const pattern = new RegExp(
+    '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?!.*s)(?=.{8,})'
+  );
+  if (!pattern.test(control.value)) {
+    return { unvalid: true };
+  }
+  return null;
+}
+export class MyErrorStateMatcher implements ErrorStateMatcher {
+  isErrorState(
+    control: FormControl | null,
+    form: FormGroupDirective | NgForm | null
+  ): boolean {
+    const invalidCtrl = !!(control && control.invalid && control.parent!.dirty);
+    const invalidParent = !!(
+      control &&
+      control.parent &&
+      control.parent.invalid &&
+      control.parent.dirty
+    );
+
+    return invalidCtrl || invalidParent;
+  }
+}
+
+export const checkPasswordsMatching: ValidatorFn = (
+  group: AbstractControl
+): ValidationErrors | null => {
+  let pass = group.get('password')!.value;
+  let confirmPass = group.get('confirmPassword')!.value;
+  return pass === confirmPass ? null : { notSame: true };
+};

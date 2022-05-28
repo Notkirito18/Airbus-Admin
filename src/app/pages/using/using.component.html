@@ -21,28 +21,32 @@
           logged in to your account before scanning a voucher's code
         </div>
       </ng-container>
-
-      <div *ngIf="voucherExpired !== 'notAuth' && voucherExpired !== 'expired'">
-        <button
-          mat-raised-button
-          class="btn"
-          [ngStyle]="{ background: admin ? '#536dfe' : '#31c2a0' }"
-          [routerLink]="'/guest/' + guest._id"
+      <div class="btns">
+        <div
+          *ngIf="voucherExpired !== 'notAuth' && voucherExpired !== 'expired'"
         >
-          Go to {{ guest.name }}'s page
-        </button>
-      </div>
-      <div *ngIf="voucherExpired !== 'notAuth'">
-        <button
-          mat-raised-button
-          class="btn"
-          [ngStyle]="{ background: admin ? '#536dfe' : '#31c2a0' }"
-          [routerLink]="admin ? '/home' : '/vhome'"
-        >
-          Home
-        </button>
+          <button
+            mat-raised-button
+            class="btn"
+            [ngStyle]="{ background: admin ? '#536dfe' : '#31c2a0' }"
+            [routerLink]="'/guest/' + guest._id"
+          >
+            Go to {{ guest.name }}'s page
+          </button>
+        </div>
+        <div *ngIf="voucherExpired !== 'notAuth'">
+          <button
+            mat-raised-button
+            class="btn"
+            [ngStyle]="{ background: admin ? '#536dfe' : '#31c2a0' }"
+            [routerLink]="admin ? '/dashboard' : '/vhome'"
+          >
+            Home
+          </button>
+        </div>
       </div>
     </div>
+
     <ng-template #loadingContent>
       <div class="loading-container">
         <mat-spinner color="accent"></mat-spinner>

@@ -1,6 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormGroupDirective,
+  Validators,
+} from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import {
@@ -13,7 +18,7 @@ import { GuestGeneratedComponent } from '../guest-generated/guest-generated.comp
 import { GuestsService } from 'src/app/shared/guests-service/guests.service';
 import { AuthServiceService } from 'src/app/shared/auth/auth-service.service';
 import { RecordsService } from 'src/app/shared/records service/records.service';
-import { filterValidVouchers } from 'src/app/shared/helper';
+import { dateInFuture, filterValidVouchers } from 'src/app/shared/helper';
 
 @Component({
   selector: 'app-new-user',
@@ -34,7 +39,6 @@ export class NewUserComponent implements OnInit {
     private guestsService: GuestsService,
     private authService: AuthServiceService,
     private recordsService: RecordsService,
-    private router: Router,
     private route: ActivatedRoute,
     private dialog: MatDialog
   ) {}
@@ -51,11 +55,18 @@ export class NewUserComponent implements OnInit {
       if (!this.editingMode) {
         //TODO match validation with backend
         this.newGuestForm = this.fb.group({
-          name: ['', [Validators.required, Validators.minLength(3)]],
-          roomNumber: ['', Validators.required],
-          vouchers: ['', Validators.required],
+          name: [
+            '',
+            [
+              Validators.required,
+              Validators.minLength(3),
+              Validators.maxLength(30),
+            ],
+          ],
+          roomNumber: ['', [Validators.required, Validators.min(0)]],
+          vouchers: ['', [Validators.required, Validators.min(0)]],
           type: ['', Validators.required],
-          validUntill: ['', Validators.required],
+          validUntill: ['', [Validators.required, dateInFuture]],
         });
         this.loading = false;
       } else {
@@ -68,16 +79,26 @@ export class NewUserComponent implements OnInit {
             .subscribe(
               (guest: Guest) => {
                 this.newGuestForm = this.fb.group({
-                  name: [guest.name, Validators.required],
-                  roomNumber: [guest.roomNumber, Validators.required],
+                  name: [
+                    guest.name,
+                    [
+                      Validators.required,
+                      Validators.minLength(3),
+                      Validators.maxLength(30),
+                    ],
+                  ],
+                  roomNumber: [
+                    guest.roomNumber,
+                    [Validators.required, Validators.min(0)],
+                  ],
                   vouchers: [
                     filterValidVouchers(guest.vouchersLis).length,
-                    Validators.required,
+                    [Validators.required, Validators.min(0)],
                   ],
                   type: [guest.type, Validators.required],
                   validUntill: [
                     new Date(guest.validUntill.toString()),
-                    Validators.required,
+                    [Validators.required, dateInFuture],
                   ],
                 });
                 // initialing guestToEdit variable
@@ -85,7 +106,10 @@ export class NewUserComponent implements OnInit {
                 this.loading = false;
               },
               (error) => {
-                console.log(error);
+                this.authService.notification.next({
+                  msg: error.error.msg,
+                  type: 'error',
+                });
               }
             );
         }
@@ -93,7 +117,7 @@ export class NewUserComponent implements OnInit {
     });
   }
 
-  onSubmitForm(newGuest: any) {
+  onSubmitForm(newGuest: any, formDirective: FormGroupDirective) {
     // fixing vouchers and validUntill
     const validUntill = this.addHoursToDate(newGuest.validUntill, 1);
     let vouchers = [];
@@ -130,15 +154,22 @@ export class NewUserComponent implements OnInit {
                   console.log('record added', record);
                 },
                 (error) => {
-                  console.log(error);
+                  this.authService.notification.next({
+                    msg: error.error.msg,
+                    type: 'error',
+                  });
                 }
               );
-            // openning dialog
+            // openning dialog/form reset
             this.newGuestForm.reset();
+            formDirective.resetForm();
             this.openGuestDialog(this.guestAdded);
           },
           (error) => {
-            console.log(error);
+            this.authService.notification.next({
+              msg: error.error.msg,
+              type: 'error',
+            });
           }
         );
       } else {
@@ -149,12 +180,16 @@ export class NewUserComponent implements OnInit {
             .subscribe(
               (guest: Guest) => {
                 this.guestAdded = guest;
-                // openning dialog
+                // openning dialog/form reset
                 this.newGuestForm.reset();
+                formDirective.resetForm();
                 this.openGuestDialog(this.guestAdded);
               },
               (error) => {
-                console.log(error);
+                this.authService.notification.next({
+                  msg: error.error.msg,
+                  type: 'error',
+                });
               }
             );
         });
@@ -172,4 +207,5 @@ export class NewUserComponent implements OnInit {
     return new Date(new Date(date).setHours(date.getHours() + hours));
   }
   filterValidVouchers = filterValidVouchers;
+  dateInFuture = dateInFuture;
 }
