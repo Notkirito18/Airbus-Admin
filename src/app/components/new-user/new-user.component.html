@@ -1,4 +1,4 @@
-<div class="new-container">
+<div class="new-container" *ngIf="!loading">
   <div class="form-container">
     <!-- airbus img -->
     <img src="../../../assets/vouchyQR-c.png" alt="aloft-logo" />
@@ -11,7 +11,8 @@
     </h2>
     <form
       [formGroup]="newGuestForm"
-      (submit)="onSubmitForm(newGuestForm.value)"
+      #formDirective="ngForm"
+      (submit)="onSubmitForm(newGuestForm.value, formDirective)"
     >
       <!-- name input -->
       <mat-form-field appearance="outline">

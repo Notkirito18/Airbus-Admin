@@ -9,9 +9,20 @@
   <div class="form-container">
     <form
       [formGroup]="signUpForm"
-      (submit)="submitSignUpForm(signUpForm.value)"
+      #formDirective="ngForm"
+      (submit)="submitSignUpForm(signUpForm.value, formDirective)"
     >
       <!-- name input -->
+      <mat-form-field appearance="outline">
+        <input
+          matInput
+          type="text"
+          placeholder="Username"
+          formControlName="username"
+          required
+        />
+      </mat-form-field>
+      <!-- email input -->
       <mat-form-field appearance="outline">
         <input
           matInput
@@ -30,11 +41,11 @@
           formControlName="password"
           [errorStateMatcher]="matcher"
           required
-          min="6"
+          min="8"
         />
-        <mat-error *ngIf="signUpForm.hasError('invalid')">
-          Password Need to be at least 6 characters with a mix of uppercase and
-          lowercase
+        <mat-error *ngIf="!signUpForm.valid">
+          password must be at least 8 characters, and a mix of lowercase
+          characters, uppercase characters and numbers
         </mat-error>
       </mat-form-field>
       <!-- Repeat Password input -->
@@ -48,8 +59,8 @@
           required
           min="6"
         />
-        <mat-error *ngIf="signUpForm.hasError('notSame')">
-          Passwords do not match
+        <mat-error *ngIf="!signUpForm.valid && signUpForm.hasError('notSame')">
+          Passwords have to match
         </mat-error>
       </mat-form-field>
       <!-- submit -->

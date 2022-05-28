@@ -1,23 +1,68 @@
-<div class="container">
-  <p>the website is still in a demo version, and you can't register yet.</p>
-  <p>
-    If you want to try the functionality of the website you can log into this
-    demo admin account:
-  </p>
-  <div class="ml-4">
-    <p>Email : <b> demoadmin@mail.com</b></p>
-    <p>password : <b>DemoDemo</b></p>
-  </div>
-  <p>or a demo vender account :</p>
-  <div class="ml-4">
-    <p>Email : <b> demovender@mail.com</b></p>
-    <p>password :<b>DemoDemo</b></p>
+<div class="signup-container">
+  <div class="title">
+    <mat-icon>how_to_reg</mat-icon> <span>Create new Account</span>
   </div>
   <p>
-    If you like this webapp and you want to use it for your hotel, or you want a
-    custumized version for your hotel contact me using the contact form at the
-    bottom of the
-    <a [routerLink]="'/home'">home page</a> or send me an email directly to :
-    <b> djalelguergouri@gmail.com </b>
+    By creating a new account you will be able to use the features of the
+    website
   </p>
+
+  <div class="form-container">
+    <form
+      [formGroup]="registerForm"
+      #formDirective="ngForm"
+      (submit)="onFormSubmit(registerForm.value, formDirective)"
+    >
+      <!-- unsername input -->
+      <mat-form-field appearance="outline">
+        <mat-label>Username</mat-label>
+        <input matInput type="text" formControlName="username" />
+        <mat-error *ngIf="!registerForm.valid">
+          Username field is required (at least 3 characters)
+        </mat-error>
+      </mat-form-field>
+      <!-- email input -->
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" />
+        <mat-error *ngIf="!registerForm.valid">
+          You must enter a valid email
+        </mat-error>
+      </mat-form-field>
+      <!-- Password input -->
+      <mat-form-field appearance="outline">
+        <mat-label>Password</mat-label>
+        <input matInput type="text" formControlName="password" min="8" />
+        <mat-error *ngIf="!registerForm.valid">
+          password must be at least 8 characters, and a mix of lowercase
+          characters, uppercase characters and numbers
+        </mat-error>
+      </mat-form-field>
+      <!-- Confirm Password input -->
+      <mat-form-field appearance="outline">
+        <mat-label>Confirm Password</mat-label>
+        <input
+          matInput
+          type="text"
+          formControlName="confirmPassword"
+          [errorStateMatcher]="matcher"
+          min="8"
+        />
+        <mat-error
+          *ngIf="!registerForm.valid && registerForm.hasError('notSame')"
+        >
+          Passwords have to match
+        </mat-error>
+      </mat-form-field>
+
+      <button
+        mat-button
+        class="register-btn"
+        type="submit"
+        [disabled]="!registerForm.valid"
+      >
+        Register
+      </button>
+    </form>
+  </div>
 </div>

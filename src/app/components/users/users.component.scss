@@ -144,6 +144,11 @@ mat-card {
     }
   }
 }
+::ng-deep snack-bar-container.deleted-snackbar {
+  min-width: 0 !important;
+  background-color: #f44336;
+  color: white;
+}
 
 @media only screen and (min-width: 1200px) {
   .mat-card-title {

@@ -68,8 +68,8 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Vouchers</th>
         <td mat-cell *matCellDef="let element">
           {{
-            element.vouchersLis[0].id.length > 1
-              ? element.vouchersLis.length
+            element.vouchersLis[0]._id.length > 1
+              ? filterValidVouchers(element.vouchersLis).length
               : 0
           }}
         </td>
@@ -83,7 +83,7 @@
           *matCellDef="let element"
           [ngStyle]="checkDate(element.validUntill) ? { color: 'red' } : {}"
         >
-          {{ element.validUntill.slice(0, 10) }}
+          {{ element.validUntill ? element.validUntill.slice(0, 10) : "" }}
         </td>
       </ng-container>
 
@@ -101,19 +101,19 @@
             <mat-icon>more_vert</mat-icon>
           </button>
           <mat-menu #menu="matMenu" xPosition="before">
-            <button mat-menu-item [routerLink]="'/new-user/' + element.id">
+            <button mat-menu-item [routerLink]="'/new-user/' + element._id">
               <mat-icon>mode_edit</mat-icon> Edit
             </button>
             <button
               mat-menu-item
-              (click)="openDeleteGuestDialog(element.id, element.name)"
+              (click)="openDeleteGuestDialog(element._id, element.name)"
             >
               <mat-icon color="warn">delete</mat-icon> Delete
             </button>
           </mat-menu>
           <ng-template #venderBtns>
             <button mat-icon-button>
-              <mat-icon [routerLink]="'/guest/' + element.id">launch</mat-icon>
+              <mat-icon [routerLink]="'/guest/' + element._id">launch</mat-icon>
             </button>
           </ng-template>
         </td>
@@ -179,8 +179,8 @@
           {{ element.name }}
           <span class="vouchers-span">
             ({{
-              element.vouchersLis[0].id.length > 1
-                ? element.vouchersLis.length
+              element.vouchersLis[0]._id.length > 1
+                ? filterValidVouchers(element.vouchersLis).length
                 : 0
             }})</span
           >
@@ -204,21 +204,23 @@
         <div>
           <mat-icon>payments</mat-icon> Vouchers :
           {{
-            element.vouchersLis[0].id.length > 1
-              ? element.vouchersLis.length
+            element.vouchersLis[0]._id.length > 1
+              ? filterValidVouchers(element.vouchersLis).length
               : 0
           }}
         </div>
         <div>
           <mat-icon style="color: #536dfe">date_range</mat-icon> Created date :
-          {{ element.createdDate.slice(0, 10) }}
+          {{ element.createdDate ? element.createdDate.slice(0, 10) : "" }}
         </div>
         <div>
           <mat-icon color="warn">date_range</mat-icon> Valid Untill :
           <span
             [ngStyle]="checkDate(element.validUntill) ? { color: 'red' } : {}"
           >
-            &nbsp;{{ element.validUntill.slice(0, 10) }}
+            &nbsp;{{
+              element.validUntill ? element.validUntill.slice(0, 10) : ""
+            }}
           </span>
         </div>
       </div>
@@ -237,13 +239,13 @@
           Guest Page
         </button>
         <div *ngIf="adminUser" class="manage-btn">
-          <button mat-button [routerLink]="'/new-user/' + element.id">
+          <button mat-button [routerLink]="'/new-user/' + element._id">
             <mat-icon>mode_edit</mat-icon>
           </button>
           <button
             mat-button
             color="warn"
-            (click)="openDeleteGuestDialog(element.id, element.name)"
+            (click)="openDeleteGuestDialog(element._id, element.name)"
           >
             <mat-icon>delete</mat-icon>
           </button>

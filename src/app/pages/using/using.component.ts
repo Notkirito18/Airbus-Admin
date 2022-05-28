@@ -1,118 +1,132 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Params } from '@angular/router';
 import { AuthServiceService } from 'src/app/shared/auth/auth-service.service';
-import { Guest, Record, Voucher } from 'src/app/shared/models';
-import { VouchersServiceService } from 'src/app/shared/vouchers service/vouchers-service.service';
-import { take } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
+import { Guest, RecordAddObject, Voucher } from 'src/app/shared/models';
+import { GuestsService } from 'src/app/shared/guests-service/guests.service';
+import { RecordsService } from 'src/app/shared/records service/records.service';
 
 @Component({
   selector: 'app-using',
   templateUrl: './using.component.html',
   styleUrls: ['./using.component.scss'],
 })
-export class UsingComponent implements OnInit, OnDestroy {
+export class UsingComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
-    private vouchersService: VouchersServiceService,
-    private authService: AuthServiceService,
-    private http: HttpClient
+    private guestsService: GuestsService,
+    private recordsService: RecordsService,
+    private authService: AuthServiceService
   ) {}
 
   voucherUsed!: Voucher;
-
   loading = true;
-
   usedVoucherid!: string;
-  usedVoucherid$$!: Subscription;
-
   guest: Guest = new Guest('', '', 0, '', new Date(), []);
-  guest$$!: Subscription;
-
-  savingRecordSub$$!: Subscription;
-
-  voucherExpired!: string;
-
+  voucherExpired!: 'no' | 'expired' | 'notAuth';
   voucherDateExpired = true;
-
   token!: string;
-
   admin = false;
 
   ngOnInit(): void {
-    this.authService.user.pipe(take(1)).subscribe((user) => {
-      const token = user.token;
-      this.token = user.token;
-      if (
-        user.id === environment.adminId ||
-        user.id === environment.myAdminId
-      ) {
-        this.admin = true;
+    this.route.params.subscribe((params: Params) => {
+      // getting voucher id
+      this.usedVoucherid = params['id'];
+      //*deleting/unvalidating used voucher
+      const { _token, userDataId, admin } = this.authService.getStorageData();
+      this.admin = admin;
+      if (!_token) {
+        this.voucherExpired = 'notAuth';
+        this.loading = false;
+      } else {
+        // checking validity
+        this.guestsService.getAllGuests(_token, userDataId).subscribe(
+          (guests: Guest[]) => {
+            guests.forEach((element) => {
+              element.vouchersLis.forEach((voucher) => {
+                if (voucher._id == this.usedVoucherid) {
+                  this.voucherUsed = voucher;
+                  this.guest = element;
+                }
+              });
+            });
+            // voucher couldn't be found
+            if (!this.voucherUsed) {
+              this.voucherExpired = 'expired';
+              this.loading = false;
+            } else {
+              //voucher found and is unvalid
+              const newDate = new Date();
+              const expirationDate = new Date(this.voucherUsed.validUntill);
+              this.voucherDateExpired =
+                newDate.getTime() > expirationDate.getTime();
+              if (this.voucherUsed.unvalid || this.voucherDateExpired) {
+                this.voucherExpired = 'expired';
+                this.loading = false;
+              } else {
+                //voucher found and valid
+                this.voucherExpired = 'no';
+                const updatedVouchersList = this.guest.vouchersLis.map(
+                  (item) => {
+                    if (item._id == this.usedVoucherid) {
+                      return { ...item, unvalid: true };
+                    }
+                    return item;
+                  }
+                );
+                this.guestsService
+                  .updateGuest(
+                    this.voucherUsed.holderId,
+                    { ...this.guest, vouchersLis: updatedVouchersList },
+                    _token,
+                    userDataId
+                  )
+                  .subscribe(
+                    (guest: Guest) => {
+                      const recordToAdd: RecordAddObject = {
+                        date: new Date(),
+                        type: 'voucher_use',
+                        guestId: guest._id,
+                        guestName: guest.name,
+                        userDataId: userDataId,
+                        voucherId: this.voucherUsed._id,
+                      };
+                      //* saving record of usage
+                      this.recordsService
+                        .addRecord(recordToAdd, _token, userDataId)
+                        .subscribe(
+                          (record) => {
+                            this.authService.notification.next({
+                              msg: 'Record saved',
+                              type: 'notError',
+                            });
+                          },
+                          (error) => {
+                            this.authService.notification.next({
+                              msg: error.error.msg,
+                              type: 'error',
+                            });
+                          }
+                        );
+                      this.loading = false;
+                    },
+                    (error) => {
+                      this.authService.notification.next({
+                        msg: error.error.msg,
+                        type: 'error',
+                      });
+                    }
+                  );
+              }
+            }
+          },
+          (error) => {
+            this.authService.notification.next({
+              msg: error.error.msg,
+              type: 'error',
+            });
+          }
+        );
       }
     });
-
-    this.usedVoucherid$$ = this.route.params.subscribe((params: Params) => {
-      this.usedVoucherid = params['id'];
-      this.guest$$ = this.http
-        .get('https://airbus-900f9-default-rtdb.firebaseio.com/guests.json')
-        .subscribe((data) => {
-          const guestsArray = Object.values(data);
-          for (let i = 0; i < guestsArray.length; i++) {
-            if (guestsArray[i].id === params['id'].slice(0, 13)) {
-              this.guest = guestsArray[i];
-            }
-          }
-          for (let i = 0; i < this.guest.vouchersLis.length; i++) {
-            if (this.guest.vouchersLis[i].id === this.usedVoucherid) {
-              this.voucherUsed = this.guest.vouchersLis[i];
-            }
-          }
-
-          //* ckecking availibility
-          let voucherExist = false;
-          this.http
-            .get('https://airbus-900f9-default-rtdb.firebaseio.com/guests.json')
-            .subscribe((data) => {
-              const guestsArray = Object.values(data);
-              for (let i = 0; i < guestsArray.length; i++) {
-                for (let j = 0; j < guestsArray[i].vouchersLis.length; j++) {
-                  if (guestsArray[i].vouchersLis[j].id === params['id']) {
-                    voucherExist = true;
-                    this.voucherDateExpired =
-                      guestsArray[i].vouchersLis[j].unvalid;
-                  }
-                }
-              }
-              if (!voucherExist || this.voucherDateExpired) {
-                this.voucherExpired = 'expired';
-              } else if (!this.token) {
-                this.voucherExpired = 'notAuth';
-              } else {
-                //* saving record of usage
-                this.http
-                  .post(
-                    'https://airbus-900f9-default-rtdb.firebaseio.com/records.json?auth=' +
-                      this.token,
-                    new Record(
-                      new Date(),
-                      'voucher_use',
-                      this.guest,
-                      this.voucherUsed
-                    )
-                  )
-                  .subscribe();
-                this.vouchersService.useVoucher(this.usedVoucherid);
-                this.voucherExpired = 'no';
-              }
-              this.loading = false;
-            });
-        });
-    });
-  }
-  ngOnDestroy(): void {
-    if (this.usedVoucherid$$) this.usedVoucherid$$.unsubscribe();
-    if (this.guest$$) this.guest$$.unsubscribe();
   }
 }

@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
 import { AuthServiceService } from 'src/app/shared/auth/auth-service.service';
 import { environment } from 'src/environments/environment';
 
@@ -12,8 +11,6 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
-  loginSub$!: Subscription;
-
   logInForm!: FormGroup;
   isLoggedIn = false;
 
@@ -35,48 +32,22 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  submitlogInForm(formValue: any) {
-    this.loginSub$ = this.authService
-      .logInEmailAndPass(formValue.email, formValue.password)
-      .subscribe(
-        (response) => {
-          if (
-            response.localId === environment.adminId ||
-            response.localId === environment.myAdminId
-          ) {
-            this.router.navigate(['/dashboard']);
-          } else {
-            this.router.navigate(['/vhome']);
-          }
-        },
-        (error) => {
-          this.error = 'unknown error occured';
-          switch (error.error.error.message) {
-            case 'EMAIL_NOT_FOUND':
-              this.error = 'The email was not found';
-              break;
-            case 'INVALID_PASSWORD':
-              this.error = 'The password is incorrect';
-              break;
-            case 'USER_DISABLED':
-              this.error = 'The user account has been disabled';
-              break;
-            case 'TOO_MANY_ATTEMPTS_TRY_LATER':
-              this.error =
-                'We have blocked all requests from this device due to unusual activity. Try again later';
-              break;
-          }
-          console.log(error.error.error.message);
-          this.openSnackBar(this.error);
-          this.logInForm.reset();
-          this.loading = false;
+  submitlogInForm({ email, password }: any) {
+    this.authService.logInEmailAndPass(email, password).subscribe(
+      (result) => {
+        if (result.body.admin) {
+          this.router.navigate(['/dashboard']);
+        } else {
+          this.router.navigate(['/vhome']);
         }
-      );
-  }
-
-  signInWithGoogle() {
-    // this.authService.signinWithGoogle();
-    alert('This featue will be implemented soon ');
+      },
+      (error) => {
+        this.authService.notification.next({
+          msg: error.error.msg,
+          type: 'error',
+        });
+      }
+    );
   }
 
   openSnackBar(message: string) {

@@ -30,9 +30,8 @@ export class SuperUserGuardGuard implements CanActivate {
     | Observable<boolean | UrlTree> {
     return this.authService.user.pipe(
       map((user) => {
-        const isSuper =
-          user.id === environment.adminId || user.id === environment.myAdminId;
-        if (isSuper) {
+        const isAdmin = user.admin;
+        if (isAdmin) {
           return true;
         } else {
           return this.router.createUrlTree(['/auth/logIn']);

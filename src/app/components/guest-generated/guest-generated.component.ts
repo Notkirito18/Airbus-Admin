@@ -2,8 +2,8 @@ import { Component, ElementRef, Inject, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Guest } from 'src/app/shared/models';
-import { UsersStorageService } from 'src/app/shared/storage service/users-storage.service';
 import QRCode from 'easyqrcodejs';
+import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-guest-generated',
   templateUrl: './guest-generated.component.html',
@@ -11,7 +11,6 @@ import QRCode from 'easyqrcodejs';
 })
 export class GuestGeneratedComponent {
   constructor(
-    private guestsService: UsersStorageService,
     private router: Router,
     public dialogRef: MatDialogRef<GuestGeneratedComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { guest: Guest }
@@ -22,7 +21,7 @@ export class GuestGeneratedComponent {
   ngAfterViewInit() {
     // Options
     var options = {
-      text: 'https://airbus-900f9.firebaseapp.com/guest/' + this.data.guest.id,
+      text: environment.serverUrl + 'guest/' + this.data.guest._id,
       width: 150,
       height: 150,
       colorDark: '#440024',

@@ -1,6 +1,6 @@
 export class Guest {
   constructor(
-    public id: string,
+    public _id: string,
     public name: string,
     public roomNumber: number,
     public type: string,
@@ -9,12 +9,16 @@ export class Guest {
     public createdDate?: Date
   ) {}
 }
-// add pin code to the guest model (instruct of guarding in routing modules)
-
-// rebrand the whole app to it's new name : VouchyQR
+export interface GuestAddObject {
+  name: string;
+  roomNumber: number;
+  type: string;
+  validUntill: Date;
+  vouchersLis: { validUntill: Date }[];
+}
 export class Voucher {
   constructor(
-    public id: string,
+    public _id: string,
     public holderId: string,
     public validUntill: Date,
     public createdDate?: Date,
@@ -24,9 +28,11 @@ export class Voucher {
 export class User {
   constructor(
     public email: string,
-    public id: string,
+    public _id: string,
     private _token: string,
-    private _tokenExpirationDate: Date
+    private _tokenExpirationDate: Date,
+    private admin: boolean,
+    private userDataId: string
   ) {}
 
   get token() {
@@ -39,9 +45,20 @@ export class User {
 }
 export class Record {
   constructor(
+    public _id: string,
     public date: Date,
     public type: string,
-    public guest: Guest,
-    public Voucher?: Voucher
+    public guestId: string,
+    public guestName: string,
+    public userDataId: string,
+    public voucherId?: string
   ) {}
+}
+export interface RecordAddObject {
+  date: Date;
+  type: string;
+  guestId: string;
+  guestName: string;
+  userDataId: string;
+  voucherId?: string;
 }

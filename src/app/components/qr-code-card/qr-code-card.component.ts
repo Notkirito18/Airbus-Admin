@@ -12,6 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 import QRCode from 'easyqrcodejs';
 import { Subscription } from 'rxjs';
 import { Voucher } from 'src/app/shared/models';
+import { environment } from 'src/environments/environment';
 import { QrCodeInfoComponent } from '../qr-code-info/qr-code-info.component';
 @Component({
   selector: 'app-qr-code-card',
@@ -43,7 +44,7 @@ export class QrCodeCardComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     // Options
     var options = {
-      text: 'https://airbus-900f9.firebaseapp.com/using/' + this.voucher.id,
+      text: environment.serverUrl + 'using/' + this.voucher._id,
       width: 150,
       height: 150,
       colorDark: '#440024',

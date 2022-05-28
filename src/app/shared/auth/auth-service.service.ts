@@ -1,21 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs/operators';
-
-import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
-
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { User } from '../models';
 import { HttpClient } from '@angular/common/http';
-
-interface authResponseData {
-  idToken: string;
-  email: string;
-  refreshToken: string;
-  expiresIn: string;
-  localId: string;
-  registered?: boolean;
-}
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -23,95 +12,95 @@ interface authResponseData {
 export class AuthServiceService {
   constructor(private router: Router, private http: HttpClient) {}
 
-  provider = new GoogleAuthProvider();
-
   user = new BehaviorSubject<User | any>(null);
+
+  notification = new Subject<{ msg: string; type: 'error' | 'notError' }>();
 
   userRank = new Subject<string>();
 
-  key = 'AIzaSyDKHGQEHRrgyDKjKqRI0ln7kNo-w_Tf8y4';
-
   expirationTimer: any;
 
-  signUpEmailAndPass(email: string, password: string) {
+  registerNewAdmin(username: string, email: string, password: string) {
     return this.http
-      .post<authResponseData>(
-        'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' +
-          this.key,
+      .post(
+        environment.serverUrl + 'auth/register',
         {
-          email: email,
-          password: password,
-          returnSecureToken: true,
-        }
+          username,
+          email,
+          password,
+          admin: true,
+        },
+        { headers: { key: environment.serverKey }, observe: 'response' }
       )
       .pipe(
-        tap((resData) => {
+        tap((result: any) => {
           this.handleAuth(
-            resData.email,
-            resData.localId,
-            resData.idToken,
-            parseInt(resData.expiresIn)
+            result.body.email,
+            result.body.userId,
+            result.headers.get('authToken'),
+            parseInt(result.headers.get('expires-in')),
+            true,
+            result.body.userId
           );
         })
       );
+  }
+
+  registerNewVender(username: string, email: string, password: string) {
+    // getting the admin id
+    const adminData: {
+      email: string;
+      id: string;
+      _token: string;
+      _tokenExpirationDate: string;
+      admin: boolean;
+      userDataId: string;
+    } = JSON.parse(localStorage.getItem('userData') || '{}');
+
+    return this.http.post(
+      environment.serverUrl + 'auth/register',
+      {
+        username,
+        email,
+        password,
+        userDataId: adminData.userDataId,
+      },
+      { headers: { key: environment.serverKey }, observe: 'response' }
+    );
   }
 
   logInEmailAndPass(email: string, password: string) {
     return this.http
-      .post<authResponseData>(
-        'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' +
-          this.key,
-        {
-          email: email,
-          password: password,
-          returnSecureToken: true,
-        }
+      .post(
+        environment.serverUrl + 'auth/login',
+        { email, password },
+        { headers: { key: environment.serverKey }, observe: 'response' }
       )
       .pipe(
-        tap((resData) => {
+        tap((result: any) => {
           this.handleAuth(
-            resData.email,
-            resData.localId,
-            resData.idToken,
-            parseInt(resData.expiresIn)
+            result.body.email,
+            result.body._id,
+            result.headers.get('authToken'),
+            result.headers.get('expires-in'),
+            result.body.admin,
+            result.body.userDataId
           );
         })
       );
   }
 
-  signinWithGoogle() {
-    const auth = getAuth();
-    signInWithPopup(auth, this.provider)
-      .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const idtoken = credential?.idToken;
-        // The signed-in user info.
-        const user = result.user;
-        // ...
-        this.handleAuth(result.user.email, user.uid, idtoken, 3600);
-      })
-      .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.email;
-        // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        // ...
-      });
-  }
-
   private handleAuth(
     email: string | null,
-    id: string,
+    _id: string,
     token: string | undefined,
-    expIn: number
+    expIn: number,
+    admin: boolean,
+    userDataId: string
   ) {
     if (email && token) {
       const expDate = new Date(new Date().getTime() + expIn * 1000);
-      const user = new User(email, id, token, expDate);
+      const user = new User(email, _id, token, expDate, admin, userDataId);
       this.user.next(user);
       this.autoLogout(expIn * 1000);
       localStorage.setItem('userData', JSON.stringify(user));
@@ -121,17 +110,21 @@ export class AuthServiceService {
   autoLogin() {
     const userData: {
       email: string;
-      id: string;
+      _id: string;
       _token: string;
       _tokenExpirationDate: string;
+      admin: boolean;
+      userDataId: string;
     } = JSON.parse(localStorage.getItem('userData') || '{}');
 
     if (userData) {
       const loadedUser = new User(
         userData.email,
-        userData.id,
+        userData._id,
         userData._token,
-        new Date(userData._tokenExpirationDate)
+        new Date(userData._tokenExpirationDate),
+        userData.admin,
+        userData.userDataId
       );
       if (loadedUser.token) {
         const expirationDuration =
@@ -159,5 +152,16 @@ export class AuthServiceService {
     }
     this.expirationTimer = null;
     this.router.navigate(['/auth']);
+  }
+
+  getStorageData() {
+    return JSON.parse(localStorage.getItem('userData') || '{}');
+  }
+
+  submitContactForm(contactInfo: any) {
+    return this.http.post(environment.serverUrl + 'contact', contactInfo, {
+      headers: { key: environment.serverKey },
+      observe: 'response',
+    });
   }
 }
