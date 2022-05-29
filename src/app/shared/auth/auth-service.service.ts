@@ -5,12 +5,17 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { User } from '../models';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { GuestsService } from '../guests-service/guests.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthServiceService {
-  constructor(private router: Router, private http: HttpClient) {}
+  constructor(
+    private router: Router,
+    private http: HttpClient,
+    private guestsService: GuestsService
+  ) {}
 
   user = new BehaviorSubject<User | any>(null);
 
@@ -94,6 +99,7 @@ export class AuthServiceService {
       );
   }
 
+  //* handle logging in / auto logout (local storage) + calls delete all unvalid vouchers
   private handleAuth(
     email: string | null,
     _id: string,
@@ -103,7 +109,7 @@ export class AuthServiceService {
     userDataId: string,
     username: string
   ) {
-    if (email && token) {
+    if (email && token && userDataId) {
       const expDate = new Date(new Date().getTime() + expIn * 1000);
       const user = new User(
         email,
@@ -116,8 +122,16 @@ export class AuthServiceService {
       );
       this.user.next(user);
       this.autoLogout(expIn * 1000);
-      console.log('user', user);
       localStorage.setItem('userData', JSON.stringify(user));
+      //calling delete all unvalid vouchers
+      this.guestsService.deleteUnvalidVouchers(token, userDataId).subscribe(
+        (res) => {
+          console.log(res);
+        },
+        (error) => {
+          console.log(error.msg);
+        }
+      );
     }
   }
 

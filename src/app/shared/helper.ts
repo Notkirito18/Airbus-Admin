@@ -146,11 +146,7 @@ export function checkDate(dateToCheck: Date) {
   return dateToCheckDate.getTime() < nowDate.getTime();
 }
 export function filterValidVouchers(vouchers: Voucher[]): Voucher[] {
-  return vouchers.filter((item) => {
-    const newDate = new Date();
-    const expireDate = new Date(item.validUntill);
-    return !item.unvalid || newDate.getTime() > expireDate.getTime();
-  });
+  return vouchers.filter((item) => !item.unvalid);
 }
 //*validators
 export function dateInFuture(control: AbstractControl) {

@@ -49,6 +49,8 @@ export class LoginComponent implements OnInit {
       (error) => {
         this.logInForm.reset();
         formDirective.resetForm();
+        console.log(error);
+
         this.authService.notification.next({
           msg: error.error.msg,
           type: 'error',

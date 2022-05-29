@@ -74,6 +74,8 @@ export class UsersComponent implements OnInit, OnDestroy {
       this.guestsService.getAllGuests(_token, userDataId).subscribe(
         (guests: Guest[]) => {
           this.guestsToShow = guests;
+          console.log(guests);
+
           this.guestsData = new MatTableDataSource<Guest>(guests);
           this.guestsData.sortingDataAccessor = (item: any, property: any) => {
             if (property === 'vouchers') {

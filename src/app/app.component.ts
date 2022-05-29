@@ -3,7 +3,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { NavigationStart, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthServiceService } from './shared/auth/auth-service.service';
-import { VouchersService } from './shared/vouchers service/vouchers.service';
+import { GuestsService } from './shared/guests-service/guests.service';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +13,6 @@ import { VouchersService } from './shared/vouchers service/vouchers.service';
 export class AppComponent implements OnInit, OnDestroy {
   constructor(
     private authService: AuthServiceService,
-    private vouchersService: VouchersService,
     private snackBar: MatSnackBar,
     private router: Router
   ) {}
@@ -31,8 +30,6 @@ export class AppComponent implements OnInit, OnDestroy {
     );
     //auto login
     this.authService.autoLogin();
-    //auto delete expired vouchers
-    this.vouchersService.deleteUnvalidVouchers();
     //getting user rank
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationStart) {
