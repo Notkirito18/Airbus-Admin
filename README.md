@@ -1,18 +1,18 @@
 ## Description
 
-    The goal of VouchyQR is to make voucher system easier for hotels using QR codes, by making the process of getting ones vouchers possible with one qr code scan, and so is consuming a voucher wich is possible by just showing a code to be scanned. And for this process to work, the app has three types of users, an Admin (requires log in + not all logged in users are admins), a Vender (requires log in) and a Geust (doesn't require log in). The admin creates a new guest and give the guest a QR code to scan that will take him to his page, where he can see all his vouchers as QR codes and can also see his history of vouchers usage. To use a voucher, the guest can go to the vender and show him one of the vouchers QR codes, the vender than scans it to consume the voucher (if the voucher is expired or the vender is not logged in the consuming wont work).
+The goal of VouchyQR is to make voucher system easier for hotels using QR codes, by making the process of getting ones vouchers possible with one qr code scan, and so is consuming a voucher wich is possible by just showing a code to be scanned. And for this process to work, the app has three types of users, an Admin (requires log in + not all logged in users are admins), a Vender (requires log in) and a Geust (doesn't require log in). The admin creates a new guest and give the guest a QR code to scan that will take him to his page, where he can see all his vouchers as QR codes and can also see his history of vouchers usage. To use a voucher, the guest can go to the vender and show him one of the vouchers QR codes, the vender than scans it to consume the voucher (if the voucher is expired or the vender is not logged in the consuming wont work).
 
 ## The Admins
 
-    Admins are users who's accounts have access to more powerfull features, the admin can create, delete and edit guests, he can also see the records of all usage and can get those records as a PDF file (wich is usefull because the hotel may needs these records) and can also clear these records. (the admin should also be able to register a new vender or a new admin but i haven't implemented this feature yet)
+Admins are users who's accounts have access to more powerfull features, the admin can create, delete and edit guests, he can also see the records of all usage and can get those records as a PDF file (wich is usefull because the hotel may needs these records) and can also clear these records. (the admin should also be able to register a new vender or a new admin but i haven't implemented this feature yet)
 
 ## The Venders
 
-    Venders are users with regular accounts, the can see information about all the guests and their voucher's + all the records, but they can't create, delete or edit the guest's information, the goal of the venders is to be able to consume vouchers by either scanning a voucher's QR code or putting the voucher id in an input field.
+Venders are users with regular accounts, the can see information about all the guests and their voucher's + all the records, but they can't create, delete or edit the guest's information, the goal of the venders is to be able to consume vouchers by either scanning a voucher's QR code or putting the voucher id in an input field.
 
 ## The Guests
 
-    Guests doesn't need to have an account or login, the admin can create a guest and give him a number of vouchers, the guest then will have access to these vouchers on his page (the guest should need to enter a pin code that the admin gives him when creating his page but this feature hasn't been implemented yet) and the guest can also see his history of vouchers usage.
+Guests doesn't need to have an account or login, the admin can create a guest and give him a number of vouchers, the guest then will have access to these vouchers on his page (the guest should need to enter a pin code that the admin gives him when creating his page but this feature hasn't been implemented yet) and the guest can also see his history of vouchers usage.
 
 # How it works
 
