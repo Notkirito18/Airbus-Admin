@@ -41,7 +41,6 @@ export class HomeComponent implements OnInit {
           if (records) {
             this.records = records;
             this.displayRecords = this.records;
-            console.log('got records :', this.records);
             this.disabelBtns = false;
             this.loading = false;
           }
@@ -223,7 +222,10 @@ export class HomeComponent implements OnInit {
           .removeManyRecords(ids, _token, userDataId)
           .subscribe(
             (res) => {
-              console.log(res);
+              this.authService.notification.next({
+                msg: 'Records Deleted',
+                type: 'notError',
+              });
             },
             (error) => {
               this.authService.notification.next({

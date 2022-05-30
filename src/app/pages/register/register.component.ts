@@ -52,7 +52,6 @@ export class RegisterComponent implements OnInit {
   ) {
     this.authService.registerNewAdmin(username, email, password).subscribe(
       (result) => {
-        console.log(result);
         this.router.navigate(['/dashboard']);
       },
       (error) => {
@@ -62,7 +61,6 @@ export class RegisterComponent implements OnInit {
           msg: error.error.msg,
           type: 'error',
         });
-        console.log(error);
       }
     );
   }

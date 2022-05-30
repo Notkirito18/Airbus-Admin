@@ -14,16 +14,16 @@
   padding: 90px 30px 30px;
 }
 .manual-use {
-  text-align: center;
+  display: flex;
+  gap: 25px;
   .mat-form-field {
-    width: 90%;
+    width: 50%;
   }
   button {
-    font-size: 21px;
+    font-size: 14pt;
     background-color: #536dfe;
     color: white;
-    padding: 10px 25px;
-    margin-top: 15px;
+    padding: 8px 20px;
   }
 }
 .records-container {
@@ -60,6 +60,8 @@ img {
   width: 250px;
   margin: 20px;
 }
+
+
 .use-btn-container {
   justify-content: center;
 }
@@ -69,10 +71,13 @@ img {
     margin-bottom: 0;
   }
   .manual-use {
+    flex-direction: column;
+    gap: 10px;
+    .mat-form-field{
+      width: 100%;
+    }
     button {
-      font-size: 16px;
-      padding: 8px 20px;
-      margin-top: 8px;
+      font-size: 12pt;
     }
   }
 }

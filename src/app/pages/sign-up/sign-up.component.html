@@ -12,7 +12,7 @@
       #formDirective="ngForm"
       (submit)="submitSignUpForm(signUpForm.value, formDirective)"
     >
-      <!-- name input -->
+      <!-- Usernamename input -->
       <mat-form-field appearance="outline">
         <input
           matInput
@@ -21,6 +21,9 @@
           formControlName="username"
           required
         />
+        <mat-error *ngIf="!signUpForm.valid">
+          Username must be between 3 and 30 characters
+        </mat-error>
       </mat-form-field>
       <!-- email input -->
       <mat-form-field appearance="outline">
@@ -31,6 +34,9 @@
           formControlName="email"
           required
         />
+        <mat-error *ngIf="!signUpForm.valid">
+          You must enter a valid email
+        </mat-error>
       </mat-form-field>
       <!-- Password input -->
       <mat-form-field appearance="outline">

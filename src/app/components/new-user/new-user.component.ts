@@ -147,9 +147,7 @@ export class NewUserComponent implements OnInit {
             this.recordsService
               .addRecord(recordToAdd, _token, userDataId)
               .subscribe(
-                (record) => {
-                  console.log('record added', record);
-                },
+                (record) => {},
                 (error) => {
                   this.authService.notification.next({
                     msg: error.error.msg,

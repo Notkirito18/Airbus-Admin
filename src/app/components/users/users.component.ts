@@ -74,8 +74,6 @@ export class UsersComponent implements OnInit, OnDestroy {
       this.guestsService.getAllGuests(_token, userDataId).subscribe(
         (guests: Guest[]) => {
           this.guestsToShow = guests;
-          console.log(guests);
-
           this.guestsData = new MatTableDataSource<Guest>(guests);
           this.guestsData.sortingDataAccessor = (item: any, property: any) => {
             if (property === 'vouchers') {
@@ -111,17 +109,14 @@ export class UsersComponent implements OnInit, OnDestroy {
         this.guestsData.data = this.guestsData.data.filter(
           (item) => item._id != id
         );
-        this.snackBar.open('Guest Deleted', '', {
-          duration: 3000,
-          panelClass: 'deleted-snackbar',
+        this.authService.notification.next({
+          msg: 'Guest Deleted',
+          type: 'notError',
         });
-        // setTimeout(() => {
-        //   window.location.reload();
-        // }, 1000);
       } else {
-        this.snackBar.open('Something went wrong when deleting guest', '', {
-          duration: 3000,
-          panelClass: 'deleted-snackbar',
+        this.authService.notification.next({
+          msg: 'Something went wrong when deleting guest',
+          type: 'notError',
         });
       }
     });

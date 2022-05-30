@@ -25,15 +25,11 @@ export class DeleteConfirmComponent {
     // getting token
     const { _token, userDataId, admin } = this.authService.getStorageData();
     if (_token && userDataId && admin) {
-      console.log(_id);
-
       this.guestsService.removeGuest(_id, _token, userDataId).subscribe(
         (result) => {
-          console.log(result);
           this.dialogRef.close(true);
         },
         (error) => {
-          console.log('remove error', error);
           this.dialogRef.close(false);
         }
       );

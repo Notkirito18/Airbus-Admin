@@ -14,7 +14,8 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(
     private authService: AuthServiceService,
     private snackBar: MatSnackBar,
-    private router: Router
+    private router: Router,
+    private guestsService: GuestsService
   ) {}
   notifier$!: Subscription;
 
@@ -22,10 +23,26 @@ export class AppComponent implements OnInit, OnDestroy {
     //error notifier
     this.notifier$ = this.authService.notification.subscribe(
       ({ msg, type }) => {
-        this.snackBar.open(msg, '', {
-          duration: 4000,
-          panelClass: type,
-        });
+        if (msg.length > 1) {
+          this.snackBar.open(msg, '', {
+            duration: 4000,
+            panelClass: type,
+          });
+        }
+      }
+    );
+    //calling delete all unvalid vouchers
+    this.guestsService.deleteUnvalidVouchers().subscribe(
+      (res: { guestsUpdated: number; expiredVouchersDeleted: boolean }) => {
+        if (res.guestsUpdated > 0) {
+          this.authService.notification.next({
+            msg: res.guestsUpdated + " Guest's vouchers deleted",
+            type: 'notError',
+          });
+        }
+      },
+      (error) => {
+        this.authService.notification.next({ msg: error.msg, type: 'error' });
       }
     );
     //auto login

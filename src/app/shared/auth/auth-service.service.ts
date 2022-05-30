@@ -11,11 +11,7 @@ import { GuestsService } from '../guests-service/guests.service';
   providedIn: 'root',
 })
 export class AuthServiceService {
-  constructor(
-    private router: Router,
-    private http: HttpClient,
-    private guestsService: GuestsService
-  ) {}
+  constructor(private router: Router, private http: HttpClient) {}
 
   user = new BehaviorSubject<User | any>(null);
 
@@ -84,8 +80,6 @@ export class AuthServiceService {
       )
       .pipe(
         tap((result: any) => {
-          console.log('backend result', result);
-
           this.handleAuth(
             result.body.email,
             result.body._id,
@@ -123,15 +117,6 @@ export class AuthServiceService {
       this.user.next(user);
       this.autoLogout(expIn * 1000);
       localStorage.setItem('userData', JSON.stringify(user));
-      //calling delete all unvalid vouchers
-      this.guestsService.deleteUnvalidVouchers(token, userDataId).subscribe(
-        (res) => {
-          console.log(res);
-        },
-        (error) => {
-          console.log(error.msg);
-        }
-      );
     }
   }
 

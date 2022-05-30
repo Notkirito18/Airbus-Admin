@@ -18,7 +18,7 @@
         <mat-label>Username</mat-label>
         <input matInput type="text" formControlName="username" />
         <mat-error *ngIf="!registerForm.valid">
-          Username field is required (at least 3 characters)
+          Username must be between 3 and 30 characters
         </mat-error>
       </mat-form-field>
       <!-- email input -->

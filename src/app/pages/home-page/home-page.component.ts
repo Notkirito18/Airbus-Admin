@@ -41,7 +41,6 @@ export class HomePageComponent implements OnInit {
   onFormSubmit(formValue: any, formDirective: FormGroupDirective) {
     this.authService.submitContactForm(formValue).subscribe(
       (result) => {
-        console.log(result);
         this.authService.notification.next({
           msg: 'Email sent',
           type: 'notError',

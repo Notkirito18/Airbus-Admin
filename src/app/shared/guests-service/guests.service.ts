@@ -22,8 +22,8 @@ export class GuestsService {
         },
       })
       .pipe(
-        map((responseGuests) => {
-          return responseGuests.guests;
+        map((result) => {
+          return result.guests;
         })
       );
   }
@@ -107,40 +107,18 @@ export class GuestsService {
     });
   }
 
-  //*delete all unvalid vouchers
-  deleteUnvalidVouchers(token: string, userDataId: string) {
-    // getting guests
-
-    return this.http
-      .get<{ guests: Guest[] }>('api/guests', {
-        headers: {
-          key: environment.serverKey,
-          authToken: token,
-          userDataId: userDataId,
-        },
-      })
-      .pipe(
-        mergeMap((result: { guests: Guest[] }) => {
-          // finding expired vouchers
-          const ids: string[] = [];
-          result.guests.forEach((guest: Guest) => {
-            const newDate = new Date();
-            const expireDate = new Date(guest.validUntill);
-            if (newDate.getTime() > expireDate.getTime()) {
-              ids.push(guest._id);
-            }
-          });
-          console.log('ids baby', ids);
-
-          // updating data
-          return this.http.patch('api/unvalidateExpired', ids, {
-            headers: {
-              key: environment.serverKey,
-              authToken: token,
-              userDataId: userDataId,
-            },
-          });
-        })
-      );
+  // //*delete all unvalid vouchers
+  deleteUnvalidVouchers(): Observable<{
+    guestsUpdated: number;
+    expiredVouchersDeleted: boolean;
+  }> {
+    return this.http.get<{
+      guestsUpdated: number;
+      expiredVouchersDeleted: boolean;
+    }>('api/unvalidateExpired', {
+      headers: {
+        key: environment.serverKey,
+      },
+    });
   }
 }

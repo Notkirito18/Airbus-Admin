@@ -39,7 +39,7 @@
       <h1><b>Admin</b></h1>
     </div>
     <div class="username-container">
-      <div class="username">{{ user.username }}</div>
+      <div class="username">{{ user.username.slice(0, 20) }}</div>
       <button class="logout-admin" mat-button (click)="onLogoutClick()">
         Logout
       </button>

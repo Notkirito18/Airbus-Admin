@@ -32,7 +32,6 @@ export class VenderHomeComponent implements OnInit {
           if (records) {
             this.records = records;
             this.displayRecords = this.records;
-            console.log('got records :', this.records);
             this.loading = false;
           }
         },

@@ -33,15 +33,12 @@ export class GuestPageComponent implements OnInit {
       this.guestsServie.getGuestById(guestId).subscribe(
         (guest: Guest) => {
           this.guest = guest;
-          console.log(guest);
           // checking if the guest has valid vouchers
           if (filterValidVouchers(guest.vouchersLis).length == 0) {
             this.guestHasNoValidVouchers = true;
           }
         },
         (error) => {
-          console.log(error);
-
           this.authService.notification.next({
             msg: error.error.msg,
             type: 'error',
@@ -55,8 +52,6 @@ export class GuestPageComponent implements OnInit {
           this.loading = false;
         },
         (error) => {
-          console.log(error);
-
           this.authService.notification.next({
             msg: error.error.msg,
             type: 'error',
